@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Shopmarket | Home</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="./images/Marvy_Shopmarket.png">
+</head>
+<body>
+    <div class="container" id="container_home">
+        <header>
+            <div class="marvy_ShopmarketInfo" id="marvy_ShopmarketInfo">
+                <img src="./images/Marvy.png" alt="logo Marvy Shopmarket" id="logo_Home" class="logo_Home">
+                <div class="title_home" id="title_home"><h1>Marvy Shopmarket</h1></div>
+            </div>
+            <div class="profile_menu" id="profile_menu">
+                <a href="/login" style="text-decoration: none; color: white"><i class="fas fa-sign-out-alt" id="salir" onclick="salir()" style="display: flex; transform: rotate(180deg); margin-right: 10px;"></i></a>
+                <div class="profile_circle" id="profile_circle"></div>
+                <i class="fas fa-bars" id="menu_hamburguesa" class="menu_hamburguesa" onclick="menu_desplegable()"></i></i>
+            </div>
+        </header>
+        <div id="mensajeDiv" style="display: none; text-align: center; position: absolute;"></div>
+        <div class="fondo_oscuro" id="fondo_oscuro" >
+                <div id="menu_desplegable">
+                    <div id="cerrar_menu"><i class="fas fa-times" onclick="cerrar_menu()"></i></div>
+                <div id="profile-preview" class="profile-preview">
+                    <div class="profile_circle_2" id="profile_circle_2"></div>
+                    <div class="profile_name" id="profile_name">Name</div>
+                </div>
+                    <ul id="ul_menu_desplegable">
+                        <li><i class="fas fa-user"></i><a href="/profile">Perfil</a></li>
+                        <li><i class="fas fa-file-invoice"></i><a href="/informes-recibos">Recibos e informes</a></li>
+                        <li><i class="fas fa-database"></i><a href="/copia-seguridad">Copia de seguridad</a></li>
+                        <li><i class="fas fa-cog"></i><a href="/ajustes">Ajustes</a></li>
+                    </ul>   
+                </div>    
+            </div>
+            
+        <main class="main_home" id="main_home">
+            <div class="content_home" id="content_home">
+                <div class="desplegable_Opc" id="desplegable_Opc">
+                    <i class="fas fa-chevron-down" style="font-size: 2rem; color: white; cursor:pointer; padding: 2%;"></i><h2>Ventas</h2>
+                </div>
+                <div class="tabla_main" id="tabla_main">
+                    <table style="width: 100%; color: white; border: 1px solid white;">
+                        <thead>
+                            <th>Id</th>
+                            <th>Producto</th>
+                            <th>Fecha de venta</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </thead>
+                    </table>
+                </div>
+                <button type="button" class="circle_opc" id="circle_opc" onclick="toggleMenu()">
+                    <i class="fas fa-plus" style="font-size: 2rem; color: white; cursor:pointer;"></i>
+                </button>
+                <div  class="menu_desplegable_2" id="menu_desplegable_2">
+                    <ul>
+                        <a href=""><li>Registrar ventas</li></a>
+                        <a href=""><li>Editar registro de ventas</li></a>
+                        <a href=""><li>Eliminar registro de ventas</li></a>
+                        <a href=""><li>Registrar suministro</li></a>
+                        <a href=""><li>Crear nuevo producto</li></a>
+                        <a href=""><li>Editar producto</li></a>
+                        <a href=""><li>Eliminar producto</li></a>
+                        <a href=""><li>Registrar proveedor</li></a>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer id="footer_home">
+            <i class="far fa-clock" id="reloj" style="display: flex; margin-right: 10px;"></i>
+            <p class="fechaYHora" id="fechaYHora"></p>
+        </footer>
+    </div> 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var registroExitoso = urlParams.get('registroExitoso');
+            var inicioSesion = urlParams.get('inicioSesion');
+            var nombreUsuario = urlParams.get('nombreUsuario');
+            var mensajeDiv = document.getElementById("mensajeDiv");
+            var circle_opc = document.getElementById("circle_opc")
+            if (registroExitoso === 'true') {
+                    mensajeDiv.innerHTML = "<p><span>Registro exitoso</span>Bienvenid@ a Marvy Shopmarket "+nombreUsuario+"<img src='https://pngimg.com/d/welcome_PNG49.png' style='width:100px; height: 100px;padding-top: 0%;'></p>";
+                    mensajeDiv.style.display = "flex";
+                    circle_opc.style.display = "none"; 
+                setInterval(function () {
+                    window.location.href = "/home";
+                }, 2000);
+                setTimeout(function () {
+                    mensajeDiv.style.display = "none";
+                    circle_opc.style.display = "flex"; 
+                }, 5000);
+            } else if (inicioSesion === 'true') {
+                mensajeDiv.innerHTML = "<p><span>Bienvenido</span>" + nombreUsuario + "<p/><img src='https://cdn-icons-png.flaticon.com/512/494/494491.png' style='margin-top: -15%;width:200px; height:200px;'>";
+                mensajeDiv.style.display = "flex";
+                circle_opc.style.display = "none"; 
+                setInterval(function () {
+                    window.location.href = "/home";
+                }, 2000);
+                setTimeout(function () {
+                    mensajeDiv.style.display = "none";
+                    circle_opc.style.display = "flex"; 
+            }, 5000);
+            }
+        }); 
+    </script>
+
+    <script src="./js/script.js"></script>
+</body>
+</html>

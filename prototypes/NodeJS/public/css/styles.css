@@ -1,0 +1,725 @@
+/*Pon las fuentes Poppins*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap');
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+/*Estilos generales*/
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color: #858585;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1,h2, label{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Poppins',sans-serif;
+}
+
+a{
+    text-decoration: none;
+}
+/*Estilos loading*/
+#container_loading{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#logo_loading{
+    width: 100%;
+    margin-top: -2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#logo_loading img{
+    width: 300px;
+    height: 300px;
+    padding: 2%;
+}
+#text_loading{
+    width: 100%;
+    text-align: center;
+    color: rgb(226, 226, 226);
+}
+/*Estilos del login*/
+#container_login{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#header_login{
+    margin-top: 2%;
+    position: absolute;
+}
+
+#header_login img{
+    width: 100px;
+    height: 100px;
+}
+
+#login{
+    position: inherit;
+    background: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 700px;
+    height: 450px;
+    margin-top: 5%;
+    padding: 2%;
+    padding-top: 4%;
+}
+
+.title{
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    margin-top: 5%;
+    font-size: 1.5rem;
+    margin-bottom: -2.5%;
+}
+#login form{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5%;
+    margin-top: 2%;
+}
+#login form div{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#login form div label{
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 2%;
+    font-size: 1.5rem;
+    
+}
+#login div label:nth-last-child(2){
+    margin-top: 4%;
+}
+#login form div input{
+    height: 30px;
+    margin-bottom: 1.5%;
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.12rem;
+}
+#login #botons_login{
+    padding-top: 4%;
+    display: flex;
+    flex-direction: row;
+    font-size: 1.15rem;
+}
+#login #botons_login button{
+    width: 50%;
+    height: 50px;
+}
+
+#btnSubmit_login{
+    border: #2B513F;
+    background: #2B513F;
+    color:white;
+}
+#btn_SingUp{
+    border:#00BF66;
+    background: #00BF66;
+    color: white;
+}
+#btnSubmit_login:hover{
+    transform:scaleY(111%);
+    border: 2px solid black;
+    background: rgb(16, 16, 16);
+}
+#btn_SingUp:hover{
+    transform:scaleY(111%);
+    border: 2px solid rgb(109, 109, 109);
+    background: rgb(109, 109, 109); 
+    color: white;
+}
+
+/*Estilos para la página de registro*/
+
+#header_singUp{
+    padding: 1.5%;
+}
+#container_singUp{
+    margin-top: -4%;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items:center;
+}
+#header_singUp{
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+#singUp{
+    text-align: center;
+    width: 100%;
+    color: rgb(31, 31, 31);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2%;
+}
+
+#container_singUp #singUp #form_singUp .content-logo{
+    margin-top: 2%;
+    position: absolute;
+    width: 95vw;
+    display: flex; 
+    justify-content: center;
+
+}
+#container_singUp #singUp #form_singUp .content-logo .logo{
+    width: 90px;
+    height: 90px;
+}
+#singUp form #content_singUp{
+    position: inherit;
+    width: 95vw;
+    height: 90vh;
+    display: flex;
+    background: #f6f6f6;
+    margin-bottom: 6.5%;
+    margin-top: 2%;
+}
+#section_tuTienda, #section_usuario{
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3%;
+}
+#section_usuario{
+    border-right: 1px solid rgb(33, 33, 33);
+    height: 85%;
+}
+#section_usuario .usuario-title, #section_tuTienda .tutienda-title{
+    font-size: 1.5rem;
+    margin-top: -3%;
+    margin-bottom: 3%;
+}
+
+#section_usuario .inputs{
+    margin-bottom: 11%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    height: 100px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding-bottom: 2%;
+}
+#section_tuTienda .inputs:not(.nit){
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4%;
+    width: 80%;
+    border: 1px solid grey;
+    border-radius: 10px;
+}
+#section_tuTienda .inputs label, #section_usuario .inputs label{
+    font-size: 1.2rem;
+    margin-bottom: 2%;
+    margin-top: 0%;
+    font-weight: normal;
+}
+#section_tuTienda .inputs input, #section_usuario .inputs input{
+    width: 70%;
+    height: 30px;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 2%;
+    border-radius: 5px;
+    border: 1px solid rgb(199, 199, 199)
+}
+
+#section_tuTienda .inputs input{
+    margin-bottom: 2.2%;
+}
+#btnSubmit_singUp_content{
+    right: 0;
+    position: relative;
+    margin-left: 43.7%;
+    margin-top: -10.8%;
+    width: 80%;
+}
+#btnSubmit_singUp{
+    background: #00BF66;
+    border: 1px solid #00BF66;
+    color: white;
+    padding: 2%;
+    width: 15%;
+    height: 20px;
+    font-size: 1.05rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#generar_nit{
+    background: #00BF66;
+    border: 1px solid #00BF66;
+    color: white;
+    margin-left: -0.5%;
+    height: 30px;
+    width: 20%;
+}
+
+#submit_SingUp #btn_SingUp{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35%;
+    margin-left: 35%;
+    margin-top: -18.3%;
+    height: 49px;
+}
+
+/*Estilos home.html*/
+#container_home{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    background: url("https://e0.pxfuel.com/wallpapers/564/875/desktop-wallpaper-city-shop-anime.jpg");
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+header{
+    display: flex;
+    width: 100%;
+    height: 12%;
+    justify-content: space-between;
+    background: #333333;
+    color: white;
+    border-bottom: 1px solid rgb(155, 155, 155);
+}
+
+#footer_home{
+    bottom: 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:100%;
+    padding: 1%;
+    background: #333333;
+    border-top: 1px solid rgb(155, 155, 155);
+}
+header #marvy_ShopmarketInfo{
+    display: flex;
+    align-items: center;
+    width: 50%;
+}
+
+header #marvy_ShopmarketInfo #title_home{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-top: 2%;
+}
+header #marvy_ShopmarketInfo h1{
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-right: 3%;
+    height: 50px;
+    width: 100%;
+}
+
+header #marvy_ShopmarketInfo img{
+    margin-right: 3%;
+    width: 90px;
+    height: 90px;
+}
+header #profile_menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2%;
+}
+header #profile_menu #profile_circle{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgb(155, 155, 155);
+    margin-right: 10px;
+    margin-bottom: 2%;
+}
+header #profile_menu i{
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 1%;
+}
+header #profile_menu i:hover{
+    color: #00BF66;
+}
+header #logo_Home{
+    width: 85px;
+    height:85px;
+    padding: 2%
+}
+#profile_preview{
+    margin-top: -20%;
+    width: 100%;
+}
+#fondo_oscuro{
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+#menu_desplegable{
+    position: absolute;
+    background-color: #171717; 
+    color: white; 
+    text-decoration: none; 
+    height: auto; 
+    width: 360px; 
+    padding: 0%; 
+    height: 100%; 
+    display: none; 
+    flex-direction: column; 
+    align-items: center;
+    padding-top: 1%;
+    right: 0;
+}
+#cerrar_menu{   
+    margin-top: 0%;
+    margin-bottom: 0%;
+    width: 100%;
+    height: 40px;
+    text-align: right;
+    font-size: 1.5rem;
+    position: relative;
+    margin-bottom: 1%;
+    padding-right: 4%;
+}
+#cerrar_menu i{
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 2%;
+}
+#profile_circle_2{
+    width: 135px;
+    height: 135px;
+    border-radius: 50%;
+    background: rgb(155, 155, 155);
+    padding: 2%;
+    margin-bottom: 5%;
+}
+#profile_name{
+    width: 100%;
+    text-align: center;
+    margin-top: 15%;
+    margin-bottom: 20%;
+    background: white;
+    color: black;
+    font-size: 1.5rem;
+
+}
+#ul_menu_desplegable{
+    width: 100%;
+    list-style: none;
+}
+#ul_menu_desplegable li{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid white;
+    text-align: right;
+    position: relative;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+#ul_menu_desplegable li:first-child{
+    border-top: 1px solid white;
+    margin-top: 5%;
+}
+#ul_menu_desplegable li i{
+    left: 0;
+    font-size: 1.1rem;
+    margin-left: 8%;
+    position: absolute;
+}
+#ul_menu_desplegable li:hover i{
+    color: #00BF66;
+}
+#ul_menu_desplegable li a{
+    text-decoration: none;
+    color: white;
+    padding: 2%;
+    margin-right: 2%;
+}
+#ul_menu_desplegable li:hover{
+    background: rgb(16, 16, 16);
+}
+#ul_menu_desplegable li:hover a{
+    color: #00BF66;
+}
+#mensajeDiv{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+#mensajeDiv2{
+    width: 100%;
+    height: 100vh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+#mensajeDiv p{
+    background-color: #e1e1e1;
+    color: #000;
+    padding: 2%;
+    width: 30%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+#mensajeDiv2 p{
+    width: 30%;
+    height: 80%;
+    background-color: #e1e1e1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#mensajeDiv2 p{
+    color: red;
+}
+#mensajeDiv p span{
+    color: #00BF66;
+}
+#mensajeDiv p span, #mensajeDiv2 p span{
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-top: 2%;
+    
+}
+#main_home{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+#main_home #content_home{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#main_home #tabla_main{
+    width: 100%;
+    height: 70vh;
+    border: 1px solid white;
+    overflow-y: scroll;
+}
+#main_home #content_home #desplegable_Opc{
+    width: 40%;
+    height: 40px;
+    margin: 1%;
+    border-radius: 10px;
+    background: #00BF66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    flex-direction: row-reverse;
+    cursor:pointer
+}
+#main_home #content_home #desplegable_Opc h2{
+    font-weight: normal;
+    margin-right: -10%;
+    width: 100%;
+    text-align: center;
+}
+#circle_opc{
+    width: 77px;
+    height: 77px;
+    background: #00BF66;
+    position: absolute;
+    bottom: 0;
+    margin-left: 90%;
+    margin-bottom: 5.5%;
+    border-radius: 50%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+#menu_desplegable_2{
+    display: none;
+    background: #d3d3d3;
+    position: absolute;
+    bottom: 0;
+    margin-left: 74%;
+    margin-bottom: 8%;
+    cursor: pointer;
+}
+#menu_desplegable_2 ul li{
+    padding: 3%;
+    background-color: #333;
+    border-bottom: 1px solid #d6d6d6;
+    list-style: none;
+    color: rgb(235, 235, 235);
+    text-align: center;
+}
+#menu_desplegable_2 ul li:hover{
+    background: #fff;
+    color: #333;
+    border-bottom: #000;
+}
+
+@media(max-width: 992px){
+
+    #login{
+        margin-top: 7%;
+        width: 80%;
+    }
+    footer .content{
+        position: relative;
+        margin-top: -10%;
+    }
+    #login{
+        margin-top: 10%;
+    }
+    #login #botons_login{
+        padding-top: 4%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        
+    }
+    #submit_SingUp #btn_SingUp{
+        margin: 0;
+    }
+    /*Estilos de home*/
+    header {
+        height: 15%;
+    }
+    header #marvy_ShopmarketInfo #title_home h1{
+        font-size: 1.4rem;
+    }
+ 
+    #main_home{
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+    }
+    
+    /*Estilos del menu desplegable*/
+    #menu_desplegable{
+        width: 100%;
+        padding-top: 3%;
+    }
+    #menu_desplegable #ul_menu_desplegable{
+        padding-top: 3%;
+    }  
+    #cerrar_menu{
+        width: 100%;
+        height: 50px;
+        font-size: 2rem;
+    }
+    #menu_desplegable #profile_preview{
+        margin-top: 5%;
+    }
+    #menu_desplegable #profile_circle_2{
+        margin-top: 3%;
+        margin-bottom: 10%;
+        width: 200px;
+        height: 200px;
+    }
+    #menu_desplegable #profile_name{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        width: 100%;
+        height: 50px;
+        background-color: white;
+        color: black;
+        margin-bottom: 2%;
+    }
+    #ul_menu_desplegable li{
+        width: 100%;
+        height: 50px;
+        font-size: 2rem;
+        border-bottom: 1px solid white;
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+    }
+    #ul_menu_desplegable li i{
+        font-size: 1.7rem;
+        right: 0;
+        margin-left: 80%;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+
+    }
+}
