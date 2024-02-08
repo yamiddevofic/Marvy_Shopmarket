@@ -18,7 +18,7 @@ p{
 .container{
     display: grid;
     grid-template-columns: 1fr 80% 1fr;
-    grid-template-rows: 80px 20% 1fr 100px;
+    grid-template-rows: 12% 20% 1fr 100px;
     height: 100vh;
     width: 100%;
     justify-content: center;
@@ -37,27 +37,137 @@ p{
 .container .integrantes ul{
     list-style: none;
     line-height: 1.5;
+    width: 100%;
+    text-align: center;
+    
 }
 .container .info .info-content ul{
     margin-bottom: 2%;
     font-size: 1.2rem;
 }
-
+.container .info-2{
+    width: 100%;
+    height: auto;
+    grid-row: 3;
+    grid-column: 2;
+    
+}
+.container .info-2 .info-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10%;
+}
+.container .info-2 .info-container img{
+  width: 80%;
+  
+}
+#js,#py,#node,#express,#mongodb{
+    align-items: center;
+    justify-content: center;
+}
+#js{
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    
+}
+#py{
+    grid-column: 3;
+    grid-row: 1;
+}
+#react{
+    grid-column: 1;
+    grid-row: 2;
+}
+#node{
+    grid-column: 2;
+    grid-row: 1;
+}
+#express{
+    grid-column: 2;
+    grid-row: 2;
+}
+#mongodb{
+    grid-column: 3;
+    grid-row: 2;
+}   
 header{
     grid-row: 1;
-    grid-column: 1/-1;
+    grid-column: 1;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 header img{
-    width: 8.5%;
+    width: 50%;
     padding: 2%;
+}
+.container-dos{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2%;
+    padding: 2%;
+}
+.container-dos header{
+    justify-content: right;
+    align-items: center;
+    text-align: right;
+    height: 75px;
+    padding: 3%;
+}
+.container-dos header img{
+    width: 10%;
+    margin-top: 2%;
+}
+.container-dos .title{
+    grid-row:2;
+    grid-column: 2;
+    width: 100%;
+    text-align: center;
+    margin-top: -2.5%;
+}
+
+.container-dos .photos{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    gap: 3%;
+    padding: 5%;
+    height: 100%;
+}
+.container-dos .photos div img{
+    width: 100%;
+    height: 100%;
+}
+.container-dos .photos .description{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2%;
+}
+
+.container-dos .footer .btn-adelante,.container .footer .btn-atras{
+    background: #038C7F;
+    padding: 2%;
+    border-radius: 50%;
 }
 .container .footer{
     grid-row: 4;
     grid-column: 2;
     display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
     justify-content: space-between;
-    padding: 2%;
+    padding: 5%;
 }
 .container .footer .btn-adelante,.container .footer .btn-atras{
     background: #038C7F;
