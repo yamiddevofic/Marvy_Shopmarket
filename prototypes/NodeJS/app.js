@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 const { verify } = require('crypto');
 const mysql = require('mysql2'); 
 const bcrypt = require('bcrypt');
+/**
+ * Paste one or more documents here
+ */
 
 // Conexion con la base de datos
 const connection = mysql.createConnection({
