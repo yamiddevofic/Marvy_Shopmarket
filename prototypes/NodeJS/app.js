@@ -13,8 +13,8 @@ const bcrypt = require('bcrypt');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'nidian56',
-  database: 'Marvy_Shopmarket'
+  password: '1127919765Jf',
+  database: 'marvyshopmarket'
 });
 
 
