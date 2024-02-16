@@ -4,22 +4,28 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configuración de la conexión a la base de datos MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1127919765Jf@localhost/marvyshopmarket'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/msm'
 
 # Inicializar la extensión SQLAlchemy
 db = SQLAlchemy(app)
 
 # Definir el modelo de la tabla 'productos'
-class Producto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100))
-    precio = db.Column(db.Float)
+class Productos(db.Model):
+    prod_Id = db.Column(db.Integer, primary_key=True)
+    prod_Nom = db.Column(db.String(100))
+    prod_Prec = db.Column(db.Float)
+    prod_Cant = db.Column(db.Float)
+    prod_Fecha_cad = db.Column(db.Date)
 
 # Ejemplo de cómo usar la conexión en una ruta
 @app.route('/')
 def index():
     # Obtener todos los productos de la base de datos
-    productos = Producto.query.all()
+    return render_template('index.html')
+@app.route('/resultados')
+def results():
+    # Obtener todos los productos de la base de datos
+    productos = Productos.query.all()
     return render_template('results.html', productos=productos)
 
 if __name__ == '__main__':

@@ -4,13 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask MySQL Example</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Contenido del Índice</h1>
-    <ul>
-        {% for result in results %}
-        <li>{{ result }}</li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Fecha de caducidad</th>
+            </tr>
+
+        </thead>
+        <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.prod_Nom }}</td>
+                    <td>{{ producto.prod_Prec}}</td>
+                    <td>{{ producto.prod_Cant}}</td>
+                    <td>{{ producto.prod_Fecha_cad}}</td>
+                </tr>
+                {% endfor %}
+            <!-- <th>Precio</th>
+            {% for producto in productos %}
+                <tr><td>{{ producto.prod_Prec }}</td></tr>
+            {% endfor %}
+            <th>Cantidad</th>
+            {% for producto in productos %}
+                <tr><td>{{ producto.prod_Cant }}</td></tr>
+            {% endfor %}
+            <th>Fecha de caducidad</th>
+            {% for producto in productos %}
+                <tr><td>{{ producto.prod_Fecha_cad }}</td></tr>
+            {% endfor %} -->
+        </tbody>
+        
+    </table>
 </body>
 </html>
