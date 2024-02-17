@@ -13,9 +13,9 @@ db = SQLAlchemy(app)
 # Definir el modelo de la tabla 'productos'
 class Productos(db.Model):
     prod_Id = db.Column(db.Integer, primary_key=True)
-    prod_Nom = db.Column(db.String(100))
-    prod_Prec = db.Column(db.Float)
-    prod_Cant = db.Column(db.Float)
+    prod_Nombre = db.Column(db.String(100))
+    prod_Precio = db.Column(db.Integer)
+    prod_Cantidad = db.Column(db.Integer)
     prod_Fecha_cad = db.Column(db.Date)
 
 # Ejemplo de cómo usar la conexión en una ruta
@@ -23,6 +23,7 @@ class Productos(db.Model):
 def index():
     # Obtener todos los productos de la base de datos
     return render_template('index.html')
+
 @app.route('/resultados')
 def results():
     # Obtener todos los productos de la base de datos
