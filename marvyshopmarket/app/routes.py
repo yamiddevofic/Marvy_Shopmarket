@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configuración de la conexión a la base de datos MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1127919765Jf@localhost/marvyshopmarket'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:nidian56@localhost/marvy_shopmarket'
 
 # Inicializar la extensión SQLAlchemy
 db = SQLAlchemy(app)
