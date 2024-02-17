@@ -1,35 +1,21 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, render_template, request,redirect,url_for
+from .models import Producto, Images
+from app import db
+import base64
+main_bp = Blueprint('main',__name__)
 
-app = Flask(__name__)
-
-# Configuración de la conexión a la base de datos MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:nidian56@localhost/marvy_shopmarket'
-
-
-# Inicializar la extensión SQLAlchemy
-db = SQLAlchemy(app)
-
-# Definir el modelo de la tabla 'productos'
-class Productos(db.Model):
-    __tablename__ = 'productos'
-    prod_Id = db.Column(db.Integer, primary_key=True)
-    prod_Nombre = db.Column(db.String(100))
-    prod_Precio = db.Column(db.Integer)
-    prod_Cantidad = db.Column(db.Integer)
-    prod_Fecha_cad = db.Column(db.Date)
-
-# Ejemplo de cómo usar la conexión en una ruta
-@app.route('/')
+@main_bp.route('/')
 def index():
-    # Obtener todos los productos de la base de datos
     return render_template('index.html')
 
-@app.route('/resultados')
+@main_bp.route('/resultados')
 def results():
-    # Obtener todos los productos de la base de datos
-    productos = Productos.query.all()
+    productos = Producto.query.all()
     return render_template('results.html', productos=productos)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@main_bp.route('/imagenes')
+def mostrar_imagenes():
+    images = Images.query.all()
+    for image in images:
+        image.image=base64.b64encode(image.image).decode('utf-8')
+    return render_template('images.html', images=images)
