@@ -1,18 +1,17 @@
 from flask import Flask
-from flaskext.mysql import MySQL
+from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+db = SQLAlchemy()
 
-# Configuración de la conexión a la base de datos MySQL
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'nidian56'
-app.config['MYSQL_DATABASE_DB'] = 'marvy_shopmarket'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'  # o la dirección IP de tu servidor MySQL
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:nidian56@localhost/marvy_shopmarket'
+    app.config['SQLALCHEMY_BINDS'] = {
+        'image':'mysql://root:nidian56@localhost/images'
+    }
+    db.init_app(app)
+    
+    from.routes import main_bp
+    app.register_blueprint(main_bp)
 
-# Inicializar la extensión MySQL
-mysql = MySQL(app)
-
-# Ahora puedes usar 'mysql' en cualquier lugar de tu aplicación para interactuar con la base de datos
-
-# Importar tus rutas o vistas
-from app import routes
+    return app
