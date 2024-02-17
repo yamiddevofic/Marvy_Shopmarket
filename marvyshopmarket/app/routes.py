@@ -12,6 +12,7 @@ db = SQLAlchemy(app)
 
 # Definir el modelo de la tabla 'productos'
 class Productos(db.Model):
+    __tablename__ = 'productos'
     prod_Id = db.Column(db.Integer, primary_key=True)
     prod_Nombre = db.Column(db.String(100))
     prod_Precio = db.Column(db.Integer)
