@@ -9,11 +9,11 @@
 <body>
     <div class="container">
         <div class="logo">
-            <div><img src="{{ url_for('static', filename='images/tienda.png') }}" alt="icono tienda"></div>
+            <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" width="20%" alt="icono tienda"></div>
         </div>
         <div class="registo">
             <div class="title">
-                <h1>Resgistro de Productos</h1>
+                <h1>Registro de Productos</h1>
             </div>
             <div class="formulario">
                 <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
@@ -32,10 +32,6 @@
                     <div>
                         <div><label for="prod_Cantidad">Cantidad Producto:</label></div>
                         <div><input type="number" name="prod_Cantidad"></div>
-                    </div>
-                    <div>
-                        <div><label for="prod_Fecha_cad">Fecha Caducidad:</label></div>
-                        <div><input type="date" name="prod_Fecha_cad" id="prod_Fecha_cad"></div>
                     </div>
                     <div>
                         <div><label for="prod_Img">Imagen del producto</label></div>

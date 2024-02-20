@@ -7,7 +7,6 @@ class Producto(db.Model):
     prod_Nombre = db.Column(db.String(100))
     prod_Precio = db.Column(db.Integer)
     prod_Cantidad = db.Column(db.Integer)
-    prod_Fecha_cad = db.Column(db.Date)
     prod_Img = db.Column(db.LargeBinary)
 
 class Images(db.Model):

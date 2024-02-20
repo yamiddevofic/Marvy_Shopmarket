@@ -15,13 +15,12 @@ def nuevo_producto():
         nombre = request.form['prod_Nombre']
         precio = request.form['prod_Precio']
         cantidad = request.form['prod_Cantidad']
-        fecha_cad = request.form['prod_Fecha_cad']
         imagen = request.files['prod_Img']
         
         imagen_data = imagen.read()
         
         # Valida los datos antes de insertarlos en la base de datos
-        if not id or not nombre or not precio or not cantidad or not fecha_cad or not imagen:
+        if not id or not nombre or not precio or not cantidad or not imagen:
             return "Por favor, completa todos los campos.", 400
 
         new_product = Producto(
@@ -29,13 +28,12 @@ def nuevo_producto():
             prod_Nombre=nombre,
             prod_Precio=precio,
             prod_Cantidad=cantidad,
-            prod_Fecha_cad=fecha_cad,
             prod_Img = imagen_data
         )
         db.session.add(new_product)
         db.session.commit()
         return redirect(url_for('main.resultados'))
-    
+
 @main_bp.route('/login', methods=['GET','POST'])
 def login():
     return render_template('1_login.html')
@@ -48,6 +46,10 @@ def redirigir_registro():
 def pagina_principal():
     return render_template('3_vista-principal.html')
     
+@main_bp.route('/registro-producto', methods=['GET','POST'])
+def registro_producto():
+    if request.method == 'GET':  
+        return render_template('4_registro_prod.html')
 
 @main_bp.route('/resultados', methods=['GET','POST'])
 def resultados():
