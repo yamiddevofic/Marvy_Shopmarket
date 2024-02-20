@@ -6,7 +6,7 @@ main_bp = Blueprint('main',__name__)
 
 @main_bp.route('/')
 def index():
-    return render_template('1_welcome.html')
+    return render_template('0_welcome.html')
 
 @main_bp.route('/nuevo_producto', methods=['POST'])
 def nuevo_producto():
@@ -38,16 +38,16 @@ def nuevo_producto():
     
 @main_bp.route('/login', methods=['GET','POST'])
 def login():
-    return render_template('2_login.html')
+    return render_template('1_login.html')
 
 @main_bp.route('/signUp',methods=['GET','POST'])
 def redirigir_registro():
-    return render_template('3_sign_up.html')
+    return render_template('2_sign_up.html')
 
-@main_bp.route('/verifyUser', methods=['GET','POST'])
-def verifify_user():
-    if request.method=='POST':
-        user = request.form[]
+@main_bp.route('/pagina-principal', methods=['GET','POST'])
+def pagina_principal():
+    return render_template('3_vista-principal.html')
+    
 
 @main_bp.route('/resultados', methods=['GET','POST'])
 def resultados():
