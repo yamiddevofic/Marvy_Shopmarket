@@ -6,7 +6,7 @@ main_bp = Blueprint('main',__name__)
 
 @main_bp.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('1_welcome.html')
 
 @main_bp.route('/nuevo_producto', methods=['POST'])
 def nuevo_producto():
@@ -36,10 +36,23 @@ def nuevo_producto():
         db.session.commit()
         return redirect(url_for('main.resultados'))
     
+@main_bp.route('/login', methods=['GET','POST'])
+def login():
+    return render_template('2_login.html')
+
+@main_bp.route('/signUp',methods=['GET','POST'])
+def redirigir_registro():
+    return render_template('3_sign_up.html')
+
+@main_bp.route('/verifyUser', methods=['GET','POST'])
+def verifify_user():
+    if request.method=='POST':
+        user = request.form[]
+
 @main_bp.route('/resultados', methods=['GET','POST'])
 def resultados():
     if request.method == "GET":
         productos = Producto.query.all()
         for producto in productos:
             producto.prod_Img = base64.b64encode(producto.prod_Img).decode('utf-8')
-        return render_template('results.html', productos=productos)
+        return render_template('11_historial_prod.html', productos=productos)

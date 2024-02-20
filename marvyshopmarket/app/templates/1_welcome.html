@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Shopmarket</title>
+    <link rel="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- <link rel="icon" type="image/png" href="./images/Marvy_Shopmarket.png"> -->
+</head>
+<body>
+    <div class="container_loading" id="container_loading">
+        <div class="logo_loading" id="logo_loading">
+            <img src="./images/Marvy_Shopmarket.png" alt="logo Marvy Shopmarket">
+        </div>
+        <div class="text_loading" id="text_loading">
+            <h1 class="cargando" id="cargando">Cargando...</h1>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 5000);
+
+        function actualizarTexto() {
+            var cargando = document.getElementById("cargando");
+            cargando.textContent = "Cargando";
+            setTimeout(function() {
+                cargando.textContent = "Cargando.";
+            }, 1000);
+            setTimeout(function() {
+                cargando.textContent = "Cargando..";
+            }, 2000);
+            setTimeout(function() {
+                cargando.textContent = "Cargando...";
+            }, 3000);
+            }
+
+        setInterval(actualizarTexto, 1500);
+      </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

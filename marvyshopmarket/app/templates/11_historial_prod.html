@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask MySQL Example</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <h1>Contenido del Índice</h1>
@@ -25,7 +25,7 @@
                     <td>{{ producto.prod_Precio}}</td>
                     <td>{{ producto.prod_Cantidad}}</td>
                     <td>{{ producto.prod_Fecha_cad}}</td>
-                    <td><img src="data:image/jpeg;base64,{{ producto.prod_Img }}" alt="{{producto.prod_Nombre}}" ></td>
+                    <td><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" alt="{{producto.prod_Nombre}}" ></td>
                 </tr>
                 {% endfor %}
             <!-- <th>Precio</th>
