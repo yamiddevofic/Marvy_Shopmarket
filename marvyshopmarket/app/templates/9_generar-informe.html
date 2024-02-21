@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
+{% block content %}
+<div class="title">
+    <h1>Generar Informe</h1>
+</div>
+
+<div class="contenedor">
+    <div class="botones-principales">
+        <div class="botom-dia" >
+            <div><form action="" method="GET"><button>Dia</button></form></div>
+        </div>
+        <div class="botom-semanal" >
+            <div><form action="" method="GET"><button>Semanal</button></form></div>
+        </div>
+        <div class="botom-mensul" >
+            <div><form action="" method="GET"><button>Mensual</button></form></div>
+        </div>
+        </div>
+    </div>
+    <div class="menu-desplegable">
+        <div class="title"><h2>Formato</h2></div>
+        <select id="formato">
+            <option value="PDF">PDF</option>
+            <option value="WORD">WORD</option>
+            <option value="EXCEL">EXCEL</option>
+        </select>
+    </div>
+
+    <div class="botones-secundario">
+        <div class="botom-generar">
+            <div><form action="" method="GET"><button>Generar</button></form></div>
+        </div>
+        
+        <div class="botom-salir">
+            <div><form action="" method="GET"><button>Cancelar</button></form></div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

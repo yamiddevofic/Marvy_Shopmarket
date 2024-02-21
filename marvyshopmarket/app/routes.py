@@ -40,6 +40,10 @@ def registro_suministro():
 def registro_ventas():
     if request.method == 'GET':  
         return render_template('6_registro_ventas.html')
+    
+@main_bp.route('/generar-informe', methods=['GET','POST'])
+def generar_informe():
+    return render_template('9_generar-informe.html')
 
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():
