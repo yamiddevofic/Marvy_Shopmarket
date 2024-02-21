@@ -1,47 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask MySQL Example</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <h1>Contenido del Índice</h1>
+{% extends 'base.html' %}
+
+{% block title %}Marvy Shopmarket | Historial de productos {% endblock %}
+
+{% block content %}
+    <form action="/registro-producto" method="GET">
+        <button>Atrás</button>
+    </form>
+
+    <h1>Inventario de productos</h1>
     <table>
         <thead>
             <tr>
-                <th>Nombre</th>
+                <th>Identificación</th>
+                <th>Producto</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
-                <th>Fecha de caducidad</th>
+                <th>Imagen</th>
+                <th>Total</th>
             </tr>
-
         </thead>
         <tbody>
-                {% for producto in productos %}
+            {% for producto in productos %}
                 <tr>
+                    <td>{{ producto.prod_Id }}</td>
                     <td>{{ producto.prod_Nombre }}</td>
-                    <td>{{ producto.prod_Precio}}</td>
-                    <td>{{ producto.prod_Cantidad}}</td>
-                    <td>{{ producto.prod_Fecha_cad}}</td>
-                    <td><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" alt="{{producto.prod_Nombre}}" ></td>
+                    <td>${{ producto.prod_Precio }}</td>
+                    <td>{{ producto.prod_Cantidad }}</td>
+                    <td><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" width="20%" alt="{{ producto.prod_Nombre }}"></td>
+                    <td>${{ producto.prod_Total }}</td>
                 </tr>
-                {% endfor %}
-            <!-- <th>Precio</th>
-            {% for producto in productos %}
-                <tr><td>{{ producto.prod_Prec }}</td></tr>
             {% endfor %}
-            <th>Cantidad</th>
-            {% for producto in productos %}
-                <tr><td>{{ producto.prod_Cant }}</td></tr>
-            {% endfor %}
-            <th>Fecha de caducidad</th>
-            {% for producto in productos %}
-                <tr><td>{{ producto.prod_Fecha_cad }}</td></tr>
-            {% endfor %} -->
+            <tr>
+                <td colspan="5">Monto Total :</td>
+                <td>${{ suma_totales_formateada }}</td>
+            </tr>
+            <tr>
+                <td colspan="5">Total de productos en la tienda: </td>
+                <td>{{suma_productos}} productos</td>
+            </tr>
         </tbody>
-        
     </table>
-</body>
-</html>
+{% endblock %}
+

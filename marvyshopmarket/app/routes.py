@@ -1,7 +1,13 @@
+import re
 from flask import Blueprint, render_template, request,redirect,url_for
 from .models import Producto, Images
 from app import db
 import base64
+import locale
+
+# Establece la configuración regional actual para usar el formato local
+locale.setlocale(locale.LC_ALL, '')
+
 main_bp = Blueprint('main',__name__)
 
 @main_bp.route('/')
@@ -16,23 +22,38 @@ def nuevo_producto():
         precio = request.form['prod_Precio']
         cantidad = request.form['prod_Cantidad']
         imagen = request.files['prod_Img']
-        
         imagen_data = imagen.read()
         
+     
         # Valida los datos antes de insertarlos en la base de datos
-        if not id or not nombre or not precio or not cantidad or not imagen:
-            return "Por favor, completa todos los campos.", 400
 
-        new_product = Producto(
-            prod_Id=int(id),
-            prod_Nombre=nombre,
-            prod_Precio=precio,
-            prod_Cantidad=cantidad,
-            prod_Img = imagen_data
-        )
-        db.session.add(new_product)
-        db.session.commit()
-        return redirect(url_for('main.resultados'))
+        nombre_min = nombre.lower()
+        id_exist = Producto.query.filter_by(prod_Id=id).first()
+
+        nombre_exist = Producto.query.filter(db.func.lower(Producto.prod_Nombre) == nombre_min).first()
+        if not id or not nombre or not precio or not cantidad or not imagen:
+            mensaje="Complete todos los datos"
+            estado = 0
+        elif id_exist or nombre_exist:
+            mensaje="Este producto ya existe"
+            estado= 0
+        # elif not re.match("^[a-zA-Z0-9]+$", nombre):
+        #     mensaje= 'El nombre del producto no puede contener caracteres especiales como espacios, guiones, etc.'
+        #     estado=0
+        else:
+            mensaje="Registro de producto éxitoso"
+            estado=1
+            new_product = Producto(
+                prod_Id=int(id),
+                prod_Nombre=nombre,
+                prod_Precio=precio,
+                prod_Cantidad=cantidad,
+                prod_Img = imagen_data,
+            )
+            db.session.add(new_product)
+            db.session.commit()
+        return render_template('4_registro_prod.html', mensaje=mensaje, estado=estado)
+
 
 @main_bp.route('/login', methods=['GET','POST'])
 def login():
@@ -51,10 +72,21 @@ def registro_producto():
     if request.method == 'GET':  
         return render_template('4_registro_prod.html')
 
-@main_bp.route('/resultados', methods=['GET','POST'])
-def resultados():
+@main_bp.route('/historial-productos', methods=['GET','POST'])
+def historial_productos():
     if request.method == "GET":
+       
         productos = Producto.query.all()
+       
+        suma_totales=sum(producto.prod_Total for producto in productos)
+        # Formatea la suma total con separadores de miles
+        suma_totales_formateada = locale.format_string('%d', round(suma_totales), grouping=True)
+        suma_productos='{:n}'.format(round(sum(producto.prod_Cantidad for producto in productos)))
+
         for producto in productos:
             producto.prod_Img = base64.b64encode(producto.prod_Img).decode('utf-8')
-        return render_template('11_historial_prod.html', productos=productos)
+       
+            producto.prod_Precio = locale.format_string('%d', round(producto.prod_Precio), grouping=True)
+            producto.prod_Total = locale.format_string('%d', round(float(producto.prod_Total)), grouping=True)
+       
+        return render_template('11_historial_prod.html', productos=productos, suma_totales_formateada=suma_totales_formateada,suma_productos=suma_productos)

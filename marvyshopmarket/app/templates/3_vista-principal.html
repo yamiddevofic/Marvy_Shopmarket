@@ -1,71 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/styles.css">
-<body>
-    <div class="container">
-        <div class="menu">
-            <div><button>menú</button></div>
-            <div class="menu_desplegable">
-                <div class="imagen_perfil">
-                    <div><img src="" alt="imagen perfil"></div>
-                </div>
-                <div class="listado">
-                    <div>
-                        <ul>
-                            <li>Generar Informe</li>
-                            <li>Ver Historial De Ventas</li>
-                            <li>Ver Historial De Producto</li>
-                            <li>Ajuste</li>
-                        </ul>
-                    </div>
-                </div>
+{% extends 'base.html' %}
+
+{% block title %}Marvy Shopmarket | Home {% endblock %}
+
+{% block content %}
+    <div class="menu">
+        <div><button>menú</button></div>
+        <div class="menu_desplegable">
+            <div class="imagen_perfil">
+                <div><img src="" alt="imagen perfil"></div>
             </div>
-            <div class="botom-salir">
-                <div><form action="/login" method="GET"><button>Salir De La Cuenta</button></form></div>
+            <div class="listado">
+                <div>
+                    <ul>
+                        <li>Generar Informe</li>
+                        <li>Ver Historial De Ventas</li>
+                        <li>Ver Historial De Producto</li>
+                        <li>Ajuste</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="buscador">
-            <div><input type="search" placeholder="buscar..."></div>
-        </div>
-
-        <div class="content">
-            <div class="titulo">
-                <div><h1>Página Principal</h1></div>
-            </div>
-            <div class="nombre-img">
-                <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" width="20%" alt="imagen tienda"></div>
-                <div><h3>Marvy Shopmarket</h3></div>
-            </div>
-
-            <div class="botom">
-                
-                <div><form action="/registro-producto" method="GET"><button>Agregar Producto</button></form></div>
-                <div><form action="" method=""><button>Registrar Suministro</button></form></div>
-                <div><form action="" method=""><button>Registrar Venta</button></form></div>
-            </div>
-
-            <div class="totales">
-                <div>
-                    <h4>Total De Venta:</h4>
-                    <p>$_______</p>
-                </div>
-                <div>
-                    <h4>Total De Gastos:</h4>
-                    <p>$_______</p>
-                </div>
-                <div>
-                    <h4>Total De Neto:</h4>
-                    <p>$_______</p>
-                </div>
-
-            </div>
-
+        <div class="botom-salir">
+            <div><form action="/login" method="GET"><button>Salir De La Cuenta</button></form></div>
         </div>
     </div>
-    
-</body>
-</html>
+    <div class="buscador">
+        <div><input type="search" placeholder="buscar..."></div>
+    </div>
+
+    <div class="content">
+        <div class="titulo">
+            <div><h1>Página Principal</h1></div>
+        </div>
+        <div class="nombre-img">
+            <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" width="20%" alt="imagen tienda"></div>
+            <div><h3>Marvy Shopmarket</h3></div>
+        </div>
+
+        <div class="botom">
+            
+            <div><form action="/registro-producto" method="GET"><button>Agregar Producto</button></form></div>
+            <div><form action="" method=""><button>Registrar Suministro</button></form></div>
+            <div><form action="" method=""><button>Registrar Venta</button></form></div>
+        </div>
+
+        <div class="totales">
+            <div>
+                <h4>Total De Venta:</h4>
+                <p>$_______</p>
+            </div>
+            <div>
+                <h4>Total De Gastos:</h4>
+                <p>$_______</p>
+            </div>
+            <div>
+                <h4>Total De Neto:</h4>
+                <p>$_______</p>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+

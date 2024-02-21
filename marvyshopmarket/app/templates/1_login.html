@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvy Shopmarket | login</title>
-    <link rel="stylesheet" href="./css/styles.css">
-    <!-- <link rel="icon" type="image/png" href="./images/Marvy_Shopmarket.png"> -->
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Marvy Shopmarket | Login {% endblock %}
+
+{% block content %}
     <div id="mensajeDiv2" style=" text-align: center; position: absolute;"></div>
     <div id="container_login" class="container">
         <div id="header_login" class="header">
@@ -33,39 +28,4 @@
             </form>
         </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            var inicioSesion = urlParams.get('inicioSesion');
-            var mensajeDiv2 = document.getElementById("mensajeDiv2");
-            var logo = document.getElementById("logo");
-            var form_login = document.getElementById("container_login")
-            var registro = document.getElementById("submit_SingUp");
-            var body = document.querySelector('body');
-            
-            if (inicioSesion === 'false') {
-                mensajeDiv2.innerHTML = "<p><span>Inicio de sesión fallida</span> Usuario y contraseña incorrectos<img src='https://cdn-icons-png.flaticon.com/512/221/221755.png' style='width: 100px; height: 100px;margin-top: 2%;'></p>";
-                mensajeDiv2.style.display = "flex";
-                mensajeDiv2.style.paddingBottom = "0%"
-                mensajeDiv2.style.height = "100vh"
-                registro.style.display = "none";
-                logo.style.display = "none";
-                form_login.style.display = "none";
-                body.style.background = "#fff";
-                setInterval(function () {
-                    window.location.href = "/login";
-                }, 1500);
-                setTimeout(function () {
-                    mensajeDiv2.style.display = "none";
-                    registro.style.display= "flex";
-                    logo.style.display = "flex";
-                    form_login.style.display = "flex";
-                    body.style.background = "#e2b808";
-                }, 5000);
-            }
-        });
-    </script>
-    <script src="./js/script.js"></script>
-</body>
-</html>
+{% endblock %}
