@@ -45,6 +45,10 @@ def registro_ventas():
 def generar_informe():
     return render_template('9_generar-informe.html')
 
+@main_bp.route('/ajustes-generales', methods=['GET','POST'])
+def ajustes_generales():
+    return render_template('13_ajustes-generales.html')
+
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():
     if request.method == "GET":
