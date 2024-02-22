@@ -58,6 +58,10 @@ def ajustes_cuenta():
 def ajuste_apariencia():
     return render_template('15_ajuste-apariencia.html')
 
+@main_bp.route('/ajustes-perfil', methods=['GET','POST'])
+def ajustes_perfil():
+    return render_template('16_ajustes-perfil.html')
+
 
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():

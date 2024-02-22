@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
+{% block content %}
+<div>
+    <h1>Ajustes Del Perfil</h1>
+    <img src="{{url_for('static',filename='images/logo_marvy.png')}}" width="10%" alt="logo Marvy Shopmarket" class="imagen">
+</div>
+<div class="contenedor">
+    <div class="botom-cambiar-nombre">
+        <div><label for="cambiar-nombre">Cambiar Nombre Del Perfil</label></div>
+        <div><input type="text" name="cambiar-nombre" id="cambiar-nombre"></div>
+    </div>
+
+    <div class="cambiar-contacto">
+        <div><label for="cambiar-contacto">Cambiar El Contacto Del Perfil</label></div>
+        <div><input type="text" name="cambiar-contacto" id="cambiar-contacto"></div>
+    </div>
+    
+    <div class="cambiar-ubicacion">
+        <div><label for="cambiar-ubicacion">Cambiar La Ubicación Del Perfil</label></div>
+        <div><input type="text" name="cambiar-ubicacion " id="cambiar-ubicacion"></div>
+    </div>
+    <div class="cambiar-identificacion">
+        <div><label for="cambiar-identificacion">Cambiar Identificación Del Perfil</label></div>
+       <div><input type="number" name="cambiar-identificacion " id="cambiar-identificacion"></div>
+    </div>
+</div>
+
+<div class="botones-segundarios">
+    <div class="botones-secundario">
+        <div class="botom-generar">
+            <div><form action="" method="GET"><button>Continuar</button></form></div>
+        </div>
+        
+        <div class="botom-salir">
+            <div><form action="" method="GET"><button>Atras</button></form></div>
+    </div>
+</div>
+
+{% endblock %}
