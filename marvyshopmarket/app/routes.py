@@ -53,6 +53,11 @@ def ajustes_generales():
 def ajustes_cuenta():
     if request.method == 'GET':  
         return render_template('14_ajustes-cuenta.html')
+    
+@main_bp.route('/ajuste-apariencia', methods=['GET','POST'])
+def ajuste_apariencia():
+    return render_template('15_ajuste-apariencia.html')
+
 
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():

@@ -2,44 +2,52 @@
 
 {% block title %}Marvy Shopmarket | Historial de productos {% endblock %}
 
-{% block content %}
+{% block hidden %}
     <form action="/registro-producto" method="GET">
         <button>Atrás</button>
     </form>
-
-    <h1>Inventario de productos</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Identificación</th>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Imagen</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            {% for producto in productos %}
-                <tr>
-                    <td>{{ producto.prod_Id }}</td>
-                    <td>{{ producto.prod_Nombre }}</td>
-                    <td>${{ producto.prod_Precio }}</td>
-                    <td>{{ producto.prod_Cantidad }}</td>
-                    <td><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" width="20%" alt="{{ producto.prod_Nombre }}"></td>
-                    <td>${{ producto.prod_Total }}</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="5">Monto Total :</td>
-                <td>${{ suma_totales_formateada }}</td>
-            </tr>
-            <tr>
-                <td colspan="5">Total de productos en la tienda: </td>
-                <td>{{suma_productos}} productos</td>
-            </tr>
-        </tbody>
-    </table>
+{% endblock %}
+    
+{% block content %}
+    <div id="container-table-producto">
+        <div class="title"><h1>Inventario de productos</h1></div>
+        <div id="tabla-productos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Identificación</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Imagen</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for producto in productos %}
+                        <tr>
+                            <td>{{ producto.prod_Id }}</td>
+                            <td>{{ producto.prod_Nombre }}</td>
+                            <td>${{ producto.prod_Precio }}</td>
+                            <td>{{ producto.prod_Cantidad }}</td>
+                            <td><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" class="imagen" alt="{{ producto.prod_Nombre }}"></td>
+                            <td>${{ producto.prod_Total }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="5">Monto Total :</td>
+                        <td>${{ suma_totales_formateada }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">Total de productos en la tienda: </td>
+                        <td>{{suma_productos}} productos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
 {% endblock %}
 

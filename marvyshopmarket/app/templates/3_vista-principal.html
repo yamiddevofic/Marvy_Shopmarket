@@ -3,11 +3,14 @@
 {% block title %}Marvy Shopmarket | Home {% endblock %}
 
 {% block content %}
-    <div class="menu">
-        <div><button>menú</button></div>
-        <div class="menu_desplegable">
+    <div id="container-home">
+        <div class="menu">
+            <div><button id="menu-hamburguesa">menú</button></div>
+        </div>
+        <div class="menu-desplegable" id="menu-desplegable">
+            <div><button class="cerrar">X</button></div>
             <div class="imagen_perfil">
-                <div><img src="" alt="imagen perfil"></div>
+                <div><img src="" alt="imagen perfil" class="imagen"></div>
             </div>
             <div class="listado">
                 <div>
@@ -18,32 +21,29 @@
                         <li>Ajuste</li>
                     </ul>
                 </div>
+                <div class="boton-salir">
+                    <div><form action="/login" method="GET"><button>Salir De La Cuenta</button></form></div>
+                </div>
             </div>
         </div>
-        <div class="botom-salir">
-            <div><form action="/login" method="GET"><button>Salir De La Cuenta</button></form></div>
+        <div class="buscador">
+            <div><input type="search" placeholder="buscar..."></div>
         </div>
-    </div>
-    <div class="buscador">
-        <div><input type="search" placeholder="buscar..."></div>
-    </div>
-
-    <div class="content">
+    
         <div class="titulo">
             <div><h1>Página Principal</h1></div>
         </div>
         <div class="nombre-img">
-            <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" width="20%" alt="imagen tienda"></div>
+            <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="imagen tienda"></div>
             <div><h3>Marvy Shopmarket</h3></div>
         </div>
-
+    
         <div class="botom">
-            
             <div><form action="/registro-producto" method="GET"><button>Agregar Producto</button></form></div>
             <div><form action="/registro-suministro" method="GET"><button>Registrar Suministro</button></form></div>
             <div><form action="/registro-ventas" method="GET"><button>Registrar Venta</button></form></div>
         </div>
-
+    
         <div class="totales">
             <div>
                 <h4>Total De Venta:</h4>
@@ -57,9 +57,7 @@
                 <h4>Total De Neto:</h4>
                 <p>$_______</p>
             </div>
-
         </div>
-
     </div>
-{% endblock %}
 
+{% endblock %}
