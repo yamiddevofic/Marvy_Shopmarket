@@ -66,7 +66,7 @@ def redirigir_registro():
 @main_bp.route('/pagina-principal', methods=['GET','POST'])
 def pagina_principal():
     return render_template('3_vista-principal.html')
-    
+
 @main_bp.route('/registro-producto', methods=['GET','POST'])
 def registro_producto():
     if request.method == 'GET':  
