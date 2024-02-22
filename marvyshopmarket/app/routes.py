@@ -49,6 +49,11 @@ def generar_informe():
 def ajustes_generales():
     return render_template('13_ajustes-generales.html')
 
+@main_bp.route('/ajustes-cuenta', methods=['GET','POST'])
+def ajustes_cuenta():
+    if request.method == 'GET':  
+        return render_template('14_ajustes-cuenta.html')
+
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():
     if request.method == "GET":

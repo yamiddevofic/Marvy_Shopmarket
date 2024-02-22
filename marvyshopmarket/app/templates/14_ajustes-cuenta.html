@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
 {% block content %}
-<div class="logo">
-    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" width="20%" alt="icono tienda"></div>
-</div>
 <div class="registo">
     <div class="title">
-        <h1>Registro de Venta</h1>
+        <h1>Ajustes De La Cuenta</h1>
     </div>
     {%if estado == 0%}
         <p style="color: red" id="mensaje" class="mensaje">{{mensaje}}</p>
@@ -37,30 +34,30 @@
         <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
     
             <div>
-                <div><label for="prod_Nombre">Producto Vendido:</label></div>
-                <div><input type="text" name="prod_Nombre"></div>
+                <div><label for="prod_Nombre">Cambiar Nombre De Ususario</label></div>
+                <div><input type="text" name="Cambiar-Nombre"></div>
             </div>
             <div>
-                <div><label for="Precio-Producto">Precio Del Producto</label></div>
-                <div><input type="number" name="Precio-Producto"></div>
+                <div><label for="Precio-Producto">Cambiar Correo Electronico</label></div>
+                <div><input type="text" name="Cambiar-correo"></div>
             </div>
             <div>
-                <div><label for="cantidad-producto-vendido">Cantidad Del Producto Vendido</label></div>
-                <div><input type="number" name="prod_Precio" id="cantidad-producto-vendido"></div>
+                <div><label for="prod_Precio">Cambiar Contraseña</label></div>
+                <div><input type="password" name="prod_Precio"></div>
             </div>
-            <div>
-                <div><label for="metodo-pago">Metodo De Pago:</label></div>
-                <div><input type="number" name="metodo-pado"></div>
+
+            <div class="botom-elimunar-cuenta">
+                <div><form action="" method="GET"></form><button>Eliminar Cuenta</button></form></div>
             </div>
+           
             
-            <div class="boton">
+            <div class="botones-segundarios">
                 <button type="submit" class="btn-submit">Confirmar</button>
             </div>
         </form>
-        <form action="/pagina-principal" method="GET">
+        <form action="" method="GET">
             <button>Cancelar</button>
         </form>
     </div>
 </div>
-
 {% endblock %}
