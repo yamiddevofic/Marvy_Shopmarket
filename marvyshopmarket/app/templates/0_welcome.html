@@ -3,32 +3,35 @@
 {% block title %}Marvy Shopmarket | Welcome {% endblock %}
 
 {% block content %}
-    <div class="logo_loading" id="logo_loading">
-        <img src="./images/Marvy_Shopmarket.png" alt="logo Marvy Shopmarket">
-    </div>
-    <div class="text_loading" id="text_loading">
-        <h1 class="cargando" id="cargando">Cargando...</h1>
-    </div>
-    </div>
-    <script>
-    setTimeout(function() {
-        window.location.href = "/login";
-    }, 5000);
-
-    function actualizarTexto() {
-        var cargando = document.getElementById("cargando");
-        cargando.textContent = "Cargando";
+    <div id="welcome">
+        <div class="logo_loading" id="logo_loading">
+            <img src="{{url_for('static',filename='images/logo_marvy.png')}}" width="20%" alt="logo Marvy Shopmarket" class="imagen">
+        </div>
+        <div class="text_loading" id="text_loading">
+            <h1 class="cargando" id="cargando">Cargando...</h1>
+        </div>
+        </div>
+        <script>
         setTimeout(function() {
-            cargando.textContent = "Cargando.";
-        }, 1000);
-        setTimeout(function() {
-            cargando.textContent = "Cargando..";
-        }, 2000);
-        setTimeout(function() {
-            cargando.textContent = "Cargando...";
-        }, 3000);
-        }
-
-    setInterval(actualizarTexto, 1500);
-    </script>
+            window.location.href = "/login";
+        }, 5000);
+    
+        function actualizarTexto() {
+            var cargando = document.getElementById("cargando");
+            cargando.textContent = "Cargando";
+            setTimeout(function() {
+                cargando.textContent = "Cargando.";
+            }, 1000);
+            setTimeout(function() {
+                cargando.textContent = "Cargando..";
+            }, 2000);
+            setTimeout(function() {
+                cargando.textContent = "Cargando...";
+            }, 3000);
+            }
+    
+        setInterval(actualizarTexto, 1500);
+        </script>
+    </div>
+    
 {% endblock %}
