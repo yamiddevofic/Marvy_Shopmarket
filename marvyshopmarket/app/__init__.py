@@ -1,18 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from .models import db
+from flask_bcrypt import Bcrypt
 
-db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root: @localhost/msm'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:nidian56@localhost/marvy_shopmarket'
     app.config['SQLALCHEMY_BINDS'] = {
-        'image':'mysql://root:nidian56@localhost/images',
-        'producto': 'mysql://root:nidian56@localhost/marvy_shopmarket'
+        'producto': 'mysql://root:nidian56@localhost/marvy_shopmarket',
+        'suministro':'mysql://root:nidian56@localhost/marvy_shopmarket',
+        'venta':'mysql://root:nidian56@localhost/marvy_shopmarket',
+        'informe':'mysql://root:nidian56@localhost/marvy_shopmarket',
+        'tienda':'mysql://root:nidian56@localhost/marvy_shopmarket',
     }
+
     db.init_app(app)
-    
-    from.routes import main_bp
+    bcrypt.init_app(app)
+
+    from .routes import main_bp
     app.register_blueprint(main_bp)
 
     return app

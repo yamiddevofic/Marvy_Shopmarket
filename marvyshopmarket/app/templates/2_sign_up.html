@@ -7,44 +7,44 @@
     <h1>Registrarse</h1>
 </div>
     <main id="singUp" class="singUp">
-        <form id="form_singUp" method="post" action="/registro-usuario">
+        <form id="form_singUp" method="post" action="/nuevo_usuario">
             <div class="content-logo"><img class="logo" src="./images/Marvy_Shopmarket.png" alt=""></div>
             <div class="content-singUp" id="content_singUp">
                 <section id="section_usuario" class="section_usuario">
                     <div class="usuario-title" id="usuario_title"><h2>Usuario</h2></div>
                     <div class="inputs">
                         <label for="usuario_singUp">Usuario: </label>
-                        <input type="text" class="usuario_singUp" name="usuario_singUp" id="usuario_singUp" placeholder="Escribe tu nombre de usuario aquí...">
+                        <input type="text" class="usuario_singUp" name="username" id="username" placeholder="Escribe tu nombre de usuario aquí...">
                     </div>
                     <div class="inputs">
                         <label for="password_singUp">Contraseña: </label>
-                        <input type="password" class="password_singUp" name="password_singUp" id="password_singUp" placeholder="Escribe tu contraseña aquí...">
+                        <input type="password" class="password_singUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
                     </div>
                     <div class="inputs">
                         <label for="email_singUp">Correo: </label>
-                        <input type="email" class="email_singUp" name="email_singUp" id="email_singUp" placeholder="Escribe tu correo electrónico aquí...">
+                        <input type="email" class="email_singUp" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí...">
                     </div>
                 </section>
                 <section id="section_tuTienda" class="section_tuTienda">
                     <div class="tutienda-title"><h2>Tu Tienda</h2></div>
                     <div class="inputs">
                         <label for="nombre_tienda">Nombre: </label>
-                        <input type="text" class="nombre_tienda" name="nombre_tienda" id="nombre_tienda" placeholder="Escribe el nombre de tu tienda aquí...">
+                        <input type="text" class="nombre_tienda" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
                     </div>
                     <div class="inputs nit" style="margin-bottom: 4%; width: 80%; height: 100px; align-items: center; border: 1px solid grey; border-radius: 10px;">
                         <div class="label">
                             <label for="id_tienda">Id/NIT</label>
                         </div>
-                        <input type="number" class="id_tienda" name="id_tienda" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 50%;">
+                        <input type="number" class="id_tienda" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 50%;">
                         <button id="generar_nit">Generar</button>
                     </div>
                     <div class="inputs">
                         <label for="contacto_tienda">Télefono: </label>
-                        <input type="text" class="contacto_tienda" name="contacto_tienda" id="contacto_tienda" placeholder="Escribe el teléfono de tu tienda aquí..." style="text-align: left;">
+                        <input type="text" class="contacto_tienda" name="tiendatel" id="tiendatel" placeholder="Escribe el teléfono de tu tienda aquí..." style="text-align: left;">
                     </div>
                     <div class="inputs">
                         <label for="ubi_tienda">Ubicación: </label>
-                        <input type="text" class="ubi_tienda" name="ubi_tienda" id="ubi_tienda" placeholder="Escribe la ubicación de tu tienda aquí...">
+                        <input type="text" class="ubi_tienda" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
                     </div>
                 </section>
             </div>

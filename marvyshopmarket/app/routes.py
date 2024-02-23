@@ -1,9 +1,10 @@
 import re
 from flask import Blueprint, render_template, request,redirect,url_for,render_template_string
-from .models import Producto, Images
+from .models import Producto, Usuario, Tienda
 from app import db
 import base64
 import locale
+from . import bcrypt
 
 # Establece la configuración regional actual para usar el formato local
 locale.setlocale(locale.LC_ALL, '')
@@ -81,6 +82,41 @@ def historial_productos():
             producto.prod_Total = locale.format_string('%d', round(float(producto.prod_Total)), grouping=True)
        
         return render_template('11_historial_prod.html', productos=productos, suma_totales_formateada=suma_totales_formateada,suma_productos=suma_productos)
+
+@main_bp.route('/nuevo_usuario', methods=['POST'])
+def nuevo_usuario():
+    if request.method=='POST':
+        username = request.form['username']
+        useremail= request.form['useremail']
+        userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')[:12]
+        tienda_id= request.form['tiendaid']
+        tienda_nombre= request.form['tiendaname']
+        tienda_tel= request.form['tiendatel']
+        tienda_ubicacion= request.form['tiendaubicacion']
+        
+        new_shop = Tienda(
+            tienda_Id= tienda_id,
+            tienda_Nombre= tienda_nombre,
+            tienda_Tel=tienda_tel,
+            tienda_Ubicacion=tienda_ubicacion
+        )
+
+        db.session.add(new_shop)
+        db.session.commit()
+
+        new_user = Usuario(
+            user_Nombre= username,
+            user_Correo=useremail,
+            user_Password=userpassword,
+            tiendas_tienda_Id= tienda_id
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+       
+        return render_template('3_vista-principal.html')
+    return render_template('2_sign_up.html')
 
 @main_bp.route('/nuevo_producto', methods=['POST'])
 def nuevo_producto():
