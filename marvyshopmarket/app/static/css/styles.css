@@ -10,7 +10,7 @@
     --btn-oscuro-continuar: #009400 ;
     --btn-oscuro-cancelar: #A40000 ;
     --btn-claro-continuar: #24CD24 ;
-    --btn-claro-cancelar: rgb(219, 0, 0);
+    --btn-claro-cancelar: #db0000;
 }
 *{
     margin: 0;
@@ -119,6 +119,8 @@ h1{
     display: none;
     position: relative;
     height: 100%;
+    right: 0;
+    margin-left: -5%;
     flex-direction: column;
     align-items: center;
     justify-content: center;

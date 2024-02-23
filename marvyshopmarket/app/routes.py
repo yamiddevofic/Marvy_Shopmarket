@@ -100,7 +100,7 @@ def nuevo_usuario():
             tienda_Tel=tienda_tel,
             tienda_Ubicacion=tienda_ubicacion
         )
-
+        
         db.session.add(new_shop)
         db.session.commit()
 

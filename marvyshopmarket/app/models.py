@@ -30,7 +30,7 @@ class Tienda(db.Model):
     tienda_Ubicacion = db.Column(db.String(100))
     tienda_total_dia = db.Column(db.Float)
     productos = db.relationship("Producto", backref="tienda", primaryjoin="Tienda.tienda_Id == Producto.tienda_Id")
-    suministros = db.relationship("Suministro")
+    suministros = db.relationship("Suministro", backref="tienda", primaryjoin="Tienda.tienda_ Id = Suministro.tienda_Id")
     ventas = db.relationship("Venta", backref="tienda", primaryjoin="Tienda.tienda_Id == Venta.tienda_Id")
     informes = db.relationship("Informe", backref="tienda", primaryjoin="Tienda.tienda_Id == Informe.tienda_Id")
 
