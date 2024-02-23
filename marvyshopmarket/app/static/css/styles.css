@@ -21,13 +21,15 @@ body, html, .container {
     height: 100%;
     background: var(--claro-secundario-2);
 }
-
+h1{
+    font-size: 2.5rem;
+}
 .container {
     width: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr 35% 35% 1fr;
-    grid-template-rows: 1fr 80% 1fr;
+    grid-template-columns: 1fr 40% 40% 1fr;
+    grid-template-rows: 1fr 90% 1fr;
 }
 .container .content{
     grid-column: 2/4;
@@ -46,16 +48,39 @@ body, html, .container {
 .imagen{
     width: 30%;
 }
-
-table{
+#container-producto{
+    padding: 5%;
+    display: grid;
+    gap: 2%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+.producto{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background: var(--claro-principal);
+    color: white;
+    padding: 10%;
+    border-radius: 10px;
     width: 100%;
+}
+.producto-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.producto-imagen{
+    background: var(--claro-secundario-2);
+    border-radius: 50%;
     height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-table,tr, td{
-    border: 1px solid black;
-}
-#container-table-producto, #tabla-producto{
-    padding: 2%;
+.producto-imagen .imagen-producto{
+    width: 50%;
 }
 #container-home{
     grid-column: 1/-1;

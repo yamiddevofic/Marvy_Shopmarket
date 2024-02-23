@@ -1,5 +1,5 @@
 import re
-from flask import Blueprint, render_template, request,redirect,url_for
+from flask import Blueprint, render_template, request,redirect,url_for,render_template_string
 from .models import Producto, Images
 from app import db
 import base64
