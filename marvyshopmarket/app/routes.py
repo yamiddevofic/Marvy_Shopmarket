@@ -1,7 +1,7 @@
 import re
-from flask import Blueprint, render_template, request,redirect,url_for,render_template_string
+from flask import Blueprint, render_template, request,sessions, redirect,url_for,render_template_string, session
 from sqlalchemy.exc import IntegrityError
-
+ 
 # Importa los modelos necesarios desde el archivo models.py
 from .models import Productos, Tenderos, Tiendas
 
@@ -9,10 +9,10 @@ from app import db
 import base64
 import locale
 from . import bcrypt
+from .helpers import obtener_informacion_perfil
 
 # Establece la configuración regional actual para usar el formato local
 locale.setlocale(locale.LC_ALL, '')
-
 main_bp = Blueprint('main',__name__)
 
 @main_bp.route('/')
@@ -29,7 +29,9 @@ def redirigir_registro():
 
 @main_bp.route('/pagina-principal', methods=['GET','POST'])
 def pagina_principal():
-    return render_template('3_vista-principal.html')
+    # Recupera la información del perfil del usuario desde la sesión
+    tendero = obtener_informacion_perfil(session.get('userid'))
+    return render_template('3_vista-principal.html', tendero=tendero)
     
 @main_bp.route('/registro-producto', methods=['GET','POST'])
 def registro_producto():
@@ -175,7 +177,10 @@ def verificar_usuario():
             if bcrypt.check_password_hash(tendero.tendero_Password, password):
                 # Autenticación exitosa
                 estado=1
+                # Si el tendero existe y la contraseña coincide, iniciar sesión
+                session['userid'] = tendero.tendero_ID
                 mensaje = "Autenticación exitosa"
+                return redirect(url_for('main.pagina_principal'))
             else:
                 estado=0
                 mensaje = "Autenticación incorrecta"
