@@ -95,8 +95,8 @@ def nuevo_usuario():
         userphone= request.form['userphone']
         useremail= request.form['useremail']
         try:
-            userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')[:12]
-            tiendapassword= bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')[:12]
+            userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')
+            tiendapassword= bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')
         except:
             estado=0
             mensaje="Por favor complete todos los campos"
@@ -159,7 +159,32 @@ def nuevo_usuario():
                     estado=1
                     mensaje="Registro éxitoso"
                     return render_template('2_sign_up.html', estado=estado,mensaje=mensaje)
+                
+@main_bp.route('/verificar-usuario', methods=['GET', 'POST'])
+def verificar_usuario():
+    mensaje = None
+    if request.method == 'POST':
+        userid = request.form['userid']
+        password = request.form['password']  # Obtener la contraseña ingresada por el usuario
 
+        # Obtener el tendero de la base de datos
+        tendero = Tenderos.query.filter_by(tendero_ID=userid).first()
+
+        if tendero:
+            # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
+            if bcrypt.check_password_hash(tendero.tendero_Password, password):
+                # Autenticación exitosa
+                estado=1
+                mensaje = "Autenticación exitosa"
+            else:
+                estado=0
+                mensaje = "Autenticación incorrecta"
+        else:
+            estado=0
+            mensaje = "Usuario no encontrado"
+    
+    return render_template('1_login.html',estado=estado, mensaje=mensaje)
+           
 @main_bp.route('/nuevo_producto', methods=['POST'])
 def nuevo_producto():
     if request.method == 'POST':
