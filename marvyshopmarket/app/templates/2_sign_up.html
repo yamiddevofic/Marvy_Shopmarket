@@ -3,34 +3,64 @@
 {% block title %}Marvy Shopmarket | Registrarse {% endblock %}
 
 {% block content %}
-<div id="header_singUp" class="header_singUp">
-    <h1>Registrarse</h1>
-</div>
+    <div id="header_singUp" class="header_singUp">
+        <h1>Registrarse</h1>
+    </div>
+    {% if estado==1 %}
+        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+                
+        <script>
+            
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.pagina_principal') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {% elif estado==0 %}
+        <p style="color: rgb(255, 0, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+                    
+        <script>
+            
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.redirigir_registro') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {% else %}
+        <div class="mensaje">
+            <p>{{mensaje}}</p>
+        </div>
+    {% endif %}
     <main id="singUp" class="singUp">
         <form id="form_singUp" method="post" action="/nuevo_usuario">
             <div class="content-logo"><img class="logo" src="./images/Marvy_Shopmarket.png" alt=""></div>
             <div class="content-singUp" id="content_singUp">
                 <section id="section_usuario" class="section_usuario">
-                    <div class="usuario-title" id="usuario_title"><h2>Usuario</h2></div>
+                    <div class="usuario-title" id="usuario_title"><h2>Tendero</h2></div>
                     <div class="inputs">
-                        <label for="usuario_singUp">Usuario: </label>
-                        <input type="text" class="usuario_singUp" name="username" id="username" placeholder="Escribe tu nombre de usuario aquí...">
+                        <label for="userid">Identificación: </label>
+                        <input type="text" class="usuario_singUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
                     </div>
                     <div class="inputs">
-                        <label for="password_singUp">Contraseña: </label>
+                        <label id="username">Nombre completo:</label>
+                        <input type="text" class="usuario_singUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
+                    </div>
+                    <div class="inputs">
+                        <label for="userpassword">Contraseña: </label>
                         <input type="password" class="password_singUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
                     </div>
                     <div class="inputs">
-                        <label for="email_singUp">Correo: </label>
-                        <input type="email" class="email_singUp" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí...">
+                        <label>Contacto: </label>
+                        <input type="email" class="contact" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí...">
+                        <input type="text" class="contact" name="userphone" id="userphone" placeholder="Escribe tu número de teléfono...">
                     </div>
                 </section>
                 <section id="section_tuTienda" class="section_tuTienda">
                     <div class="tutienda-title"><h2>Tu Tienda</h2></div>
-                    <div class="inputs">
-                        <label for="nombre_tienda">Nombre: </label>
-                        <input type="text" class="nombre_tienda" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
-                    </div>
                     <div class="inputs nit" style="margin-bottom: 4%; width: 80%; height: 100px; align-items: center; border: 1px solid grey; border-radius: 10px;">
                         <div class="label">
                             <label for="id_tienda">Id/NIT</label>
@@ -39,8 +69,17 @@
                         <button id="generar_nit">Generar</button>
                     </div>
                     <div class="inputs">
-                        <label for="contacto_tienda">Télefono: </label>
-                        <input type="text" class="contacto_tienda" name="tiendatel" id="tiendatel" placeholder="Escribe el teléfono de tu tienda aquí..." style="text-align: left;">
+                        <label for="tiendaname">Nombre de la tienda: </label>
+                        <input type="text" class="tiendaname" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
+                    </div>
+                    <div class="inputs">
+                        <label for="tiendapassword">Contraseña: </label>
+                        <input type="password" class="password_singUp" name="tiendapassword" id="tiendapassword" placeholder="Escribe la contraseña de tu tienda...">
+                    </div>
+                    <div class="inputs">
+                        <label>Contacto: </label>
+                        <input type="text" class="contact" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;">
+                        <input type="text" class="contact" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
                     </div>
                     <div class="inputs">
                         <label for="ubi_tienda">Ubicación: </label>

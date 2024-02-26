@@ -1,6 +1,10 @@
 import re
 from flask import Blueprint, render_template, request,redirect,url_for,render_template_string
-from .models import Producto, Usuario, Tienda
+from sqlalchemy.exc import IntegrityError
+
+# Importa los modelos necesarios desde el archivo models.py
+from .models import Productos, Tenderos, Tiendas
+
 from app import db
 import base64
 import locale
@@ -68,7 +72,7 @@ def ajustes_perfil():
 def historial_productos():
     if request.method == "GET":
        
-        productos = Producto.query.all()
+        productos = Productos.query.all()
        
         suma_totales=sum(producto.prod_Total for producto in productos)
         # Formatea la suma total con separadores de miles
@@ -86,37 +90,75 @@ def historial_productos():
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method=='POST':
+        userid= request.form['userid']
         username = request.form['username']
+        userphone= request.form['userphone']
         useremail= request.form['useremail']
-        userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')[:12]
+        try:
+            userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')[:12]
+            tiendapassword= bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')[:12]
+        except:
+            estado=0
+            mensaje="Por favor complete todos los campos"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+        
         tienda_id= request.form['tiendaid']
         tienda_nombre= request.form['tiendaname']
-        tienda_tel= request.form['tiendatel']
+        tienda_tel= request.form['tiendaphone']
+        tienda_email= request.form['tiendaemail']
         tienda_ubicacion= request.form['tiendaubicacion']
-        
-        new_shop = Tienda(
-            tienda_Id= tienda_id,
-            tienda_Nombre= tienda_nombre,
-            tienda_Tel=tienda_tel,
-            tienda_Ubicacion=tienda_ubicacion
-        )
+        if not userid or not username or not useremail or not userpassword or not userphone or not tienda_id or not tienda_nombre or not tiendapassword or not tienda_tel or not tienda_email or not tienda_ubicacion:
+            estado=0
+            mensaje="Por favor complete todos los campos"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+        else:
+            # Verificar si la tienda ya existe en la base de datos
+            existing_shop = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
+            existing_user = Tenderos.query.filter_by(tendero_ID=userid).first()
+            if existing_user:
+                    mensaje=f"Error, ya existe un usuario con la identificación {userid}" 
+                    estado=0; 
+                    return render_template('2_sign_up.html',estado=estado,mensaje=mensaje)
+            else:
+                if existing_shop:
+                    new_user= Tenderos(
+                            tendero_ID= userid,
+                            tendero_Nombre= username,
+                            tendero_Correo= useremail,
+                            tendero_Celular= userphone,
+                            tendero_Password= userpassword,
+                            tienda_Id= tienda_id
+                    )
+                    estado=1
+                    mensaje=f"Has sido agregado a la base de datos de la tienda {tienda_nombre} con éxito"
+                    db.session.add(new_user)
+                    db.session.commit()
+                    return render_template('2_sign_up.html', estado=estado,mensaje=mensaje)
+                else:
+                    new_shop= Tiendas(
+                        tienda_Id= tienda_id,
+                        tienda_Nombre= tienda_nombre,
+                        tienda_Password= tiendapassword,
+                        tienda_Correo= tienda_email,
+                        tienda_Celular= tienda_tel,
+                        tienda_Ubicacion= tienda_ubicacion
+                    )
+                    db.session.add(new_shop)
+                    db.session.commit()
 
-        db.session.add(new_shop)
-        db.session.commit()
-
-        new_user = Usuario(
-            user_Nombre= username,
-            user_Correo=useremail,
-            user_Password=userpassword,
-            tiendas_tienda_Id= tienda_id
-        )
-
-        db.session.add(new_user)
-        db.session.commit()
-
-       
-        return render_template('3_vista-principal.html')
-    return render_template('2_sign_up.html')
+                    new_user= Tenderos(
+                        tendero_ID= userid,
+                        tendero_Nombre= username,
+                        tendero_Correo= useremail,
+                        tendero_Celular= userphone,
+                        tendero_Password= userpassword,
+                        tienda_Id= tienda_id
+                    )
+                    db.session.add(new_user)
+                    db.session.commit()
+                    estado=1
+                    mensaje="Registro éxitoso"
+                    return render_template('2_sign_up.html', estado=estado,mensaje=mensaje)
 
 @main_bp.route('/nuevo_producto', methods=['POST'])
 def nuevo_producto():
@@ -132,9 +174,9 @@ def nuevo_producto():
         # Valida los datos antes de insertarlos en la base de datos
 
         nombre_min = nombre.lower()
-        id_exist = Producto.query.filter_by(prod_Id=id).first()
+        id_exist = Productos.query.filter_by(prod_Id=id).first()
 
-        nombre_exist = Producto.query.filter(db.func.lower(Producto.prod_Nombre) == nombre_min).first()
+        nombre_exist = Productos.query.filter(db.func.lower(Productos.prod_Nombre) == nombre_min).first()
         if not id or not nombre or not precio or not cantidad or not imagen:
             mensaje="Complete todos los datos"
             estado = 0
@@ -147,7 +189,7 @@ def nuevo_producto():
         else:
             mensaje="Registro de producto éxitoso"
             estado=1
-            new_product = Producto(
+            new_product = Productos(
                 prod_Id=int(id),
                 prod_Nombre=nombre,
                 prod_Precio=precio,
