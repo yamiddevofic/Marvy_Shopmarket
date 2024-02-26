@@ -41,25 +41,11 @@ class Productos(db.Model):
     prod_Total = db.Column(db.Float, db.Computed('(prod_Precio * prod_Cantidad)'))
     prod_Img = db.Column(db.LargeBinary)
 
-<<<<<<< HEAD
-class Tienda(db.Model):
-    __tablename__ = 'tiendas'
-    tienda_Id = db.Column(db.Integer, primary_key=True)
-    tienda_Nombre = db.Column(db.String(45))
-    tienda_Tel = db.Column(db.String(20))
-    tienda_Ubicacion = db.Column(db.String(100))
-    tienda_total_dia = db.Column(db.Float)
-    productos = db.relationship("Producto", backref="tienda", primaryjoin="Tienda.tienda_Id == Producto.tienda_Id")
-    suministros = db.relationship("Suministro", backref="tienda", primaryjoin="Tienda.tienda_ Id = Suministro.tienda_Id")
-    ventas = db.relationship("Venta", backref="tienda", primaryjoin="Tienda.tienda_Id == Venta.tienda_Id")
-    informes = db.relationship("Informe", backref="tienda", primaryjoin="Tienda.tienda_Id == Informe.tienda_Id")
-=======
 class Proveedores(db.Model):
     prov_Id = db.Column(db.Integer, primary_key=True)
     prov_Nombre = db.Column(db.String(70))
     prov_Ubicacion = db.Column(db.String(100))
     prov_Contacto = db.Column(db.String(50))
->>>>>>> ad5bdaf3950453d5b3ca5ae409a364b8a5bdca00
 
 class SuministroProveedor(db.Model):
     sum_ID = db.Column(db.Integer, db.ForeignKey('suministros.sum_ID'), primary_key=True)
@@ -76,7 +62,7 @@ class Suministros(db.Model):
 
 class Tenderos(db.Model):
     tendero_ID = db.Column(db.Integer, primary_key=True)
-    tendero_Password = db.Column(db.String(12))
+    tendero_Password = db.Column(db.String(255))
     tendero_Nombre = db.Column(db.String(70))
     tendero_Correo= db.Column(db.String(50))
     tendero_Celular= db.Column(db.String(12))
@@ -84,7 +70,7 @@ class Tenderos(db.Model):
 
 class Tiendas(db.Model):
     tienda_Id = db.Column(db.Integer, primary_key=True)
-    tienda_Password = db.Column(db.String(12))
+    tienda_Password = db.Column(db.String(255))
     tienda_Nombre = db.Column(db.String(70))
     tienda_Correo = db.Column(db.String(50))
     tienda_Celular = db.Column(db.String(12))

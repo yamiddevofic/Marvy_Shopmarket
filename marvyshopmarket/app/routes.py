@@ -109,18 +109,6 @@ def nuevo_usuario():
         tienda_tel= request.form['tiendaphone']
         tienda_email= request.form['tiendaemail']
         tienda_ubicacion= request.form['tiendaubicacion']
-<<<<<<< HEAD
-        
-        new_shop = Tienda(
-            tienda_Id= tienda_id,
-            tienda_Nombre= tienda_nombre,
-            tienda_Tel=tienda_tel,
-            tienda_Ubicacion=tienda_ubicacion
-        )
-        
-        db.session.add(new_shop)
-        db.session.commit()
-=======
         if not userid or not username or not useremail or not userpassword or not userphone or not tienda_id or not tienda_nombre or not tiendapassword or not tienda_tel or not tienda_email or not tienda_ubicacion:
             estado=0
             mensaje="Por favor complete todos los campos"
@@ -180,7 +168,6 @@ def verificar_usuario():
     if request.method == 'POST':
         userid = request.form['userid']
         password = request.form['password']  # Obtener la contraseña ingresada por el usuario
->>>>>>> ad5bdaf3950453d5b3ca5ae409a364b8a5bdca00
 
         # Obtener el tendero de la base de datos
         tendero = Tenderos.query.filter_by(tendero_ID=userid).first()
