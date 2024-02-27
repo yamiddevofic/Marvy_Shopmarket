@@ -1,6 +1,7 @@
 import random
 import string
 from .models import Productos, Tiendas, Tenderos
+import base64
 
 def generar_codigo():
     """Genera una contraseña aleatoria de la longitud especificada."""
@@ -21,13 +22,15 @@ def obtener_informacion_perfil(tendero_id):
         }
     else:
         return None
+    
 def obtener_informacion_tienda(tienda_id):
-    tienda= Tiendas.query.filter_by(tienda_Id=tienda_id).first()
+    tienda = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
 
     if tienda:
+        imagen_codificada = base64.b64encode(tienda.tienda_IMG).decode('utf-8')
         return {
             'id': tienda.tienda_Id,
             'nombre': tienda.tienda_Nombre,
-            'ubicacion':tienda.tienda_Ubicacion,
-            'image': tienda.tienda_IMG
+            'ubicacion': tienda.tienda_Ubicacion,
+            'imagen': imagen_codificada  # Asegúrate de devolver la imagen codificada
         }

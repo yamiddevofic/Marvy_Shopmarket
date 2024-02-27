@@ -227,6 +227,9 @@ img{
     .container .content{
         grid-template-columns: 1fr;
         grid-row: 1fr;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     #container_login{
         grid-column: 1;

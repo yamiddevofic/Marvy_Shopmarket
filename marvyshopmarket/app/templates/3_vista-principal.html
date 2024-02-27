@@ -35,7 +35,9 @@
         </div>
         <div><p>{{tendero['nombre']}}</p></div>
         <div class="nombre-img">
-            <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="imagen tienda"></div>
+            <div class="imagen-perfil">
+                <img src="data:image/png;base64,{{ imagen }}" alt="Imagen de perfil">
+            </div>            
             <div><h3>Marvy Shopmarket</h3></div>
         </div>
     

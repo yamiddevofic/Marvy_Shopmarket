@@ -31,9 +31,9 @@ def redirigir_registro():
 def pagina_principal():
     # Recupera la información del perfil del usuario desde la sesión
     tendero = obtener_informacion_perfil(session.get('userid'))
-    imagen = obtener_informacion_tienda(session.get('userid'))
-    return render_template('3_vista-principal.html', tendero=tendero)
-    
+    imagen = obtener_informacion_tienda(session.get('imagen_Tienda'))
+    return render_template('3_vista-principal.html', tendero=tendero, imagen=imagen)
+  
 @main_bp.route('/registro-producto', methods=['GET','POST'])
 def registro_producto():
     if request.method == 'GET':  
@@ -105,77 +105,92 @@ def historial_productos():
 
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
-    if request.method=='POST':
-        userid= request.form['userid']
+    if request.method == 'POST':
+        userid = request.form['userid']
         username = request.form['username']
-        userphone= request.form['userphone']
-        useremail= request.form['useremail']
+        userphone = request.form['userphone']
+        useremail = request.form['useremail']
         try:
-            userpassword= bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')
-            tiendapassword= bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')
+            userpassword = bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')
+            tiendapassword = bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')
         except:
-            estado=0
-            mensaje="Por favor complete todos los campos"
+            estado = 0
+            mensaje = "Por favor complete todos los campos"
             return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
-        
-        tienda_id= request.form['tiendaid']
-        tienda_nombre= request.form['tiendaname']
-        tienda_tel= request.form['tiendaphone']
-        tienda_email= request.form['tiendaemail']
-        tienda_ubicacion= request.form['tiendaubicacion']
+
+        tienda_id = request.form['tiendaid']
+        tienda_nombre = request.form['tiendaname']
+        tienda_tel = request.form['tiendaphone']
+        tienda_email = request.form['tiendaemail']
+        tienda_ubicacion = request.form['tiendaubicacion']
+
+        # Verificar si todos los campos obligatorios están presentes
         if not userid or not username or not useremail or not userpassword or not userphone or not tienda_id or not tienda_nombre or not tiendapassword or not tienda_tel or not tienda_email or not tienda_ubicacion:
-            estado=0
-            mensaje="Por favor complete todos los campos"
+            estado = 0
+            mensaje = "Por favor complete todos los campos"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+
+        # Verificar si se ha proporcionado una imagen
+        if 'tienda_img' not in request.files:
+            estado = 0
+            mensaje = f"No se ha proporcionado ninguna imagen"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+
+        tienda_img = request.files['tienda_img']
+
+        # Verificar si el nombre de archivo es válido
+        if tienda_img.filename == '':
+            estado = 0
+            mensaje = "No se ha seleccionado ningún archivo"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+
+        # Leer el contenido del archivo de imagen
+        tienda_data = tienda_img.read()
+
+        # Agregar el nuevo usuario y tienda a la base de datos
+        existing_user = Tenderos.query.filter_by(tendero_ID=userid).first()
+        existing_shop = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
+        if existing_user:
+            mensaje = f"Error, ya existe un usuario con la identificación {userid}"
+            estado = 0
             return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
         else:
-            # Verificar si la tienda ya existe en la base de datos
-            existing_shop = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
-            existing_user = Tenderos.query.filter_by(tendero_ID=userid).first()
-            if existing_user:
-                    mensaje=f"Error, ya existe un usuario con la identificación {userid}" 
-                    estado=0; 
-                    return render_template('2_sign_up.html',estado=estado,mensaje=mensaje)
+            if not existing_shop:
+                new_shop = Tiendas(
+                    tienda_Id=tienda_id,
+                    tienda_Nombre=tienda_nombre,
+                    tienda_Password=tiendapassword,
+                    tienda_Correo=tienda_email,
+                    tienda_Celular=tienda_tel,
+                    tienda_Ubicacion=tienda_ubicacion,
+                    tienda_IMG=tienda_data
+                )
+                db.session.add(new_shop)
+                db.session.commit()
+                new_user = Tenderos(
+                    tendero_ID=userid,
+                    tendero_Nombre=username,
+                    tendero_Correo=useremail,
+                    tendero_Celular=userphone,
+                    tendero_Password=userpassword,
+                    tienda_Id=tienda_id
+                )
             else:
-                if existing_shop:
-                    new_user= Tenderos(
-                            tendero_ID= userid,
-                            tendero_Nombre= username,
-                            tendero_Correo= useremail,
-                            tendero_Celular= userphone,
-                            tendero_Password= userpassword,
-                            tienda_Id= tienda_id
-                    )
-                    estado=1
-                    mensaje=f"Has sido agregado a la base de datos de la tienda {tienda_nombre} con éxito"
-                    db.session.add(new_user)
-                    db.session.commit()
-                    return render_template('2_sign_up.html', estado=estado,mensaje=mensaje)
-                else:
-                    new_shop= Tiendas(
-                        tienda_Id= tienda_id,
-                        tienda_Nombre= tienda_nombre,
-                        tienda_Password= tiendapassword,
-                        tienda_Correo= tienda_email,
-                        tienda_Celular= tienda_tel,
-                        tienda_Ubicacion= tienda_ubicacion
-                    )
-                    db.session.add(new_shop)
-                    db.session.commit()
+                new_user = Tenderos(
+                    tendero_ID=userid,
+                    tendero_Nombre=username,
+                    tendero_Correo=useremail,
+                    tendero_Celular=userphone,
+                    tendero_Password=userpassword,
+                    tienda_Id=tienda_id
+                )
+            db.session.add(new_user)
+            db.session.commit()
+            
+            estado = 1
+            mensaje = "Registro exitoso"
+            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
 
-                    new_user= Tenderos(
-                        tendero_ID= userid,
-                        tendero_Nombre= username,
-                        tendero_Correo= useremail,
-                        tendero_Celular= userphone,
-                        tendero_Password= userpassword,
-                        tienda_Id= tienda_id
-                    )
-                    db.session.add(new_user)
-                    db.session.commit()
-                    estado=1
-                    mensaje="Registro éxitoso"
-                    return render_template('2_sign_up.html', estado=estado,mensaje=mensaje)
-                
 @main_bp.route('/verificar-usuario', methods=['GET', 'POST'])
 def verificar_usuario():
     mensaje = None
@@ -193,10 +208,10 @@ def verificar_usuario():
                 estado=1
                 # Si el tendero existe y la contraseña coincide, iniciar sesión
                 imagen_tienda = db.session.query(Tiendas.tienda_IMG).join(Tenderos).filter(Tenderos.tendero_ID == userid).first()
-                for image in imagen_tienda:
-                    image.tienda_IMG = base64.b64encode(image.prod_Img).decode('utf-8')
+                imagen_codificada = base64.b64encode(imagen_tienda.tienda_IMG).decode('utf-8')
+                
                 session['userid'] = tendero.tendero_ID
-                session['imagen_Tienda']= imagen_tienda.tienda_IMG
+                session['imagen_Tienda']= imagen_codificada
                 mensaje = "Autenticación exitosa"
                 return redirect(url_for('main.pagina_principal'))
             else:

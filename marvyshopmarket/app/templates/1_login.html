@@ -3,7 +3,6 @@
 {% block title %}Marvy Shopmarket | Login {% endblock %}
 
 {% block content %}
-    <div class="mensajeDiv" style=" text-align: center; position: absolute; "></div>
         {% if estado==1 %}
             <div class="mensaje" style="display: flex;">
                 <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
