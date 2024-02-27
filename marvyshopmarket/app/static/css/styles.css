@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
     --claro-principal: #00BF66 ;
     --oscuro-principal: #007A41 ;
@@ -17,6 +19,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins',Arial, Helvetica, sans-serif;
 }
 body, html, .container {
     height: 100%;
@@ -45,6 +48,8 @@ h1{
     align-items: center;
     text-align: center;
     overflow: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
 }
 .imagen{
     width: 30%;
@@ -149,15 +154,15 @@ h1{
 }
 
 .mensaje{
-    grid-row: 3;
+    grid-column: 1/-1;
+    grid-row: 1/-1;
     position: absolute;
     width: 80%;
     height: 80%;
-    display: flex;
+    display: none;
     flex-direction: column ;
     justify-content: center;
     align-items: center;
-    background: var(--opacidad)
 }
 
 #content_signUp{
@@ -165,13 +170,66 @@ h1{
     grid-row: 2;
     grid-template-columns: 1fr 1fr;
 }
-
-
-@media(width < 850px){
+#container_login{
+    grid-column: 2;
+    grid-row: 1/-1;
+    border: 1px solid var(--negro);
+    padding: 2%;
+    background: var(--blanco);
+    height: 80%;
+    display: grid;
+    grid-template-rows: 20% 1fr;
+    grid-template-rows: auto;
+}
+.mensaje-content{
+    background-color: var(--blanco);
+    color:var(--negro);
+    width: 50%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+}
+.header_signUp{
+    grid-column: 2;
+    grid-row: 1;
+}
+#signUp{
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+#welcome{
+    grid-column: 2;
+    grid-row: 2;
+}
+#title_login{
+    margin-bottom: 4%;
+}
+label{
+    margin-top: 2%;
+}
+input{
+    margin-bottom: 2%;
+}
+img{
+    margin: 2%;
+}
+@media(width < 990px){
     .container{
         grid-template-columns: 1fr 45% 45% 1fr;
     }
     .container .content{
-        grid-column: 2/4;
+        grid-template-columns: 1fr;
+        grid-row: 1fr;
+    }
+    #container_login{
+        grid-column: 1;
+        grid-row: 1 ;
+        border: none;
     }
 }
