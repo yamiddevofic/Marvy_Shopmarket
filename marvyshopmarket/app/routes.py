@@ -37,7 +37,7 @@ def pagina_principal():
 @main_bp.route('/registro-producto', methods=['GET','POST'])
 def registro_producto():
     if request.method == 'GET':  
-        return render_template('4_registro_prod.html')
+        return render_template('4_registro_producto.html')
     
 @main_bp.route('/registro-suministro', methods=['GET','POST'])
 def registro_suministro():
