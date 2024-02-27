@@ -70,6 +70,10 @@ def ajuste_apariencia():
 def ajustes_perfil():
     return render_template('16_ajustes-perfil.html')
 
+@main_bp.route('/cerrar-sesion', methods=['GET','POST'])
+def cerrar_sesion():
+    return render_template('17_cerrar-sesion.html')
+
 
 @main_bp.route('/registro-tendero', methods=['GET','POST'])
 def registro_tendero():
