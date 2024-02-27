@@ -1,42 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}Marvy Shopmarket | Ajustes perfil {% endblock %}
 {% block content %}
-
-<div class="title"><h1>Registro Tendero</h1></div>
-
+<div class="logo">
+    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
+</div>
 <div class="registro">
-    <div>
-        <div><label for="nom-tendero">Nombre Tendero:</label></div>
-        <div><input type="text" name="nom-tendero"></div>
-    </div>
-    <div>
-        <div><label for="correo">Coreo:</label></div>
-        <div><input type="email" name="correo"></div>
-    </div>
-    <div>
-        <div><label for="contraseña">Contraseña:</label></div>
-        <div><input type="number" name="contraseña"></div>
-    </div>
-    <div>
-        <div><label for="confi-contraseña">Confirmar Contraseña:</label></div>
-        <div><input type="number" name="confi-contraseña"></div>
-    </div>
-    <div>
-        <div><label for="num-tienda">Numero De Tienda Nit:</label></div>
-        <div><input type="number" name="num-tienda"></div>
-    </div>
+    <div class="title"><h1>Registro Tendero</h1></div>
+    <div class="formulario">
+        <form method="post" action="" enctype="">
+            <div>
+                <div><label for="nom-tendero">Nombre Tendero:</label></div>
+                <div><input type="text" name="nom-tendero"></div>
+            </div>
+            <div>
+                <div><label for="correo">Correo:</label></div>
+                <div><input type="email" name="correo"></div>
+            </div>
+            <div>
+                <div><label for="contraseña">Contraseña:</label></div>
+                <div><input type="number" name="contraseña"></div>
+            </div>
+            <div>
+                <div><label for="confi-contraseña">Confirmar Contraseña:</label></div>
+                <div><input type="number" name="confi-contraseña"></div>
+            </div>
+            <div>
+                <div><label for="num-tienda">Numero De Tienda Nit:</label></div>
+                <div><input type="number" name="num-tienda"></div>
+            </div>
 
+            <div class="boton-confitmar">
+                <button type="submit" class="btn-submit">Confirmar</button>
+            </div>
+        </form>
+        <form action="/pagina-principal" method="GET">
+            <button>Cancelar</button>
+        </form> 
+    </div>
 </div>
-<div class="botones-secundario">
-    <div class="botom-generar">
-        <div><form action="" method="GET"><button>Continuar</button></form></div>
-    </div>
-    
-    <div class="botom-salir">
-        <div><form action="" method="GET"><button>Atras</button></form></div>
-</div>
-
-
-
-
 {% endblock %}
