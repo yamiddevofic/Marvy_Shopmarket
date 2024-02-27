@@ -75,6 +75,15 @@ def cerrar_sesion():
     return render_template('17_cerrar-sesion.html')
 
 
+@main_bp.route('/registro-tendero', methods=['GET','POST'])
+def registro_tendero():
+    return render_template('18_registro-tendero.html')
+
+
+
+
+
+
 @main_bp.route('/historial-productos', methods=['GET','POST'])
 def historial_productos():
     if request.method == "GET":
