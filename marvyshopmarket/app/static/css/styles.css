@@ -158,11 +158,12 @@ h1{
     grid-row: 1/-1;
     position: absolute;
     width: 80%;
-    height: 80%;
+    height: 90%;
     display: none;
     flex-direction: column ;
     justify-content: center;
     align-items: center;
+    background: var(--opacidad);
 }
 
 #content_signUp{
@@ -231,5 +232,8 @@ img{
         grid-column: 1;
         grid-row: 1 ;
         border: none;
+    }
+    .mensaje{
+        width: 90%;
     }
 }
