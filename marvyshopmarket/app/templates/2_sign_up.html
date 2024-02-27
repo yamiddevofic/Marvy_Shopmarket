@@ -3,55 +3,55 @@
 {% block title %}Marvy Shopmarket | Registrarse {% endblock %}
 
 {% block content %}
-    <div id="header_singUp" class="header_singUp">
+    <div id="header_signUp" class="header_signUp">
         <h1>Registrarse</h1>
     </div>
-    {% if estado==1 %}
-        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-                
-        <script>
-            
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.login') }}";
-            }, 2000);   
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {% elif estado==0 %}
-        <p style="color: rgb(255, 0, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+    <main id="signUp" class="signUp">
+        {% if estado==1 %}
+            <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
                     
-        <script>
-            
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.redirigir_registro') }}";
-            }, 2000);   
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {% else %}
-        <div class="mensaje">
-            <p>{{mensaje}}</p>
-        </div>
-    {% endif %}
-    <main id="singUp" class="singUp">
-        <form id="form_singUp" method="post" action="/nuevo_usuario">
+            <script>
+                
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.login') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
+        {% elif estado==0 %}
+            <p style="color: rgb(255, 0, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+                        
+            <script>
+                
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.redirigir_registro') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
+        {% else %}
+            <div class="mensaje">
+                <p>Hola{{mensaje}}</p>
+            </div>
+        {% endif %}
+        <form id="form_signUp" method="post" action="/nuevo_usuario">
             <div class="content-logo"><img class="logo" src="./images/Marvy_Shopmarket.png" alt=""></div>
-            <div class="content-singUp" id="content_singUp">
+            <div class="content-signUp" id="content_signUp">
                 <section id="section_usuario" class="section_usuario">
-                    <div class="usuario-title" id="usuario_title"><h2>Tendero</h2></div>
+                    <div class="usuario-title" id="usuario_title"><h2>Administrador</h2></div>
                     <div class="inputs">
                         <label for="userid">Identificación: </label>
-                        <input type="text" class="usuario_singUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
+                        <input type="text" class="usuario_signUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
                     </div>
                     <div class="inputs">
                         <label id="username">Nombre completo:</label>
-                        <input type="text" class="usuario_singUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
+                        <input type="text" class="usuario_signUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
                     </div>
                     <div class="inputs">
                         <label for="userpassword">Contraseña: </label>
-                        <input type="password" class="password_singUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
+                        <input type="password" class="password_signUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
                     </div>
                     <div class="inputs">
                         <label>Contacto: </label>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="inputs">
                         <label for="tiendapassword">Contraseña: </label>
-                        <input type="password" class="password_singUp" name="tiendapassword" id="tiendapassword" placeholder="Escribe la contraseña de tu tienda...">
+                        <input type="password" class="password_signUp" name="tiendapassword" id="tiendapassword" placeholder="Escribe la contraseña de tu tienda...">
                     </div>
                     <div class="inputs">
                         <label>Contacto: </label>
@@ -87,8 +87,8 @@
                     </div>
                 </section>
             </div>
-            <div class="btn-submit" id="btnSubmit_singUp_content">
-                <button type="submit" class="btnSubmit_singUp" name="btnSubmit_singUp" id="btnSubmit_singUp">Registrarse</button>
+            <div class="btn-submit" id="btnSubmit_signUp_content">
+                <button type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="btnSubmit_signUp">Registrarse</button>
             </div>
         </form>
         <form action="/login" method="get">

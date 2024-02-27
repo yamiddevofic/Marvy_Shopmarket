@@ -21,4 +21,13 @@ def obtener_informacion_perfil(tendero_id):
         }
     else:
         return None
+def obtener_informacion_tienda(tienda_id):
+    tienda= Tiendas.query.filter_by(tienda_Id=tienda_id).first()
 
+    if tienda:
+        return {
+            'id': tienda.tienda_Id,
+            'nombre': tienda.tienda_Nombre,
+            'ubicacion':tienda.tienda_Ubicacion,
+            'image': tienda.tienda_IMG
+        }

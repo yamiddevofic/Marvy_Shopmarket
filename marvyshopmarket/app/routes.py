@@ -1,5 +1,5 @@
 import re
-from flask import Blueprint, render_template, request,sessions, redirect,url_for,render_template_string, session
+from flask import Blueprint, render_template, request, redirect,url_for,render_template_string, session
 from sqlalchemy.exc import IntegrityError
  
 # Importa los modelos necesarios desde el archivo models.py
@@ -9,7 +9,7 @@ from app import db
 import base64
 import locale
 from . import bcrypt
-from .helpers import obtener_informacion_perfil
+from .helpers import obtener_informacion_perfil, obtener_informacion_tienda
 
 # Establece la configuración regional actual para usar el formato local
 locale.setlocale(locale.LC_ALL, '')
@@ -31,6 +31,7 @@ def redirigir_registro():
 def pagina_principal():
     # Recupera la información del perfil del usuario desde la sesión
     tendero = obtener_informacion_perfil(session.get('userid'))
+    imagen = obtener_informacion_tienda(session.get('userid'))
     return render_template('3_vista-principal.html', tendero=tendero)
     
 @main_bp.route('/registro-producto', methods=['GET','POST'])
@@ -171,14 +172,18 @@ def verificar_usuario():
 
         # Obtener el tendero de la base de datos
         tendero = Tenderos.query.filter_by(tendero_ID=userid).first()
-
+        
         if tendero:
             # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
             if bcrypt.check_password_hash(tendero.tendero_Password, password):
                 # Autenticación exitosa
                 estado=1
                 # Si el tendero existe y la contraseña coincide, iniciar sesión
+                imagen_tienda = db.session.query(Tiendas.tienda_IMG).join(Tenderos).filter(Tenderos.tendero_ID == userid).first()
+                for image in imagen_tienda:
+                    image.tienda_IMG = base64.b64encode(image.prod_Img).decode('utf-8')
                 session['userid'] = tendero.tendero_ID
+                session['imagen_Tienda']= imagen_tienda.tienda_IMG
                 mensaje = "Autenticación exitosa"
                 return redirect(url_for('main.pagina_principal'))
             else:
