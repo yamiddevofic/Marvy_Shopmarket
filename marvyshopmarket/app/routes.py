@@ -66,17 +66,17 @@ def pagina_principal():
         # Si el tendero no está autenticado, redirigirlo a la página de inicio de sesión
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
   
-@main_bp.route('/registro-producto', methods=['GET','POST'])
-@login_required
-def registro_producto():
-    if request.method == 'GET':  
-        return render_template('4_registro_producto.html')
-    
+   
 @main_bp.route('/registro-suministro', methods=['GET','POST'])
 @login_required
 def registro_suministro():
     if request.method == 'GET':  
         return render_template('5_registro_suministro.html')
+@main_bp.route('/registro-producto', methods=['GET','POST'])
+@login_required
+def registro_producto():
+    if request.method == 'GET':  
+        return render_template('4_registro_producto.html')
     
 @main_bp.route('/registro-ventas', methods=['GET','POST'])
 @login_required
