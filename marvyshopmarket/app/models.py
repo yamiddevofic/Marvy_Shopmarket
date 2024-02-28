@@ -40,6 +40,10 @@ class Productos(db.Model):
     prod_Categoria = db.Column(db.String(45))
     prod_Total = db.Column(db.Float, db.Computed('(prod_Precio * prod_Cantidad)'))
     prod_Img = db.Column(db.LargeBinary)
+<<<<<<< HEAD
+=======
+
+>>>>>>> d3b87b31ab27c44373eeeddc1bcd03c92d291ffe
 class Proveedores(db.Model):
     prov_Id = db.Column(db.Integer, primary_key=True)
     prov_Nombre = db.Column(db.String(70))

@@ -3,50 +3,61 @@
 {% block title %}Marvy Shopmarket | Login {% endblock %}
 
 {% block content %}
-    <div id="mensajeDiv2" style=" text-align: center; position: absolute;"></div>
+        {% if estado==1 %}
+            <div class="mensaje" style="display: flex;">
+                <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+                
+            </div>        
+            <script>
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.pagina_principal') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
+        {% elif estado==0 %}
+            <div class="mensaje" style="display: flex;">
+                <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+            </div>
+                        
+            <script>
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.login') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
+
+        {% elif estado==2 %}
+            <div class="mensaje">
+                <p class="mensaje-content">{{mensaje}}</p>
+            </div>
+            <script>
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.login') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
+        {% endif %}
+
         <div id="container_login" class="container_login">
             <div id="header_login" class="header">
-                <div class="logo"><img class="logo" id="logo" src="./images/Marvy_Shopmarket.png" alt=""></div>
+                <div class="logo"><img class="logo" id="logo" src="{{ url_for('static', filename='images/logo_marvy.png') }}" alt="logo marvy" width="30%"></div>
+                <div class="title" id="title_login"><h1>Iniciar sesión</h1></div>
             </div>
             <div id="login" class="login">
-                <div class="title" id="title_login"><h2>Iniciar sesión</h2></div>
-                {% if estado==1 %}
-                    <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-                            
-                    <script>
-                        
-                        function redirigirDespuesDeTiempo() {
-                        setTimeout(function() {
-                            window.location.href = "{{ url_for('main.pagina_principal') }}";
-                        }, 2000);   
-                        }
-                    redirigirDespuesDeTiempo()
-                    </script>
-                {% elif estado==0 %}
-                    <p style="color: rgb(255, 0, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-                                
-                    <script>
-                        
-                        function redirigirDespuesDeTiempo() {
-                        setTimeout(function() {
-                            window.location.href = "{{ url_for('main.login') }}";
-                        }, 2000);   
-                        }
-                    redirigirDespuesDeTiempo()
-                    </script>
-                {% else %}
-                    <div class="mensaje">
-                        <p>{{mensaje}}</p>
-                    </div>
-                {% endif %}
                 <form id="form_login" method="post" action="/verificar-usuario">
                     <div class="usuario-login" id="usuario_login">
-                        <label for="user">Usuario</label>
-                        <input type="text" name="userid" id="userid" placeholder="Escribe tu nombre de usuario...">
+                        <div><label for="user">Usuario</label></div>
+                        <div><input type="text" name="userid" id="userid" placeholder="Escribe tu nombre de usuario..."></div>
                     </div>
                     <div class="contra-login" id="contra_login">
-                        <label for="password">Contraseña</label>
-                        <input type="password" name="password" id="password" placeholder="Escribe tu contraseña...">
+                        <div><label for="password">Contraseña</label></div>
+                        <div><input type="password" name="password" id="password" placeholder="Escribe tu contraseña..."></div>
                     </div>
                     <!-- Agregar un campo oculto para enviar el ID de tendero -->
                     <input type="hidden" name="tendero_ID" value="{{ tendero_ID }}">
