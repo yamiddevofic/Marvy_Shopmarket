@@ -4,25 +4,27 @@
 
 {% block content %}
     <div id="container-home">
+
         <div class="menu">
-            <div><button id="menu-hamburguesa">menú</button></div>
+            <div><button id="menu-hamburguesa"><i class="fa-solid fa-bars" style="font-size: 2rem; cursor:pointer;"></i></button></div>
         </div>
         <div class="menu-desplegable" id="menu-desplegable">
-            <div><button class="cerrar">X</button></div>
+            <div><button class="cerrar" style="background: black; bordeR: 1px solid black;border-radius: 50%"><i class="fa-solid fa-circle-xmark" style="font-size: 2rem; color: var(--blanco); cursor: pointer"></i></button></div>
             <div class="imagen_perfil">
-                <div><img src="" alt="imagen perfil" class="imagen"></div>
+                <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda"></div>
             </div>
+            <div><p>{{informacion_tienda.nombre}}</p></div>
             <div class="listado">
                 <div>
                     <ul>
-                        <li>Generar Informe</li>
-                        <li>Ver Historial De Ventas</li>
-                        <li>Ver Historial De Producto</li>
-                        <li>Ajuste</li>
+                        <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
+                        <li><p><i class="fa-solid fa-cash-register"></i> Ver Historial De Ventas</p></li>
+                        <li><i class="fa-solid fa-shop"></i> Ver Historial De Producto</li>
+                        <li><i class="fa-solid fa-gear"></i> Ajuste</li>
                     </ul>
                 </div>
                 <div class="boton-salir">
-                    <div><form action="/login" method="GET"><button>Salir De La Cuenta</button></form></div>
+                    <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--btn-claro-cancelar)"><div>Salir</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
                 </div>
             </div>
         </div>
@@ -33,21 +35,31 @@
         <div class="titulo">
             <div><h1>Página Principal</h1></div>
         </div>
-        <div><p>{{tendero['nombre']}}</p></div>
-        <div class="nombre-img">
+        <div><p>{{informacion_tendero.nombre}}</p></div>
+        <!-- <div class="nombre-img">
             <div class="imagen-perfil">
-                <img src="data:image/png;base64,{{ imagen }}" alt="Imagen de perfil">
+                <img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda">
             </div>            
-            <div><h3>Marvy Shopmarket</h3></div>
-        </div>
+            <div><h3>{{informacion_tienda.nombre}}</h3></div>
+        </div> -->
     
         <div class="botom">
-            <div><form action="/registro-ventas" method="GET"><button>Registrar Venta</button></form></div>
-            <div><form action="/registro-suministro" method="GET"><button>Registrar Suministro</button></form></div>
-            <div><form action="/registro-producto" method="GET"><button>Agregar Nuevo Producto</button></form></div>
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto; display: flex; align-items: center; justify-content: center;flex-direction: column;">
+                <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
+                <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
+            </div>
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center;flex-direction: column;">
+                <div><form action="/registro-suministro" method="GET"><button>Registrar suministro</button></form></div>
+                <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
+            </div>
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <div><form action="/registro-producto" method="GET"><button>Registrar nuevo producto</button></form></div>
+                <div><img src="{{ url_for('static', filename='images/estar.png') }}" style="width: 150px;"></div>
+            </div>
+            
         </div>
     
-        <div class="totales">
+        <!-- <div class="totales">
             <div>
                 <h4>Total De Venta:</h4>
                 <p>$_______</p>
@@ -60,7 +72,7 @@
                 <h4>Total De Neto:</h4>
                 <p>$_______</p>
             </div>
-        </div>
+        </div> -->
     </div>
 
 {% endblock %}
