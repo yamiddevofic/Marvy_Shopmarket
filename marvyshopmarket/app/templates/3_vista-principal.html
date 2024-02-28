@@ -9,22 +9,26 @@
             <div><button id="menu-hamburguesa"><i class="fa-solid fa-bars" style="font-size: 2rem; cursor:pointer;"></i></button></div>
         </div>
         <div class="menu-desplegable" id="menu-desplegable">
-            <div><button class="cerrar" style="background: black; bordeR: 1px solid black;border-radius: 50%"><i class="fa-solid fa-circle-xmark" style="font-size: 2rem; color: var(--blanco); cursor: pointer"></i></button></div>
-            <div class="imagen_perfil">
-                <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda"></div>
-            </div>
-            <div><p>{{informacion_tienda.nombre}}</p></div>
-            <div class="listado">
-                <div>
-                    <ul>
-                        <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
-                        <li><p><i class="fa-solid fa-cash-register"></i> Ver Historial De Ventas</p></li>
-                        <li><i class="fa-solid fa-shop"></i> Ver Historial De Producto</li>
-                        <li><i class="fa-solid fa-gear"></i> Ajuste</li>
-                    </ul>
+            <div class="menu-desplegable-content">
+                <div><button class="cerrar" style="background: none; border-radius: 50%; border: none;"><i class="fa-solid fa-circle-xmark" style="font-size: 2.5rem; color: var(--negro); cursor: pointer"></i></button></div>
+                <div class="imagen_perfil_content">
+                    <div class="imagen_perfil">
+                        <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda"></div>
+                    </div>
                 </div>
-                <div class="boton-salir">
-                    <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--btn-claro-cancelar)"><div>Salir</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
+                <div><h2>{{informacion_tienda.nombre}}</h2></div>
+                <div class="listado">
+                    <div>
+                        <ul>
+                            <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
+                            <li><p><i class="fa-solid fa-cash-register"></i> Ver Historial De Ventas</p></li>
+                            <li><i class="fa-solid fa-shop"></i> Inventario de productos</li>
+                            <li><i class="fa-solid fa-gear"></i> Ajuste</li>
+                        </ul>
+                    </div>
+                    <div class="boton-salir">
+                        <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--negro)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,9 +37,9 @@
         </div>
     
         <div class="titulo">
-            <div><h1>Página Principal</h1></div>
+            <div><h1>{{ informacion_tienda.nombre }}</h1></div>
         </div>
-        <div><p>{{informacion_tendero.nombre}}</p></div>
+        <div><p>{{informacion_tienda.ubicacion}}</p></div>
         <!-- <div class="nombre-img">
             <div class="imagen-perfil">
                 <img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda">
