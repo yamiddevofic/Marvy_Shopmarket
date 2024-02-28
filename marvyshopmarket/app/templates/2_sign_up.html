@@ -11,10 +11,10 @@
     <script>
         function redirigirDespuesDeTiempo() {
         setTimeout(function() {
-            window.location.href = "{{ url_for('main.pagina_principal') }}";
+            window.location.href = "{{ url_for('main.login_dos') }}";
         }, 2000);   
         }
-    redirigirDespuesDeTiempo()
+        redirigirDespuesDeTiempo()
     </script>
     {% elif estado==0 %}
     <div class="mensaje" style="display: flex;">

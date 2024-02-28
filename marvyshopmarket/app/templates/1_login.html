@@ -30,10 +30,18 @@
             redirigirDespuesDeTiempo()
             </script>
 
-        {% else %}
+        {% elif estado==2 %}
             <div class="mensaje">
-                <p class="mensaje-content">Hola {{mensaje}}</p>
+                <p class="mensaje-content">{{mensaje}}</p>
             </div>
+            <script>
+                function redirigirDespuesDeTiempo() {
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.login') }}";
+                }, 2000);   
+                }
+            redirigirDespuesDeTiempo()
+            </script>
         {% endif %}
 
         <div id="container_login" class="container_login">

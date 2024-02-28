@@ -10,27 +10,32 @@ def generar_codigo():
     return code
 
 def obtener_informacion_perfil(tendero_id):
-    # Busca el usuario en la base de datos por su ID
-    tendero = Tenderos.query.filter_by(tendero_ID=tendero_id).first()
-    # Si el usuario existe, devuelve su información de perfil, de lo contrario, devuelve None
-    if tendero:
-        return {
-            'id': tendero.tendero_ID,
-            'nombre': tendero.tendero_Nombre,
-            'correo': tendero.tendero_Correo,
-            # Otros campos del perfil que puedas tener en tu modelo de Usuario
-        }
-    else:
-        return None
+    try:
+        # Busca el usuario en la base de datos por su ID
+        tendero = Tenderos.query.filter_by(tendero_ID=tendero_id).first()
+        if tendero:
+            return {
+                'id': tendero.tendero_ID,
+                'nombre': tendero.tendero_Nombre,
+                'correo': tendero.tendero_Correo,
+                # Otros campos del perfil que puedas tener en tu modelo de Usuario
+            }
+    except Exception as e:
+        print(f"Error al obtener información del perfil del tendero: {e}")
+    return None
     
 def obtener_informacion_tienda(tienda_id):
-    tienda = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
-
-    if tienda:
-        imagen_codificada = base64.b64encode(tienda.tienda_IMG).decode('utf-8')
-        return {
-            'id': tienda.tienda_Id,
-            'nombre': tienda.tienda_Nombre,
-            'ubicacion': tienda.tienda_Ubicacion,
-            'imagen': imagen_codificada  # Asegúrate de devolver la imagen codificada
-        }
+    try:
+        # Busca la tienda en la base de datos por su ID
+        tienda = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
+        if tienda:
+            imagen_codificada = base64.b64encode(tienda.tienda_IMG).decode('utf-8')
+            return {
+                'id': tienda.tienda_Id,
+                'nombre': tienda.tienda_Nombre,
+                'ubicacion': tienda.tienda_Ubicacion,
+                'imagen': imagen_codificada  # Asegúrate de devolver la imagen codificada
+            }
+    except Exception as e:
+        print(f"Error al obtener información de la tienda: {e}")
+    return None

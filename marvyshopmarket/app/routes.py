@@ -1,7 +1,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect,url_for,render_template_string, session
 from sqlalchemy.exc import IntegrityError
- 
+from functools import wraps 
 # Importa los modelos necesarios desde el archivo models.py
 from .models import Productos, Tenderos, Tiendas
 
@@ -15,6 +15,21 @@ from .helpers import obtener_informacion_perfil, obtener_informacion_tienda
 locale.setlocale(locale.LC_ALL, '')
 main_bp = Blueprint('main',__name__)
 
+# Decorador para verificar si el usuario ha iniciado sesión
+def login_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        # Verificar si el ID del tendero está en la sesión
+        if 'tienda_Id' in session:
+            # Si el usuario ha iniciado sesión, continuar con la función original
+            return func(*args, **kwargs)
+        else:
+            mensaje="ERROR: Debes iniciar sesión primero"
+            estado=0
+            # Si el usuario no ha iniciado sesión, redirigirlo a la página de inicio de sesión
+            return render_template('1_login.html', mensaje=mensaje, estado=estado)
+    return decorated_function
+
 @main_bp.route('/')
 def index():
     return render_template('0_welcome.html')
@@ -23,68 +38,96 @@ def index():
 def login():
     return render_template('1_login.html')
 
+@main_bp.route('/registro-exitoso', methods=['GET','POST'])
+def login_dos():
+    mensaje="Registro éxitoso, ahora puedes iniciar sesión"
+    estado=2
+    return render_template('1_login.html',mensaje=mensaje, estado=estado)
+
 @main_bp.route('/signUp',methods=['GET','POST'])
 def redirigir_registro():
     return render_template('2_sign_up.html')
 
-@main_bp.route('/pagina-principal', methods=['GET','POST'])
+@main_bp.route('/pagina-principal', methods=['GET'])
 def pagina_principal():
-    # Recupera la información del perfil del usuario desde la sesión
-    tendero = obtener_informacion_perfil(session.get('userid'))
-    imagen = obtener_informacion_tienda(session.get('imagen_Tienda'))
-    return render_template('3_vista-principal.html', tendero=tendero, imagen=imagen)
+    # Verificar si el tendero está autenticado (su ID está en la sesión)
+    if 'tienda_Id' and 'tendero_Id' in session:
+        tienda_id = session['tienda_Id']
+        tendero_id = session['tendero_Id']
+        # # Utilizar el ID del tendero para obtener información del perfil y de la tienda
+        # perfil_tendero = obtener_informacion_perfil(tendero_id)
+        # tienda_id = perfil_tendero.get('tienda_id')  # Obtener el ID de la tienda del perfil del tendero
+        informacion_tienda = obtener_informacion_tienda(tienda_id)
+        informacion_tendero = obtener_informacion_perfil(tendero_id)
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero)
+    else:
+        mensaje="ERROR: Debes iniciar sesión primero"
+        estado=0
+        # Si el tendero no está autenticado, redirigirlo a la página de inicio de sesión
+        return render_template('1_login.html', mensaje=mensaje, estado=estado)
   
 @main_bp.route('/registro-producto', methods=['GET','POST'])
+@login_required
 def registro_producto():
     if request.method == 'GET':  
-        return render_template('4_registro_prod.html')
+        return render_template('4_registro_producto.html')
     
 @main_bp.route('/registro-suministro', methods=['GET','POST'])
+@login_required
 def registro_suministro():
     if request.method == 'GET':  
         return render_template('5_registro_suministro.html')
     
 @main_bp.route('/registro-ventas', methods=['GET','POST'])
+@login_required
 def registro_ventas():
     if request.method == 'GET':  
         return render_template('6_registro_ventas.html')
     
 @main_bp.route('/generar-informe', methods=['GET','POST'])
+@login_required
 def generar_informe():
     return render_template('9_generar-informe.html')
 
 @main_bp.route('/ajustes-generales', methods=['GET','POST'])
+@login_required
 def ajustes_generales():
     return render_template('13_ajustes-generales.html')
 
 @main_bp.route('/ajustes-cuenta', methods=['GET','POST'])
+@login_required
 def ajustes_cuenta():
     if request.method == 'GET':  
         return render_template('14_ajustes-cuenta.html')
     
 @main_bp.route('/ajuste-apariencia', methods=['GET','POST'])
+@login_required
 def ajuste_apariencia():
     return render_template('15_ajuste-apariencia.html')
 
 @main_bp.route('/ajustes-perfil', methods=['GET','POST'])
+@login_required
 def ajustes_perfil():
     return render_template('16_ajustes-perfil.html')
 
 @main_bp.route('/cerrar-sesion', methods=['GET','POST'])
-def cerrar_sesion():
+@login_required
+def logout():
+    # Elimina el ID del usuario de la sesión, lo que efectivamente cierra la sesión
+    session.pop('tienda_Id', None)
+    session.pop('tendero_Id', None)
     return render_template('17_cerrar-sesion.html')
 
 
 @main_bp.route('/registro-tendero', methods=['GET','POST'])
+@login_required
 def registro_tendero():
     return render_template('18_registro-tendero.html')
 
 
 
-
-
-
 @main_bp.route('/historial-productos', methods=['GET','POST'])
+@login_required
 def historial_productos():
     if request.method == "GET":
        
@@ -175,21 +218,15 @@ def nuevo_usuario():
                     tendero_Password=userpassword,
                     tienda_Id=tienda_id
                 )
+                db.session.add(new_user)
+                db.session.commit()
+                estado = 1
+                mensaje = "Registro exitoso"
+                return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
             else:
-                new_user = Tenderos(
-                    tendero_ID=userid,
-                    tendero_Nombre=username,
-                    tendero_Correo=useremail,
-                    tendero_Celular=userphone,
-                    tendero_Password=userpassword,
-                    tienda_Id=tienda_id
-                )
-            db.session.add(new_user)
-            db.session.commit()
-            
-            estado = 1
-            mensaje = "Registro exitoso"
-            return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
+                estado=0
+                mensaje=f"Ya existe una tienda con la identificación {tienda_id}"
+                return render_template('2_sign_up.html',mensaje=mensaje,estado=estado)
 
 @main_bp.route('/verificar-usuario', methods=['GET', 'POST'])
 def verificar_usuario():
@@ -206,12 +243,11 @@ def verificar_usuario():
             if bcrypt.check_password_hash(tendero.tendero_Password, password):
                 # Autenticación exitosa
                 estado=1
-                # Si el tendero existe y la contraseña coincide, iniciar sesión
-                imagen_tienda = db.session.query(Tiendas.tienda_IMG).join(Tenderos).filter(Tenderos.tendero_ID == userid).first()
-                imagen_codificada = base64.b64encode(imagen_tienda.tienda_IMG).decode('utf-8')
+                # Si la autenticación es exitosa, guarda el ID de la tienda en la sesión
                 
-                session['userid'] = tendero.tendero_ID
-                session['imagen_Tienda']= imagen_codificada
+                session['tienda_Id'] = tendero.tienda_Id  # Esta línea parece correcta
+                session['tendero_Id']=tendero.tendero_ID# Corregir tendero.tendero_Id a tendero.tendero_ID
+
                 mensaje = "Autenticación exitosa"
                 return redirect(url_for('main.pagina_principal'))
             else:
@@ -220,10 +256,10 @@ def verificar_usuario():
         else:
             estado=0
             mensaje = "Usuario no encontrado"
-    
-    return render_template('1_login.html',estado=estado, mensaje=mensaje)
+        return render_template('1_login.html',estado=estado, mensaje=mensaje)
            
 @main_bp.route('/nuevo_producto', methods=['POST'])
+@login_required
 def nuevo_producto():
     if request.method == 'POST':
         id = request.form['prod_Id']
@@ -261,5 +297,5 @@ def nuevo_producto():
             )
             db.session.add(new_product)
             db.session.commit()
-        return render_template('4_registro_prod.html', mensaje=mensaje, estado=estado)
+        return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 

@@ -231,7 +231,7 @@ DROP TABLE IF EXISTS `tenderos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tenderos` (
   `tendero_ID` int NOT NULL,
-  `tendero_Password` varchar(12) DEFAULT NULL,
+  `tendero_Password` varchar(255) DEFAULT NULL,
   `tendero_Nombre` varchar(70) DEFAULT NULL,
   `tendero_Contacto` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`tendero_ID`)
@@ -256,7 +256,7 @@ DROP TABLE IF EXISTS `tiendas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tiendas` (
   `tienda_Id` int NOT NULL,
-  `tienda_Password` varchar(12) NOT NULL,
+  `tienda_Password` varchar(255) NOT NULL,
   `tienda_Nombre` varchar(70) NOT NULL,
   `tienda_Contacto` varchar(50) NOT NULL,
   `tienda_Ubicacion` varchar(100) NOT NULL,
