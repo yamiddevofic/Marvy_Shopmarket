@@ -130,22 +130,20 @@ def registro_tendero():
 @login_required
 def historial_productos():
     if request.method == "GET":
-       
-        productos = Productos.query.all()
-       
-        suma_totales=sum(producto.prod_Total for producto in productos)
-        # Formatea la suma total con separadores de miles
-        suma_totales_formateada = locale.format_string('%d', round(suma_totales), grouping=True)
-        suma_productos='{:n}'.format(round(sum(producto.prod_Cantidad for producto in productos)))
-
-        for producto in productos:
-            producto.prod_Img = base64.b64encode(producto.prod_Img).decode('utf-8')
-       
-            producto.prod_Precio = locale.format_string('%d', round(producto.prod_Precio), grouping=True)
-            producto.prod_Total = locale.format_string('%d', round(float(producto.prod_Total)), grouping=True)
-       
-        return render_template('11_historial_prod.html', productos=productos, suma_totales_formateada=suma_totales_formateada,suma_productos=suma_productos)
-
+       if 'tienda_Id' and 'tendero_Id' in session:
+            tienda_id = session['tienda_Id']
+            tendero_id = session['tendero_Id']
+            # # Utilizar el ID del tendero para obtener información del perfil y de la tienda
+            # perfil_tendero = obtener_informacion_perfil(tendero_id)
+            # tienda_id = perfil_tendero.get('tienda_id')  # Obtener el ID de la tienda del perfil del tendero
+            informacion_tienda = obtener_informacion_tienda(tienda_id)
+            informacion_tendero = obtener_informacion_perfil(tendero_id)
+            return render_template('11_historial_prod.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero)
+    else:
+        mensaje="ERROR: Debes iniciar sesión primero"
+        estado=0
+        # Si el tendero no está autenticado, redirigirlo a la página de inicio de sesión
+        return render_template('1_login.html', mensaje=mensaje, estado=estado)
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method == 'POST':
@@ -295,7 +293,11 @@ def nuevo_producto():
                 prod_Cantidad=cantidad,
                 prod_Img = imagen_data,
             )
+            asociar_tienda= Tiendas(
+                prod_Id= int(id)
+            )
             db.session.add(new_product)
+            db.session.add(asociar_tienda)
             db.session.commit()
         return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 

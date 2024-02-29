@@ -40,66 +40,70 @@
     </div>
     <main id="signUp" class="signUp">
         <form id="form_signUp" method="post" action="/nuevo_usuario" enctype="multipart/form-data">
-            <div class="content-logo"><img class="logo" src="./images/Marvy_Shopmarket.png" alt=""></div>
+            <div class="content-logo"><img class="logo" id="logo-signUp" src="{{ url_for('static', filename='images/logo_marvy.png') }}" alt=""></div>
             <div class="content-signUp" id="content_signUp">
                 <section id="section_usuario" class="section_usuario">
-                    <div class="usuario-title" id="usuario_title"><h2>Administrador</h2></div>
-                    <div class="inputs">
-                        <div><label for="userid">Identificación: </label></div>
-                        <input type="text" class="usuario_signUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
-                    </div>
-                    <div class="inputs">
-                        <div><label id="username">Nombre completo:</label></div>
-                        <input type="text" class="usuario_signUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
-                    </div>
-                    <div class="inputs">
-                        <div><label for="userpassword">Contraseña: </label></div>
-                        <input type="password" class="password_signUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
-                    </div>
-                    <div class="inputs">
-                        <div><label>Contacto: </label></div>
-                        <input type="email" class="contact" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí...">
-                        <input type="text" class="contact" name="userphone" id="userphone" placeholder="Escribe tu número de teléfono...">
+                    <div id="registro-adm-content">
+                        <div class="usuario-title" id="usuario_title"><h2>Administrador</h2></div>
+                        <div class="inputs">
+                            <div><label for="userid">Identificación: </label></div>
+                            <input type="text" class="usuario_signUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label id="username">Nombre completo:</label></div>
+                            <input type="text" class="usuario_signUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="userpassword">Contraseña: </label></div>
+                            <input type="password" class="password_signUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label>Contacto: </label></div>
+                            <div><input type="email" class="contact" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí..."></div>
+                            <input type="text" class="contact" name="userphone" id="userphone" placeholder="Escribe tu número de teléfono...">
+                        </div>
                     </div>
                 </section>
                 <section id="section_tuTienda" class="section_tuTienda">
-                    <div class="tutienda-title"><h2>Tu Tienda</h2></div>
-                    <div class="inputs nit" style="margin-bottom: 4%; width: 80%; height: 100px; align-items: center; border: 1px solid grey; border-radius: 10px;">
-                        <div class="label">
-                            <label for="id_tienda">Id/NIT</label>
+                    <div id="registro-tienda-content">
+                        <div class="tutienda-title"><h2>Tu Tienda</h2></div>
+                        <div class="inputs nit">
+                            <div class="label">
+                                <label for="id_tienda">Id/NIT</label>
+                            </div>
+                            <input type="number" class="id_tienda" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 50%;">
+                            <button id="generar_nit" style="width: 50%;">Generar</button>
                         </div>
-                        <input type="number" class="id_tienda" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 50%;">
-                        <button id="generar_nit">Generar</button>
-                    </div>
-                    <div class="inputs">
-                        <div><label for="tiendaname">Nombre de la tienda: </label></div>
-                        <input type="text" class="tiendaname" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
-                    </div>
-                    <div class="inputs">
-                        <div><label for="tiendapassword">Contraseña: </label></div>
-                        <input type="password" class="password_signUp" name="tiendapassword" id="tiendapassword" placeholder="Escribe la contraseña de tu tienda...">
-                    </div>
-                    <div class="inputs">
-                        <div><label>Contacto: </label></div>
-                        <input type="email" class="contact" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;">
-                        <input type="text" class="contact" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
-                    </div>
-                    <div class="inputs">
-                        <div><label for="ubi_tienda">Ubicación: </label></div>
-                        <input type="text" class="ubi_tienda" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
-                    </div>
-                    <div class="inputs">
-                        <div><label for="tienda_img">Logo de la tienda: </label></div>
-                        <input type="file" class="tienda_img" name="tienda_img" id="tienda_img">
+                        <div class="inputs">
+                            <div><label for="tiendaname">Nombre de la tienda: </label></div>
+                            <input type="text" class="tiendaname" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="tiendapassword">Contraseña: </label></div>
+                            <input type="password" class="password_signUp" name="tiendapassword" id="tiendapassword" placeholder="Escribe la contraseña de tu tienda...">
+                        </div>
+                        <div class="inputs">
+                            <div><label>Contacto: </label></div>
+                            <div><input type="email" class="contact" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;"></div>
+                            <input type="text" class="contact" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="ubi_tienda">Ubicación: </label></div>
+                            <input type="text" class="ubi_tienda" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="tienda_img">Logo de la tienda: </label></div>
+                            <input type="file" class="tienda_img" name="tienda_img" id="tienda_img">
+                        </div>
                     </div>
                 </section>
             </div>
-            <div class="btn-submit" id="btnSubmit_signUp_content">
-                <button type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="btnSubmit_signUp">Registrarse</button>
+            <div class="btn-submit">
+                <button type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="enviar-registro-g" >Registrarse</button>
             </div>
+        </form> 
+        <form action="/login" method="GET">
+            <button class="btn-cancelar" id="cancelar-registro-g">Cancelar registro</button>
         </form>
-        <form action="/login" method="get">
-            <button class="btn-cancelar">Cancelar registro</button>
-        </form>  
     </main>
 {% endblock %}

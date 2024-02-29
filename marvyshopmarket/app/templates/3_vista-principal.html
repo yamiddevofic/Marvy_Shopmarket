@@ -27,13 +27,13 @@
                         </ul>
                     </div>
                     <div class="boton-salir">
-                        <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--negro)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
+                        <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--blanco)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="buscador">
-            <div><input type="search" placeholder="buscar..."></div>
+            <div><input type="search" placeholder="buscar...">   <i class="fa-solid fa-search"></i></div>
         </div>
     
         <div class="titulo">
@@ -48,21 +48,21 @@
         </div> -->
     
         <div class="botom">
-            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto; display: flex; align-items: center; justify-content: center;flex-direction: column;">
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto; display: flex; align-items: center; justify-content: center;flex-direction: column; background: var(--claro-secundario-3)">
                 <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
                 <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
             </div>
-            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center;flex-direction: column;">
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center;flex-direction: column;background: var(--claro-secundario-3)">
                 <div><form action="/registro-suministro" method="GET"><button>Registrar suministro</button></form></div>
                 <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
             </div>
-            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="border: 1px solid var(--negro); border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center; flex-direction: column;background: var(--claro-secundario-3)">
                 <div><form action="/registro-producto" method="GET"><button>Registrar nuevo producto</button></form></div>
                 <div><img src="{{ url_for('static', filename='images/estar.png') }}" style="width: 150px;"></div>
             </div>
             
         </div>
-    
+        
         <!-- <div class="totales">
             <div>
                 <h4>Total De Venta:</h4>

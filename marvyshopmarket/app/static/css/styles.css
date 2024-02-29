@@ -123,7 +123,7 @@ h1{
 }
 .botom{
     grid-column: 1/-1;
-    grid-row: 3/-1;
+    grid-row: 3;
     height: 50%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -133,6 +133,7 @@ h1{
     justify-content: space-around;
     padding: 2%;
 }
+
 .botom button{
     border: 1px solid black;
     border-radius: 10px;
@@ -168,8 +169,9 @@ h1{
     justify-content: center;
     grid-column:1;
     grid-row: 1/-1;
-    background: var(--claro-secundario-3);
-    color: var(--negro);
+    background: var(--claro-principal);
+    color: var(--blanco);
+    border-right: 1px solid var(--blanco);
 }
 #menu-desplegable .menu-desplegable-content{
     width: 100%;
@@ -187,13 +189,13 @@ h1{
     text-align: left;
     padding: 2%;
     padding-left: 7%;
-    background: var(--claro-secundario-3);
-    color: var(--negro);
+    background: var(--claro-principal);
+    color: var(--blanco);
 }
 .listado ul li:hover{
-    background: var(--oscuro-secundario-1);
+    background: var(--claro-secundario-2);
     cursor: pointer;
-    color: var(--blanco);
+    color: var(--negro);
 }
 
 .mensaje{
@@ -213,13 +215,77 @@ h1{
     display: grid;
     grid-row: 2;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows:  20% 1fr 10%;
+}
+#section_tuTienda{
+    border-left: 1px solid var(--negro);
+    display: flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content: center;
+}
+#section_usuario{
+    display: flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content: center;
+}
+#registro-tienda-content{
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 80%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#registro-adm-content{
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 80%;
+    height: 100%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#enviar-registro-g{
+    width: 25%;
+    margin-top: 2%;
+    background: var(--claro-principal);
+    border: none;
+    height: 30px;
+    color: var(--blanco);
+}
+#cancelar-registro-g{
+    width: 25%;
+    margin-bottom: 2%;
+    background: var(--claro-secundario-1);
+    height: 30px;
+    border: none;
+    color: var(--blanco);
+}
+#btnSubmit_login{
+    background: var(--claro-principal);
+    height: 30px;
+    width: 50%;
+    border: none;
+    color: var(--blanco);
+}
+#btnSubmit_reg{
+    background: var(--claro-secundario-1);
+    height: 30px;
+    border: none;
+    width: 50%;
+    color: var(--blanco);
 }
 #container_login{
+
     grid-column: 2;
     grid-row: 1/-1;
     border: 1px solid var(--negro);
     padding: 2%;
-    background: var(--blanco);
+    background: var(--claro-secundario-3);
     height: 80%;
     display: grid;
     grid-template-rows: 20% 1fr;
@@ -243,9 +309,10 @@ h1{
 #signUp{
     grid-column: 1/-1;
     grid-row: 2;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 10% 1fr 5%;
 }
 #welcome{
     grid-column: 2;
@@ -282,7 +349,7 @@ img{
     justify-content: center;
 }
 .imagen_perfil{
-    background: var(--claro-secundario-1);
+    background: var(--claro-secundario-3);
     width: 80%;
     height: 80%;
     border-radius: 5%;
@@ -295,7 +362,9 @@ img{
     grid-row: 1;
     grid-column: 2;
 }
-
+#logo-signUp{
+    width: 8%;
+}
 
 .btn-principal{
     font-size: 2rem;
@@ -306,9 +375,10 @@ img{
     border: none;
     cursor: pointer;
 }
-.boton-salir button i:hover{
-    color: var(--btn-claro-cancelar);
+.boton-salir:hover{
+    background: var(--btn-claro-cancelar);
 }
+
 #menu-hamburguesa{
     width: 30%;
 }
