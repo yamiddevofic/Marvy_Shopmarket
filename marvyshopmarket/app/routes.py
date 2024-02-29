@@ -124,6 +124,52 @@ def logout():
 def registro_tendero():
     return render_template('18_registro-tendero.html')
 
+@main_bp.route('/nuevo_producto', methods=['POST'])
+@login_required
+def nuevo_producto():
+    if request.method == 'POST':
+        id = request.form['prod_Id']
+        nombre = request.form['prod_Nombre']
+        precio = request.form['prod_Precio']
+        cantidad = request.form['prod_Cantidad']
+        imagen = request.files['prod_Img']
+        imagen_data = imagen.read()
+        
+        
+        # Valida los datos antes de insertarlos en la base de datos
+
+        nombre_min = nombre.lower()
+        id_exist = Productos.query.filter_by(prod_Id=id).first()
+        tienda_id = session['tienda_Id']
+        
+        nombre_exist = Productos.query.filter(db.func.lower(Productos.prod_Nombre) == nombre_min).first()
+        if not id or not nombre or not precio or not cantidad or not imagen:
+            mensaje="Complete todos los datos"
+            estado = 0
+        elif id_exist or nombre_exist:
+            mensaje="Este producto ya existe"
+            estado= 0
+        # elif not re.match("^[a-zA-Z0-9]+$", nombre):
+        #     mensaje= 'El nombre del producto no puede contener caracteres especiales como espacios, guiones, etc.'
+        #     estado=0
+        else:
+            tienda_id = session['tienda_Id']
+            mensaje="Registro de producto éxitoso"
+            estado=1
+            new_product = Productos(
+                prod_Id=int(id),
+                prod_Nombre=nombre,
+                prod_Precio=precio,
+                prod_Cantidad=cantidad,
+                prod_Img = imagen_data,
+                tienda_Id= tienda_id
+            )
+            
+            # tienda=Tiendas.query.filter_by(tienda_Id=tienda_id).first()
+            # tienda.prod_Id = int(id)
+            db.session.add(new_product)
+            db.session.commit()
+        return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 
 
 @main_bp.route('/historial-productos', methods=['GET','POST'])
@@ -133,12 +179,16 @@ def historial_productos():
        if 'tienda_Id' and 'tendero_Id' in session:
             tienda_id = session['tienda_Id']
             tendero_id = session['tendero_Id']
+            resultado = db.session.query(Productos, Tiendas).join(Tiendas).all()
+            # Itera sobre el resultado para obtener la información de cada fila
+            for producto, tienda in resultado:
+                if tienda.tienda_id == tienda_id:
+                    print("Tienda:", tienda.tienda_Id, tienda.tienda_Nombre)
+                    print("Productos:", producto.prod_Id, producto.prod_Nombre)
             # # Utilizar el ID del tendero para obtener información del perfil y de la tienda
             # perfil_tendero = obtener_informacion_perfil(tendero_id)
             # tienda_id = perfil_tendero.get('tienda_id')  # Obtener el ID de la tienda del perfil del tendero
-            informacion_tienda = obtener_informacion_tienda(tienda_id)
-            informacion_tendero = obtener_informacion_perfil(tendero_id)
-            return render_template('11_historial_prod.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero)
+            return render_template('11_historial_prod.html', resultado=resultado)
     else:
         mensaje="ERROR: Debes iniciar sesión primero"
         estado=0
@@ -243,8 +293,8 @@ def verificar_usuario():
                 estado=1
                 # Si la autenticación es exitosa, guarda el ID de la tienda en la sesión
                 
-                session['tienda_Id'] = tendero.tienda_Id  # Esta línea parece correcta
-                session['tendero_Id']=tendero.tendero_ID# Corregir tendero.tendero_Id a tendero.tendero_ID
+                session['tienda_Id'] = tendero.tienda_Id  
+                session['tendero_Id']=tendero.tendero_ID
 
                 mensaje = "Autenticación exitosa"
                 return redirect(url_for('main.pagina_principal'))
@@ -256,48 +306,4 @@ def verificar_usuario():
             mensaje = "Usuario no encontrado"
         return render_template('1_login.html',estado=estado, mensaje=mensaje)
            
-@main_bp.route('/nuevo_producto', methods=['POST'])
-@login_required
-def nuevo_producto():
-    if request.method == 'POST':
-        id = request.form['prod_Id']
-        nombre = request.form['prod_Nombre']
-        precio = request.form['prod_Precio']
-        cantidad = request.form['prod_Cantidad']
-        imagen = request.files['prod_Img']
-        imagen_data = imagen.read()
-        
-     
-        # Valida los datos antes de insertarlos en la base de datos
-
-        nombre_min = nombre.lower()
-        id_exist = Productos.query.filter_by(prod_Id=id).first()
-
-        nombre_exist = Productos.query.filter(db.func.lower(Productos.prod_Nombre) == nombre_min).first()
-        if not id or not nombre or not precio or not cantidad or not imagen:
-            mensaje="Complete todos los datos"
-            estado = 0
-        elif id_exist or nombre_exist:
-            mensaje="Este producto ya existe"
-            estado= 0
-        # elif not re.match("^[a-zA-Z0-9]+$", nombre):
-        #     mensaje= 'El nombre del producto no puede contener caracteres especiales como espacios, guiones, etc.'
-        #     estado=0
-        else:
-            mensaje="Registro de producto éxitoso"
-            estado=1
-            new_product = Productos(
-                prod_Id=int(id),
-                prod_Nombre=nombre,
-                prod_Precio=precio,
-                prod_Cantidad=cantidad,
-                prod_Img = imagen_data,
-            )
-            asociar_tienda= Tiendas(
-                prod_Id= int(id)
-            )
-            db.session.add(new_product)
-            db.session.add(asociar_tienda)
-            db.session.commit()
-        return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 

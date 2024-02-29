@@ -34,8 +34,7 @@ def obtener_informacion_tienda(tienda_id):
                 'id': tienda.tienda_Id,
                 'nombre': tienda.tienda_Nombre,
                 'ubicacion': tienda.tienda_Ubicacion,
-                'imagen': imagen_codificada,  # Asegúrate de devolver la imagen codificada
-                'productos':tienda.prod_Id  
+                'imagen': imagen_codificada,  # Asegúrate de devolver la imagen codificada 
             }
     except Exception as e:
         print(f"Error al obtener información de la tienda: {e}")
