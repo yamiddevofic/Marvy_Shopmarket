@@ -91,8 +91,8 @@ class Tenderos(db.Model):
     __tablename__ = 'tenderos'
     tendero_Id = db.Column(db.Integer, primary_key=True)
     tendero_Nombre = db.Column(db.String(70))
-    tendero_Correo = db.Column(db.String(12))
-    tendero_Celular = db.Column(db.String(100))
+    tendero_Correo = db.Column(db.String(100))
+    tendero_Celular = db.Column(db.String(12))
     tendero_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.Integer, db.ForeignKey('tiendas.tienda_Id'))
 
@@ -104,7 +104,6 @@ class Tiendas(db.Model):
     tienda_Celular = db.Column(db.String(12))
     tienda_Ubicacion = db.Column(db.String(100))
     tienda_IMG = db.Column(db.LargeBinary)
-    tienda_Password = db.Column(db.String(100))
 
 
 

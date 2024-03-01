@@ -208,7 +208,6 @@ def nuevo_usuario():
         useremail = request.form['useremail']
         try:
             userpassword = bcrypt.generate_password_hash(request.form['userpassword']).decode('utf-8')
-            tiendapassword = bcrypt.generate_password_hash(request.form['tiendapassword']).decode('utf-8')
         except:
             estado = 0
             mensaje = "Por favor complete todos los campos"
@@ -221,7 +220,7 @@ def nuevo_usuario():
         tienda_ubicacion = request.form['tiendaubicacion']
 
         # Verificar si todos los campos obligatorios están presentes
-        if not userid or not username or not useremail or not userpassword or not userphone or not tienda_id or not tienda_nombre or not tiendapassword or not tienda_tel or not tienda_email or not tienda_ubicacion:
+        if not userid or not username or not useremail or not userpassword or not userphone or not tienda_id or not tienda_nombre or not tienda_tel or not tienda_email or not tienda_ubicacion:
             estado = 0
             mensaje = "Por favor complete todos los campos"
             return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
@@ -243,19 +242,22 @@ def nuevo_usuario():
         # Leer el contenido del archivo de imagen
         tienda_data = tienda_img.read()
 
+        # Consulta para contar registros en la tabla Administrador
+        num_adm = Administrador.query.count()
+        num_tiendas = Tiendas.query.count()
         # Agregar el nuevo usuario y tienda a la base de datos
         existing_user = Administrador.query.filter_by(adm_Id=userid).first()
         existing_shop = Tiendas.query.filter_by(tienda_Id=tienda_id).first()
-        if existing_user:
-            mensaje = f"Error, ya existe un usuario con la identificación {userid}"
+        
+        if num_adm>0 and num_tiendas>0:
+            mensaje = f"Sólo puedes registrar una tienda y un administrador"
             estado = 0
             return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
         else:
-            if not existing_shop:
+            if not existing_shop and not existing_user:
                 new_shop = Tiendas(
                     tienda_Id=tienda_id,
                     tienda_Nombre=tienda_nombre,
-                    tienda_Password=tiendapassword,
                     tienda_Correo=tienda_email,
                     tienda_Celular=tienda_tel,
                     tienda_Ubicacion=tienda_ubicacion,
@@ -288,7 +290,7 @@ def nuevo_usuario():
                 return render_template('2_sign_up.html', estado=estado, mensaje=mensaje)
             else:
                 estado=0
-                mensaje=f"Ya existe una tienda con la identificación {tienda_id}"
+                mensaje=f"Ya existe una tienda y administrador con la identificación {tienda_id}"
                 return render_template('2_sign_up.html',mensaje=mensaje,estado=estado)
 
 @main_bp.route('/verificar-usuario', methods=['GET', 'POST'])
