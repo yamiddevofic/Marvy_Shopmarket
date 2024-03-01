@@ -1,6 +1,6 @@
 import random
 import string
-from .models import Productos, Tiendas, Tenderos
+from .models import Productos, Tiendas, Tenderos, Administrador
 import base64
 
 def generar_codigo():
@@ -9,19 +9,19 @@ def generar_codigo():
     code = ''.join(random.choice(caracteres) for _ in range(8))
     return code
 
-def obtener_informacion_perfil(tendero_id):
+def obtener_informacion_perfil(adm_id):
     try:
         # Busca el usuario en la base de datos por su ID
-        tendero = Tenderos.query.filter_by(tendero_ID=tendero_id).first()
-        if tendero:
+        administrador = Administrador.query.filter_by(adm_Id=adm_id).first()
+        if administrador:
             return {
-                'id': tendero.tendero_ID,
-                'nombre': tendero.tendero_Nombre,
-                'correo': tendero.tendero_Correo,
+                'id': administrador.adm_Id,
+                'nombre': administrador.adm_Nombre,
+                'correo': administrador.adm_Correo,
                 # Otros campos del perfil que puedas tener en tu modelo de Usuario
             }
     except Exception as e:
-        print(f"Error al obtener información del perfil del tendero: {e}")
+        print(f"Error al obtener información del perfil del administrador: {e}")
     return None
     
 def obtener_informacion_tienda(tienda_id):
