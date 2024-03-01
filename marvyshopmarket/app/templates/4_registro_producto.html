@@ -3,6 +3,38 @@
 {% block title %}Marvy Shopmarket | Registrar productos {% endblock %}
 
 {% block content %}
+{% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.registro_producto') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+    {% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.registro_producto') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+    {% else %}
+    <div class="mensaje">
+        <p class="mensaje-content">Hola {{mensaje}}</p>
+    </div>
+    {% endif %}
     <div class="logo">
         <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
     </div>
@@ -10,31 +42,6 @@
         <div class="title">
             <h1>Registro de Productos</h1>
         </div>
-        {%if estado == 0%}
-            <p style="color: red" id="mensaje" class="mensaje">{{mensaje}}</p>
-            <script> 
-                function redirigirDespuesDeTiempo() {
-                setTimeout(function() {
-                    window.location.href = "{{ url_for('main.registro_producto') }}";
-                }, 3500);   
-                }
-            redirigirDespuesDeTiempo()
-            </script>
-        {%elif estado ==1%}
-            <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-            
-            <script>
-                
-                function redirigirDespuesDeTiempo() {
-                setTimeout(function() {
-                    window.location.href = "{{ url_for('main.historial_productos') }}";
-                }, 2000);   
-                }
-            redirigirDespuesDeTiempo()
-            </script>
-        {%else%}
-            <p id="mensaje"></p>
-        {%endif%}
         <div class="formulario">
             <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
                 <div>

@@ -2,25 +2,30 @@
 
 {% block title %}Marvy Shopmarket | Historial de productos {% endblock %}
 {% block hidden %}
-    <form action="/registro-producto" method="GET">
+    <form action="/pagina-principal" method="GET">
         <button>Atrás</button>
     </form>
     {% endblock %}
+    
 {% block content %}
     <div class="title"><h1>Inventario de productos</h1></div>
     <div id="container-producto">
-        {% for producto in productos %}
+        {% for producto,imagen_codificada in resultado %}
             <div class="producto">
-                <div class="producto-imagen"><p><img src="data:image/jpeg_;base64,{{ producto.prod_Img }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}"></div>
+                <div class="producto-imagen"><p><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}"></div>
                 <div class="producto-info">
                     <div class="producto-id"><p>Producto {{producto.prod_Id}}: {{producto.prod_Nombre}}</p></div>
                     <div class="producto-precio"><p>Precio: ${{producto.prod_Precio}}</p></div>
                     <div class="producto-cantidad"><p>Cantidad: {{ producto.prod_Cantidad }} </p></div>
                     <div class="dinero-total">Precio Total: ${{producto.prod_Total}}</div>
+                    {%for tienda in tienda_info%}
+                        {% if loop.first %}
+                            <div>{{ tienda.tienda_Nombre }}</div>
+                        {% endif %}
+                    {%endfor%}
                 </div>  
             </div>
         {% endfor %}  
-        
     </div>  
 {% endblock %}
 
