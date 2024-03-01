@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from functools import wraps 
 # Importa los modelos necesarios desde el archivo models.py
 from .models import Productos,Administrador, Tenderos, Tiendas
-
+from sqlalchemy import and_
 from app import db
 import base64
 import locale
@@ -123,8 +123,44 @@ def logout():
 @login_required
 def registro_tendero():
     return render_template('18_registro-tendero.html')
-from sqlalchemy import and_
 
+@main_bp.route('/nuevo_tendero', methods=['GET','POST'])
+@login_required
+def nuevo_tendero():
+    if request.method == 'POST':
+        id = request.form['id-tendero']
+        nombre = request.form['nom-tendero']
+        correo = request.form['correo-tendero']
+        celular = request.form['celular-tendero']
+        try:
+            password = bcrypt.generate_password_hash(request.form['password-tendero']).decode('utf-8')
+        except:
+            estado = 0
+            mensaje = "Por favor complete todos los campos"
+            return render_template('18_registro-tendero.html', estado=estado, mensaje=mensaje)
+        tienda_id = session['tienda_Id']
+        
+        existing_user = Tenderos.query.filter(and_(Tenderos.tendero_Id == int(id), Tenderos.tienda_Id == tienda_id)).first()
+        if existing_user:
+            mensaje="El usuario ya existe"
+            estado=0
+            return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
+        else:
+            new_tendero= Tenderos(
+                tendero_Id=int(id),
+                tendero_Nombre= nombre,
+                tendero_Correo= correo,
+                tendero_Celular= celular,
+                tendero_Password= password,
+                tienda_Id= tienda_id
+            )
+            db.session.add(new_tendero)
+            db.session.commit()
+            mensaje="Registro éxitoso"
+            estado=1
+            return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
+            
+            
 @main_bp.route('/nuevo_producto', methods=['POST'])
 @login_required
 def nuevo_producto():
@@ -304,7 +340,7 @@ def verificar_usuario():
         try:
             # Obtener el tendero de la base de datos
             administrador = Administrador.query.filter_by(adm_Id=int(userid)).first()
-            
+            tendero= Tenderos.query.filter_by(tendero_Id=int(userid)).first()
             if administrador:
                 # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
                 if bcrypt.check_password_hash(administrador.adm_Password, password):
@@ -321,8 +357,25 @@ def verificar_usuario():
                     estado=0
                     mensaje = "Contraseña incorrecta"
             else:
-                mensaje = "Usuario no encontrado"
-                estado=0
+                if tendero == 0:
+                    # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
+                    if bcrypt.check_password_hash(tendero.temdero_Password, password):
+                        # Autenticación exitosa
+                        estado=1
+                        # Si la autenticación es exitosa, guarda el ID de la tienda en la sesión
+                        
+                        session['tienda_Id'] = administrador.tienda_Id  
+                        session['tendero_Id'] = administrador.tendero_Id
+                        session['adm_Id']=administrador.adm_Id
+
+                        mensaje = "Autenticación exitosa"
+                        return redirect(url_for('main.pagina_principal'))
+                    else:
+                        estado=0
+                        mensaje = "Contraseña incorrecta"
+                else:
+                    mensaje = "Usuario no encontrado"
+                    estado=0
             return render_template('1_login.html',estado=estado, mensaje=mensaje)
         except:      
             mensaje = "Usuario no encontrado"    
