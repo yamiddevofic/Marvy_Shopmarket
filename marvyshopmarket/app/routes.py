@@ -342,9 +342,11 @@ def verificar_usuario():
             administrador = Administrador.query.filter_by(adm_Id=int(userid)).first()
             tendero= Tenderos.query.filter_by(tendero_Id=int(userid)).first()
             if administrador:
+                print("Entré a administrador")
                 # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
                 if bcrypt.check_password_hash(administrador.adm_Password, password):
                     # Autenticación exitosa
+                    print("Autentiqué administrador")
                     estado=1
                     # Si la autenticación es exitosa, guarda el ID de la tienda en la sesión
                     
@@ -357,16 +359,17 @@ def verificar_usuario():
                     estado=0
                     mensaje = "Contraseña incorrecta"
             else:
-                if tendero == 0:
+                if tendero:
+                    print("Entré a tendero")
                     # Verificar si la contraseña ingresada coincide con la contraseña almacenada en la base de datos
-                    if bcrypt.check_password_hash(tendero.temdero_Password, password):
+                    if bcrypt.check_password_hash(tendero.tendero_Password, password):
+                        print("Autentiqué tendero")
                         # Autenticación exitosa
                         estado=1
                         # Si la autenticación es exitosa, guarda el ID de la tienda en la sesión
                         
-                        session['tienda_Id'] = administrador.tienda_Id  
-                        session['tendero_Id'] = administrador.tendero_Id
-                        session['adm_Id']=administrador.adm_Id
+                        session['tienda_Id'] = tendero.tienda_Id  
+                        session['tendero_Id'] = tendero.tendero_Id
 
                         mensaje = "Autenticación exitosa"
                         return redirect(url_for('main.pagina_principal'))
