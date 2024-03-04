@@ -12,8 +12,26 @@
     <div class="hidden">
         {% block hidden %}{% endblock %}
     </div>
-   <div class="container">
-        <div class="content">
+   <div class="container" id="container">
+        <input type="checkbox" class="theme-checkbox" id="modo-oscuro">
+        <script>
+            const switchInput = document.getElementById('modo-oscuro');
+
+            // Agrega un evento 'change' al input del checkbox
+            switchInput.addEventListener('change', function() {
+                // Verifica si el checkbox está marcado (checked)
+                if (this.checked) {
+                    // Si está marcado, agrega una clase al body para activar el modo oscuro
+                    console.log("activado")
+                    document.body.classList.add('dark-mode');
+                } else {
+                    // Si no está marcado, remueve la clase del body para desactivar el modo oscuro
+                    document.body.classList.remove('dark-mode');
+                }
+            });
+        </script>
+
+        <div class="content" id="content">
             {% block content %}{% endblock %}
         </div>
    </div> 

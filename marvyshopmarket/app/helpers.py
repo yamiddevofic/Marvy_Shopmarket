@@ -9,7 +9,7 @@ def generar_codigo():
     code = ''.join(random.choice(caracteres) for _ in range(8))
     return code
 
-def obtener_informacion_perfil(adm_id):
+def obtener_informacion_adm(adm_id):
     try:
         # Busca el usuario en la base de datos por su ID
         administrador = Administrador.query.filter_by(adm_Id=adm_id).first()
@@ -23,7 +23,22 @@ def obtener_informacion_perfil(adm_id):
     except Exception as e:
         print(f"Error al obtener información del perfil del administrador: {e}")
     return None
-    
+def obtener_informacion_tendero(tendero_id):
+    try:
+        # Busca el usuario en la base de datos por su ID
+        tendero = Tenderos.query.filter_by(tendero_Id=tendero_id).first()
+        if tendero:
+            return {
+                'id': tendero.tendero_Id,
+                'nombre': tendero.tendero_Nombre,
+                'correo': tendero.tendero_Correo,
+                # Otros campos del perfil que puedas tener en tu modelo de Usuario
+            }
+    except Exception as e:
+        print(f"Error al obtener información del perfil del administrador: {e}")
+    return None
+
+
 def obtener_informacion_tienda(tienda_id):
     try:
         # Busca la tienda en la base de datos por su ID
