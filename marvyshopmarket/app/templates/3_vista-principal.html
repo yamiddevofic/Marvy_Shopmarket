@@ -3,14 +3,57 @@
 {% block title %}Marvy Shopmarket | Home {% endblock %}
 
 {% block content %}
+    {% if estado==1 %}
+        <div id="content-login">
+            
+        </div>
+        <div class="mensaje" style="display: flex;">
+            <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+            
+        </div>        
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.pagina_principal') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+        {% elif estado==0 %}
+        <div class="mensaje" style="display: flex;">
+            <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+        </div>
+                    
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.login') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+
+        {% elif estado==2 %}
+        <div class="mensaje">
+            <p class="mensaje-content">{{mensaje}}</p>
+        </div>
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.login') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {% endif %}
     <div id="container-home">
 
         <div class="menu">
-            <div><button id="menu-hamburguesa"><i class="fa-solid fa-bars" style="font-size: 2rem; cursor:pointer;"></i></button></div>
+            <div><button id="menu-hamburguesa"><img src="{{url_for('static', filename='images/menu(1).png')}}" width="40%"></button></div>
         </div>
         <div class="menu-desplegable" id="menu-desplegable">
             <div class="menu-desplegable-content">
-                <div><button class="cerrar" style="background: none; border-radius: 50%; border: none;"><i class="fa-solid fa-circle-xmark" style="font-size: 2.5rem; color: var(--negro); cursor: pointer"></i></button></div>
+                <div><button class="cerrar" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
                 <div class="imagen_perfil_content">
                     <div class="imagen_perfil">
                         <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" style="border-radius: 50%;" alt="Imagen de la Tienda"></div>
@@ -69,7 +112,7 @@
                     <div><img src="{{ url_for('static', filename='images/estar.png') }}" style="width: 150px;"></div>
                 </div>
             {% elif perfil=="tendero" %}
-                <div class="action">
+                <div class="action" style="grid-column: 2;">
                     <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
                 </div>

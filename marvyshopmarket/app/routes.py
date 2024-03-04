@@ -90,7 +90,7 @@ def pagina_principal():
 @login_required
 def registro_suministro():
     if request.method == 'GET':
-        if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+        if ('adm_Id' in session and 'tienda_Id'in session):
             return render_template('5_registro_suministro.html')
         else:
             mensaje="Debes iniciar sesión primero"
@@ -415,7 +415,7 @@ def verificar_usuario():
                     mensaje = "Usuario no encontrado"
                     estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
-        except:
-            mensaje = "Usuario no encontrado"
+        except Exception as e:
+            mensaje = f"Error: {e}"
             estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)

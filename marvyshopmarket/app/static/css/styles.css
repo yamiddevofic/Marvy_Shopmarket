@@ -131,6 +131,9 @@ a{
     background-color: var(--blanco);
     border: 1px solid var(--claro-secundario-1)
 }
+.dark-mode #container-producto table{
+    background: var(--oscuro-secundario-1);
+}
 .producto{
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -172,6 +175,9 @@ a{
     grid-column: 1;
     grid-row:1;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
 }
 .buscador{
     grid-column: 3;
@@ -185,12 +191,22 @@ a{
     grid-column: 1;
     grid-row: 3/-1;
 }
+#btn-cerrar{
+    font-size: 2.5rem;
+    color: var(--negro);
+    cursor: pointer
+}
+.dark-mode #btn-cerrar{
+    font-size: 2.5rem;
+    color: var(--blanco);
+    cursor: pointer
+}
 .botom{
     grid-column: 1/-1;
     grid-row: 3;
     height: 50%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr;
     gap: 5%;
     /* flex-direction: column; */
@@ -282,7 +298,7 @@ a{
     grid-row: 1/-1;
     position: absolute;
     width: 84%;
-    height: 90%;
+    height: 85%;
     display: none;
     flex-direction: column ;
     justify-content: center;
@@ -469,12 +485,16 @@ img{
 }
 
 #menu-hamburguesa{
-    width: 30%;
+    width: 8rem;
+    cursor: pointer;
+    background-color: var(--oscuro-secundario-1);
+    border: none;
+    margin: 15%;
+
 }
 #menu-hamburguesa:hover{
-    background: var(--negro);
+    background: var(--claro-principal);
     color: var(--blanco);
-    border: 1px solid black;
 }
 #text_loading{
     width: 100%;
