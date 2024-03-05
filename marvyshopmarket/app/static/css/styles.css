@@ -255,7 +255,17 @@ a{
     justify-content: space-around;
     font-size: 1.2rem;
     margin: 2% 0;
-    padding: 2% o;
+    padding: 2%;
+}
+.totales div{
+    background: var(--claro-secundario-3);
+    padding: 2%;
+    color: var(--negro);
+    width: 30%;
+}
+.dark-mode .totales div{
+    background: var(--oscuro-secundario-2);
+    color: var(--blanco);
 }
 #menu-desplegable{
     display: none;
@@ -480,9 +490,16 @@ img{
     align-items: center;
     text-align: center;
 }
-.logo{
+.dark-mode .imagen_perfil{
+    background: var(--oscuro-secundario-2);
+};
+.container .content .logo{
     grid-row: 1;
-    grid-column: 2;
+    grid-column: 2/3;
+}
+#logo{
+    grid-row: 1;
+    grid-column: 2/3;
 }
 #logo-signUp{
     width: 8%;
