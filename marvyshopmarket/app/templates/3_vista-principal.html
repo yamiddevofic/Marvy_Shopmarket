@@ -5,17 +5,17 @@
 {% block content %}
     {% if estado==1 %}
         <div id="content-login">
-            
+
         </div>
         <div class="mensaje" style="display: flex;">
             <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
-            
-        </div>        
+
+        </div>
         <script>
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
                 window.location.href = "{{ url_for('main.pagina_principal') }}";
-            }, 2000);   
+            }, 2000);
             }
         redirigirDespuesDeTiempo()
         </script>
@@ -23,12 +23,12 @@
         <div class="mensaje" style="display: flex;">
             <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
         </div>
-                    
+
         <script>
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
                 window.location.href = "{{ url_for('main.login') }}";
-            }, 2000);   
+            }, 2000);
             }
         redirigirDespuesDeTiempo()
         </script>
@@ -41,7 +41,7 @@
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
                 window.location.href = "{{ url_for('main.login') }}";
-            }, 2000);   
+            }, 2000);
             }
         redirigirDespuesDeTiempo()
         </script>
@@ -73,7 +73,7 @@
                                 <a href="registro-tendero"><li><i class="fa-solid fa-user"></i> Registrar tendero</li></a>
                                 <li><i class="fa-solid fa-address-book"></i> Libreta de proveedores</li>
                             {% endif %}
-                            
+
                             <li><i class="fa-solid fa-gear"></i> Ajuste</li>
                         </ul>
                     </div>
@@ -86,7 +86,7 @@
         <div class="buscador">
             <div><input type="search" placeholder="buscar...">   <i class="fa-solid fa-search" style="cursor: pointer;"></i></div>
         </div>
-    
+
         <div class="titulo">
             <div><h1>{{ informacion_tienda.nombre }}</h1></div>
         </div>
@@ -94,7 +94,7 @@
         <!-- <div class="nombre-img">
             <div class="imagen-perfil">
                 <img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda">
-            </div>            
+            </div>
             <div><h3>{{informacion_tienda.nombre}}</h3></div>
         </div> -->
         <div class="botom">
@@ -119,22 +119,21 @@
             {% else %}
                 <div><h1>ERROR 404</h1></div>
             {% endif %}
+            <div class="totales">
+                <div>
+                    <h4>Total De Venta:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Gastos:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Neto:</h4>
+                    <p>$_______</p>
+                </div>
+            </div>
         </div>
-        
-        <!-- <div class="totales">
-            <div>
-                <h4>Total De Venta:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Gastos:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Neto:</h4>
-                <p>$_______</p>
-            </div>
-        </div> -->
     </div>
 
 {% endblock %}
