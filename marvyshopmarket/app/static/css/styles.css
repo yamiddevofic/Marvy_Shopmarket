@@ -219,7 +219,7 @@ a{
     grid-row: 3;
     height: 50%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 28% 28% 28%;
     grid-template-rows: 1fr;
     gap: 5%;
     /* flex-direction: column; */
@@ -324,8 +324,8 @@ a{
     grid-column: 1/-1;
     grid-row: 1/-1;
     position: absolute;
-    width: 84%;
-    height: 85%;
+    width: 100%;
+    height: 100%;
     display: none;
     flex-direction: column ;
     justify-content: center;
