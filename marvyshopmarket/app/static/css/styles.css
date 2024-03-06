@@ -5,9 +5,9 @@
     --oscuro-principal: #007A41 ;
     --blanco: #FFF ;
     --negro: #0C0E0D ;
-    --claro-secundario-1: #909090;
-    --claro-secundario-2: #CBCBCB;
-    --claro-secundario-3: #e0e0e0;
+    --claro-secundario-1: #c6c6c6;
+    --claro-secundario-2: #dddddd;
+    --claro-secundario-3: #e3e3e3;
     --oscuro-secundario-1:  #353535 ;
     --oscuro-secundario-2: #636363 ;
     --btn-oscuro-continuar: #009400 ;
@@ -22,7 +22,8 @@
     box-sizing: border-box;
     font-family: 'Poppins',Arial, Helvetica, sans-serif;
 }
-button{
+
+button, #registro-tienda-content, #registro-adm-content{
     width: 80%;
 }
 .transicion {
@@ -42,17 +43,12 @@ button{
 .hidden button{
     margin: 2%;
 }
-body,html{
-    width: 100%;
-    height: 100%;
-}
-.container {
+body,html,.container {
     height: 100%;
     width: 100%;
     background: #1D976C;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #93F9B9, #1D976C);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #93F9B9, #1D976C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
 }
 
 h1{
@@ -66,25 +62,28 @@ a{
     height: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr 42% 42% 1fr;
+    grid-template-columns: 5% 45% 45% 5%;
     grid-template-rows: 1fr 85% 10%;
 }
 .container .content{
-    grid-column: 2/4;
-    grid-row: 2;
+    grid-column: 1/-1;
+    grid-row: 1/-1;
     width: 100%;
     height: 100%;
-    background-color: var(--blanco);
+    background-color: none;
+    color: var(--blanco);
     border-radius: 10px;
     display: grid;
     flex-direction: column;
-    justify-content: center;
+   
     align-items: center;
     text-align: center;
-    overflow: auto;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 40% 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
-    gap: 2%;
+    gap: 0;
+}
+.dark-mode body{
+    background: black;
 }
 .dark-mode .container{
     background: black;
@@ -92,7 +91,7 @@ a{
 }
 .dark-mode .container .content {
     /* Estilos específicos para el body en modo oscuro */
-    background-color: #222222; /* Fondo oscuro */
+    background-color: none; /* Fondo oscuro */
     color: var(--claro-secundario-2); /* Texto blanco */
 }
 .dark-mode #container_login{
@@ -141,6 +140,7 @@ a{
   
 #container-producto table {
     background-color: var(--blanco);
+    color: var(--oscuro-secundario-1);
     border: 1px solid var(--claro-secundario-1)
 }
 .dark-mode #container-producto table{
@@ -227,7 +227,7 @@ a{
     padding: 2%;
 }
 .botom .action{
-    border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center; flex-direction: column;background: var(--claro-secundario-3)
+    border-radius: 10px; height: auto;display: flex; align-items: center; justify-content: center; flex-direction: column; background: var(--claro-secundario-2)
 }
 .dark-mode .action{
     background: var(--oscuro-secundario-1);
@@ -339,9 +339,10 @@ a{
     grid-row: 2;
     grid-template-columns: 1fr 1fr;
     grid-template-rows:  auto 1fr auto;
+    color: var(--oscuro-secundario-1);
 }
 #section_tuTienda{
-    border-right: 1px solid var(--negro);
+    border-right: 1px solid var(--blanco);
     width: auto;
     display: flex;
     align-items:center;
@@ -351,30 +352,38 @@ a{
     width: auto;
     grid-row: 1/3;
     grid-column: 1;
+    color: var(--oscuro-secundario-1);
+}
+.dark-mode #section_tuTienda{
+    color: var(--claro-secundario-2);
 }
 #section_usuario{
     display: flex;
     align-items:center;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    height: auto;
     width: auto;
     grid-row: 1/3;
     grid-column: 2;
 }
+.dark-mode #section_usuario{
+    color: var(--claro-secundario-2);
+}
 #registro-tienda-content{
     background: var(--claro-secundario-3);
     border-radius: 10px;
-    width: 80%;
     padding: 2%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+.dark-mode #registro-tienda-content, .dark-mode #registro-adm-content{
+    background: var(--oscuro-secundario-1)
+}
 #registro-adm-content{
     background: var(--claro-secundario-3);
     border-radius: 10px;
-    width: 80%;
     height: 100%;
     padding: 2%;
     display: flex;
@@ -412,15 +421,17 @@ a{
     color: var(--blanco);
 }
 #container_login{
-
+    border-radius: 10px;
     grid-column: 2;
     grid-row: 1/-1;
-    padding: 2%;
+    padding: 5%;
     background: var(--claro-secundario-3);
-    height: 80%;
+    height: auto;
     display: grid;
     grid-template-rows: 20% 1fr;
     grid-template-rows: auto;
+    justify-content: center;
+    align-items: center;
 }
 .mensaje-content{
     background-color: var(--blanco);
@@ -438,6 +449,7 @@ a{
     grid-row: 1;
     padding: 5%;
     margin-bottom: 2%;
+    width: 100%
 }
 #signUp{
     grid-column: 1/-1;
@@ -459,7 +471,7 @@ label{
     margin-top: 2%;
 }
 input{
-    margin-bottom: 2%;
+    margin-bottom: 5%;
 }
 img{
     margin: 2%;
@@ -471,6 +483,15 @@ img{
 .registro{
     grid-row: 2;
     grid-column: 2;
+    border-radius: 10px;
+    height: 100%;
+    border: 1px solid var(--oscuro-secundario-1);
+    padding: 15%;
+    background: var(--claro-secundario-2);
+    color: var(--oscuro-secundario-1);
+}
+.dark-mode .registro{
+    border: 1px solid var(--claro-secundario-1)
 }
 .imagen-logo{
     grid-column: 2;
@@ -500,6 +521,11 @@ img{
 #logo{
     grid-row: 1;
     grid-column: 2/3;
+    width: 100%;
+    display: none;
+}
+#logo img{
+    width: 15%;
 }
 #logo-signUp{
     width: 8%;
@@ -557,10 +583,17 @@ img{
     width: 100%;
     height: 100%;
     display: grid;
+    color: var(--oscuro-secundario-1);
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     align-items: center;
     flex-direction: center;
+}
+#content-login .logo{
+    width: 100%
+}
+#content-login .logo img{
+    width: 30%;
 }
 @keyframes square-animation {
     0% {

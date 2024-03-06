@@ -272,24 +272,28 @@ def historial_productos():
     if request.method == "GET":
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
             tienda_id = session['tienda_Id']
-            resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
-            productos_filtrados = [(producto, tienda) for producto, tienda in resultado if producto.tienda_Id == tienda_id]
+            try:
+                resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
+                productos_filtrados = [(producto, tienda) for producto, tienda in resultado if producto.tienda_Id == tienda_id]
 
-            productos_codificados = []
-            tienda_info = []
+                productos_codificados = []
+                tienda_info = []
 
-            for producto, tienda in productos_filtrados:
-                if producto.prod_Img:
-                    img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
-                    productos_codificados.append((producto, img_codificada))
-                else:
-                    productos_codificados.append((producto, None))
-                tienda_info.append(tienda)
-            return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info)
+                for producto, tienda in productos_filtrados:
+                    if producto.prod_Img:
+                        img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
+                        productos_codificados.append((producto, img_codificada))
+                    else:
+                        productos_codificados.append((producto, None))
+                    tienda_info.append(tienda)
+                return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info)
+            except:
+                return render_template('11_historial_prod.html')
         else:
             mensaje="Debes iniciar sesión primero"
             estado=0
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
+        
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method == 'POST':

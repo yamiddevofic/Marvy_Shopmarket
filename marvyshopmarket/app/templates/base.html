@@ -11,7 +11,7 @@
 <body>
    
    <div class="container" id="container">        
-        <input type="checkbox" class="theme-checkbox" id="modo-oscuro">
+        <!-- <input type="checkbox" class="theme-checkbox" id="modo-oscuro">
         <script>
             
             const switchInput = document.getElementById('modo-oscuro');
@@ -28,12 +28,11 @@
                     document.body.classList.remove('dark-mode');
                 }
             });
-        </script>
+        </script> -->
         <div class="content" id="content">
             {% block content %}{% endblock %}
         </div>
-   </div> 
+   </div>
    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>
