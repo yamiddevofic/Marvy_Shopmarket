@@ -8,8 +8,8 @@ DELETE FROM administrador WHERE adm_Id>1;
 DELETE FROM tenderos WHERE tendero_Id>1 ;
 DELETE FROM tiendas WHERE tienda_Id>1 ;
 DELETE FROM productos WHERE tendero_Id > 100;
-
-
+CREATE DATABASE marvy_shopmarket;
+DROP DATABASE marvy_shopmarket;
 CREATE TABLE `administrador` (
   `adm_Id` BIGINT NOT NULL,
   `adm_Nombre` varchar(70) DEFAULT NULL,
@@ -127,7 +127,6 @@ CREATE TABLE `tiendas` (
   PRIMARY KEY (`tienda_Id`)
 );
 
-ALTER TABLE tiendas MODIFY COLUMN tienda_Celular BIGINT;
 
 CREATE TABLE `tenderos` (
   `tendero_Id` BIGINT NOT NULL,

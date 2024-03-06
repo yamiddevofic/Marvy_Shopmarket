@@ -16,8 +16,12 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Precio</th>
+                    <th>Precio bruto</th>
                     <th>Cantidad</th>
+                    <th>Total bruto</th>
+                    <th>Ganancia</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
                     <th>Imagen</th>
                 </tr>
 
@@ -26,8 +30,12 @@
                     {% for producto,imagen_codificada in resultado %}
                     <tr>
                         <td>{{ producto.prod_Nombre }}</td>
-                        <td>{{ producto.prod_Precio | format }}</td>
+                        <td>$ {{ producto.prod_Precio}}</td>
                         <td>{{ producto.prod_Cantidad}}</td>
+                        <td>$ {{producto.prod_Total}}</td>
+                        <td>{{ producto.prod_Ganancia}}%</td>
+                        <td>$ {{producto.prod_TotalPrecio}}</td>
+                        <td>$ {{producto.prod_TotalGana}}</td>
                         <td width="250"><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td>
                     </tr>
                     {% endfor %}

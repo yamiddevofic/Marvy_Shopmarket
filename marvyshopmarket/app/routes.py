@@ -235,6 +235,7 @@ def nuevo_producto():
         nombre = request.form['prod_Nombre']
         precio = request.form['prod_Precio']
         cantidad = request.form['prod_Cantidad']
+        ganancia = request.form['prod_Ganancia']
         imagen = request.files['prod_Img']
         imagen_data = imagen.read()
         tienda_id = session['tienda_Id']
@@ -256,6 +257,7 @@ def nuevo_producto():
                 prod_Id=int(id),
                 prod_Nombre=nombre,
                 prod_Precio=precio,
+                prod_Ganancia= ganancia,
                 prod_Cantidad=cantidad,
                 prod_Img=imagen_data,
                 tienda_Id=tienda_id,
@@ -283,6 +285,16 @@ def historial_productos():
                     if producto.prod_Img:
                         img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
                         productos_codificados.append((producto, img_codificada))
+                    if producto.prod_Precio:
+                        producto.prod_Precio= "{:,}".format(int(producto.prod_Precio))
+                    if producto.prod_TotalPrecio:
+                        producto.prod_TotalPrecio= "{:,}".format(int(producto.prod_TotalPrecio))
+                    if producto.prod_Total:
+                        producto.prod_Total= "{:,}".format(int(producto.prod_Total))
+                    if producto.prod_Ganancia:
+                        producto.prod_Ganancia= int(producto.prod_Ganancia)
+                    if producto.prod_TotalGana:
+                        producto.prod_TotalGana= "{:,}".format(int(producto.prod_TotalGana))
                     else:
                         productos_codificados.append((producto, None))
                     tienda_info.append(tienda)
