@@ -52,7 +52,7 @@ class Productos(db.Model):
     prod_Nombre = db.Column(db.String(70))
     prod_Precio = db.Column(db.Float)
     prod_Ganancia= db.Column(db.Float)
-    prod_TotalPrecio = db.Column(db.Float,db.Computed('(prod_Ganancia/prod_Precio)*100'))
+    prod_TotalPrecio = db.Column(db.Float,db.Computed('(prod_Precio*(prod_Ganancia/100))+prod_Precio'))
     prod_Cantidad = db.Column(db.BigInteger)
     prod_Categoria = db.Column(db.String(45))
     prod_Total = db.Column(db.Float,db.Computed('(prod_Precio * prod_Cantidad)'))

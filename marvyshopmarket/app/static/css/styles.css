@@ -54,7 +54,7 @@ body,html,.container {
 }
 
 h1{
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 a{
     text-decoration: none;
@@ -64,6 +64,7 @@ a{
     height: 100%;
     box-sizing: border-box;
     display: grid;
+    overflow: auto;
     grid-template-columns: 5% 45% 45% 5%;
     grid-template-rows: 1fr 85% 10%;
 }
@@ -77,8 +78,6 @@ a{
     border-radius: 10px;
     display: grid;
     flex-direction: column;
-   
-    align-items: center;
     text-align: center;
     grid-template-columns: 1fr 40% 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -338,6 +337,10 @@ a{
     align-items: center;
     background: var(--opacidad);
 }
+.mensaje p{
+    height: auto;
+    padding: 2%;
+}
 
 #content_signUp{
     display: grid;
@@ -477,7 +480,8 @@ label{
     margin-top: 2%;
 }
 input{
-    margin-bottom: 5%;
+    margin-bottom: 3%;
+    width: 60%;
 }
 img{
     margin: 2%;
@@ -487,19 +491,29 @@ img{
     grid-column: 2;
 }
 .registro{
-    grid-row: 2;
-    grid-column: 2;
+    grid-row: 1/-1;
+    grid-column: 2/3;
     border-radius: 10px;
-    height: auto;
+    height: 95%;
+    overflow: auto;
+    width: 100%;
     padding: 2%;
     font-size: 1.2rem;
     border: 1px solid var(--oscuro-secundario-1);
     background: var(--claro-secundario-2);
     color: var(--oscuro-secundario-1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
 }
 .registro form{
     padding: 2%;
     height: auto;
+}
+.regitro form div{
+    width: 100%;
 }
 .dark-mode .registro{
     border: 1px solid var(--claro-secundario-1)
@@ -824,9 +838,12 @@ form input{
     width: 60%;
     height: 30px;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
 }
 
+form label{
+    font-size: 1.2rem;
+}
 #prod_Ganancia{
     width: 30%;
 }
