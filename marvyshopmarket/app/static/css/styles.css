@@ -349,6 +349,7 @@ a{
     grid-template-columns: 1fr 1fr;
     grid-template-rows:  auto 1fr auto;
     color: var(--oscuro-secundario-1);
+    font-size: 0.5rem;
 }
 #section_tuTienda{
     border-right: 1px solid var(--blanco);
@@ -467,11 +468,15 @@ a{
     flex-direction: column;
     grid-template-columns: 1fr;
     grid-template-rows: 10% 1fr 5%;
+    
 }
 #welcome{
     grid-column: 1/-1;
-    grid-row: 2/4;
+    grid-row: 1/-1;
     width: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
 }
 #title_login{
     margin-bottom: 4%;

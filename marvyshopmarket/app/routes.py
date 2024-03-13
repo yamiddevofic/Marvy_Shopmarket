@@ -4,10 +4,11 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas
+from .models import Productos, Administrador, Tenderos, Tiendas, Ventas
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
+from datetime import datetime
 
 locale.setlocale(locale.LC_ALL, '')
 main_bp = Blueprint('main', __name__)
@@ -118,6 +119,29 @@ def registro_ventas():
             mensaje="Debes iniciar sesión primero"
             estado=0
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
+    if request.method == 'POST':
+        if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+            cantidad= request.form['cantidad-producto-vendido']
+            metodo= request.form['metodo-pago']
+            fecha= datetime.now()
+            print(fecha)
+            tienda_id = session['tienda_Id']
+            tendero_id = session['tendero_Id']
+            
+            new_Venta= Ventas(
+                venta_Cantidad = cantidad,
+                venta_Metodo = metodo,
+                venta_Datetime = fecha,
+                tendero_Id = tendero_id,
+                tienda_Id = tienda_id
+            )
+            db.session.add(new_Venta)
+            db.session.commit()
+        else:
+            mensaje="Debes iniciar sesión primero"
+            estado=0
+            return render_template('1_login.html', mensaje=mensaje, estado=estado)
+        
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
 @login_required
@@ -408,11 +432,11 @@ def verificar_usuario():
             if administrador:
                 if bcrypt.check_password_hash(administrador.adm_Password, password):
                     estado = 1
-                    session['tienda_Id'] = administrador.tienda_Id
+                    session['tienda_Id'] = tendero.tienda_Id
                     session['adm_Id'] = administrador.adm_Id
                     session['tendero_Id'] = tendero.tendero_Id
                     mensaje = "Autenticación exitosa"
-                    return redirect(url_for('main.pagina_principal'))
+                    return redirect(url_for('main.pagina_principal', mensaje=mensaje))
                 else:
                     estado = 0
                     mensaje = "Contraseña incorrecta"

@@ -3,14 +3,21 @@ SELECT * FROM tiendas;
 SELECT * FROM tenderos;
 SELECT * FROM productos;
 SELECT * FROM administrador;
+SELECT * FROM ventas;
 
+DELETE FROM ventas WHERE venta_Id>0;
 DELETE FROM administrador WHERE adm_Id>1;
 DELETE FROM tenderos WHERE tendero_Id>1 ;
 DELETE FROM tiendas WHERE tienda_Id>1 ;
 DELETE FROM productos WHERE tendero_Id > 100;
 CREATE DATABASE marvy_shopmarket;
+USE marvy_shopmarket;
 DROP DATABASE marvy_shopmarket;
-CREATE TABLE `administrador` (
+DROP TABLE ventas;
+DROP TABLE administrador;
+
+
+CREATE TABLE `administrador` ( 
   `adm_Id` BIGINT NOT NULL,
   `adm_Nombre` varchar(70) DEFAULT NULL,
   `adm_Correo` varchar(100) DEFAULT NULL,
@@ -70,9 +77,12 @@ CREATE TABLE `productos` (
   `prod_Id` BIGINT,
   `prod_Nombre` varchar(70),
   `prod_Precio` float,
+  `prod_Ganancia` float,
+  `prod_TotalPrecio` float GENERATED ALWAYS AS ((prod_Precio*(prod_Ganancia/100))+prod_Precio),
   `prod_Cantidad` int,
   `prod_Categoria` varchar(45),
-  `prod_Total` float,
+  `prod_Total` float generated always as(prod_Precio*prod_Cantidad),
+  `prod_TotalGana` float generated always as(prod_TotalPrecio*prod_Cantidad),
   `prod_Img` longblob,
   `tendero_Id` BIGINT,
   `tienda_Id` BIGINT,
@@ -80,6 +90,7 @@ CREATE TABLE `productos` (
   KEY `fk_productos_tenderos1_idx` (`tendero_Id`,`tienda_Id`),
   CONSTRAINT `fk_productos_tenderos1` FOREIGN KEY (`tendero_Id`, `tienda_Id`) REFERENCES `tenderos` (`tendero_Id`, `tienda_Id`)
 );
+DROP TABLE productos;
 
 CREATE TABLE `proveedores` (
   `prov_Id` BIGINT NOT NULL,
@@ -139,9 +150,30 @@ CREATE TABLE `tenderos` (
   KEY `fk_tenderos_tiendas2_idx` (`tienda_Id`),
   CONSTRAINT `fk_tenderos_tiendas2` FOREIGN KEY (`tienda_Id`) REFERENCES `tiendas` (`tienda_Id`)
 );
+ALTER TABLE ventas CHANGE COLUMN ventas_Vueltos venta_Vueltos FLOAT;
+
+DELIMITER //
+CREATE PROCEDURE eliminar_ventas_y_reiniciar_id()
+BEGIN
+    DELETE FROM ventas;
+    ALTER TABLE clientes AUTO_INCREMENT = 1;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER eliminar_ventas_y_reiniciar_id
+AFTER DELETE
+ON ventas
+FOR EACH ROW
+BEGIN
+    CALL eliminar_ventas_y_reiniciar_id();
+END;
+//
+DELIMITER ;
 
 CREATE TABLE `ventas` (
-  `venta_Id` BIGINT NOT NULL,
+  `venta_Id` BIGINT NOT NULL auto_increment,
   `venta_Cantidad` int,
   `venta_Metodo` varchar(45),
   `venta_Datetime` datetime,

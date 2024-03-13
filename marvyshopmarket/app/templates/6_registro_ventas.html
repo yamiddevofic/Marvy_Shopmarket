@@ -34,7 +34,7 @@
         <p id="mensaje"></p>
     {%endif%}
     <div class="formulario">
-        <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
+        <form method="post" action="/registro-ventas" enctype="multipart/form-data">
     
             <div>
                 <div><label for="prod_Nombre">Producto Vendido:</label></div>
@@ -46,11 +46,11 @@
             </div>
             <div>
                 <div><label for="cantidad-producto-vendido">Cantidad Del Producto Vendido</label></div>
-                <div><input type="number" name="prod_Precio" id="cantidad-producto-vendido"></div>
+                <div><input type="number" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
             </div>
             <div>
                 <div><label for="metodo-pago">Metodo De Pago:</label></div>
-                <div><input type="number" name="metodo-pado"></div>
+                <div><input type="text" name="metodo-pago" id="metodo-pago"></div>
             </div>
             
             <div class="botones-secundario">
