@@ -108,9 +108,11 @@
                     <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
                 </div>
             {% elif perfil=="tendero" %}
-                <div class="action" style="grid-column: 2;">
-                    <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
-                    <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
+                <div  style="grid-column: 1/-1; width: 100%; display: flex; text-align: center; justify-content: center;">
+                    <div class="action" style="width: 50%;">
+                        <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
+                    </div>
                 </div>
             {% else %}
                 <div><h1>ERROR 404</h1></div>

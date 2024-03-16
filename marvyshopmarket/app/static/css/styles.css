@@ -217,7 +217,7 @@ a{
     grid-row: 3;
     height: 50%;
     display: grid;
-    grid-template-columns: 28% 28% 28%;
+    grid-template-columns: 42% 42%;
     grid-template-rows: 1fr;
     gap: 5%;
     /* flex-direction: column; */
