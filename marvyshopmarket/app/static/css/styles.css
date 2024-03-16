@@ -121,27 +121,27 @@ a{
 #container-producto table td, #container-producto th{
     border: 1px solid var(--negro)
 } */
-#container-producto tbody tr td{
+tbody tr td{
     border: 1px solid var(--claro-secundario-2);
 }
-#container-producto tbody tr> * {
-    background: var(--claro-secundario-2);/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+tbody tr> * {
+    background: var(--blanco);/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
   
 /* #container-producto tbody tr:nth-child(even) {
     background-color: var(--blanco);
 } */
   
-#container-producto tbody tr {
+tbody tr {
     background-image: url(noise.png);
 }
   
-#container-producto table {
+table {
     background-color: var(--blanco);
     color: var(--oscuro-secundario-1);
     border: 1px solid var(--claro-secundario-1)
 }
-.dark-mode #container-producto table{
+.dark-mode table{
     background: var(--oscuro-secundario-1);
 }
 .producto{
@@ -514,6 +514,21 @@ img{
     justify-content: center;
     align-items: center;
     margin-top: 2%;
+}
+#registro-ventas{
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+    background: none;
+    border: none;
+    display: block;
+}
+#form-ventas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#form-ventas table{
+    width: 100%;
 }
 .registro form{
     padding: 2%;

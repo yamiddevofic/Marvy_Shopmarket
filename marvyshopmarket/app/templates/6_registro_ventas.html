@@ -4,7 +4,7 @@
 <div class="logo" id="logo">
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
-<div class="registro">
+<div class="registro" id="registro-ventas">
     <div class="title">
         <h1>Registro de Venta</h1>
     </div>
@@ -14,7 +14,7 @@
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
                 window.location.href = "{{ url_for('main.registro_producto') }}";
-            }, 3500);   
+            }, 3500); 
             }
         redirigirDespuesDeTiempo()
         </script>
@@ -34,28 +34,41 @@
         <p id="mensaje"></p>
     {%endif%}
     <div class="formulario">
-        <form method="post" action="/registro-ventas" enctype="multipart/form-data">
-    
-            <div>
-                <div><label for="prod_Nombre">Producto Vendido:</label></div>
-                <div><input type="text" name="prod_Nombre"></div>
-            </div>
-            <div>
-                <div><label for="Precio-Producto">Precio Del Producto</label></div>
-                <div><input type="number" name="Precio-Producto"></div>
-            </div>
-            <div>
-                <div><label for="cantidad-producto-vendido">Cantidad Del Producto Vendido</label></div>
-                <div><input type="number" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
-            </div>
-            <div>
-                <div><label for="metodo-pago">Metodo De Pago:</label></div>
-                <div><input type="text" name="metodo-pago" id="metodo-pago"></div>
-            </div>
-            
-            <div class="botones-secundario">
+        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Id factura: </label>
+                            <div><input placeholder="#" id="id-venta" name="id-venta"></div>
+                        </td>
+                        <td>
+                            <label>Id: </label>
+                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Nombre: </label>
+                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Precio: </label>
+                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Cantidad: </label>
+                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                        </td>
+                        <td>
+                            <div class="botones-secundarios">
+                                <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="botones-secundario">
                 <button type="submit" class="btn-submit">Confirmar</button>
-            </div>
+            </div> -->
         </form>
         <form action="/pagina-principal" method="GET">
             <button>Cancelar</button>

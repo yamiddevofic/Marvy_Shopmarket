@@ -122,7 +122,6 @@ def registro_ventas():
     if request.method == 'POST':
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
             cantidad= request.form['cantidad-producto-vendido']
-            metodo= request.form['metodo-pago']
             fecha= datetime.now()
             print(fecha)
             tienda_id = session['tienda_Id']
@@ -130,7 +129,6 @@ def registro_ventas():
             
             new_Venta= Ventas(
                 venta_Cantidad = cantidad,
-                venta_Metodo = metodo,
                 venta_Datetime = fecha,
                 tendero_Id = tendero_id,
                 tienda_Id = tienda_id

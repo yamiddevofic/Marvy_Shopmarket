@@ -1,6 +1,6 @@
 import random
 import string
-from .models import Productos, Tiendas, Tenderos, Administrador
+from .models import Productos, Tiendas, Tenderos, Administrador, Ventas
 import base64
 
 def generar_codigo():
@@ -50,6 +50,20 @@ def obtener_informacion_tienda(tienda_id):
                 'nombre': tienda.tienda_Nombre,
                 'ubicacion': tienda.tienda_Ubicacion,
                 'imagen': imagen_codificada,  # Asegúrate de devolver la imagen codificada 
+            }
+    except Exception as e:
+        print(f"Error al obtener información de la tienda: {e}")
+    return None
+
+def obtener_informacion_venta(venta_id):
+    try:
+        # Busca la tienda en la base de datos por su ID
+        venta = Ventas.query.filter_by(venta_Id=venta_id).first()
+        if venta:
+            return {
+                'id': venta.venta_Id,
+                'nombre': tienda.tienda_Nombre,
+                'ubicacion': tienda.tienda_Ubicacion,
             }
     except Exception as e:
         print(f"Error al obtener información de la tienda: {e}")
