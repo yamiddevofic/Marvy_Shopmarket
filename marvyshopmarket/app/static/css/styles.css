@@ -486,7 +486,9 @@ label{
 }
 input{
     margin-bottom: 3%;
-    width: 60%;
+}
+label, input, .inputs, button{
+    width: 80%;
 }
 img{
     margin: 2%;
