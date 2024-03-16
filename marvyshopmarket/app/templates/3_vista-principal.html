@@ -107,10 +107,6 @@
                     <div><form action="/registro-suministro" method="GET"><button>Registrar suministro</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
                 </div>
-                <div class="action">
-                    <div><form action="/registro-producto" method="GET"><button>Registrar nuevo producto</button></form></div>
-                    <div><img src="{{ url_for('static', filename='images/estar.png') }}" style="width: 150px;"></div>
-                </div>
             {% elif perfil=="tendero" %}
                 <div class="action" style="grid-column: 2;">
                     <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
