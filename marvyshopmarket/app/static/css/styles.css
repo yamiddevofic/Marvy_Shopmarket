@@ -496,6 +496,7 @@ img{
 .title{
     grid-row: 1;
     grid-column: 2;
+    color: var(--blanco)
 }
 .registro{
     grid-row: 1/-1;

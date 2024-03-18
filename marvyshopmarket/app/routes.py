@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, Ventas
+from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -121,17 +121,16 @@ def registro_ventas():
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
     if request.method == 'POST':
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-            cantidad= request.form['cantidad-producto-vendido']
-            fecha= datetime.now()
-            print(fecha)
-            tienda_id = session['tienda_Id']
-            tendero_id = session['tendero_Id']
-            
-            new_Venta= Ventas(
-                venta_Cantidad = cantidad,
-                venta_Datetime = fecha,
-                tendero_Id = tendero_id,
-                tienda_Id = tienda_id
+            # cantidad= request.form['cantidad-producto-vendido']
+            # fecha= datetime.now()
+            # print(fecha)
+            # tienda_id = session['tienda_Id']
+            # tendero_id = session['tendero_Id']
+            venta_Id=request.form=['id-registro-venta']
+            producto_Id= request.form=['id-producto-venta']
+            new_Venta= VentasHasProductos(
+                venta_Id = venta_Id,
+                producto_Id = producto_Id
             )
             db.session.add(new_Venta)
             db.session.commit()
@@ -454,6 +453,7 @@ def verificar_usuario():
                     estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
         except Exception as e:
+            print(e)
             mensaje = f"Error: {e}"
             estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
