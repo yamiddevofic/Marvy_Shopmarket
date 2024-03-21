@@ -183,10 +183,10 @@ table {
     height: 100%;
 
 }
-#container-home header{
+#container-home footer{
     grid-column: 2;
     grid-row: -1;
-    height: 50px;
+    height: auto;
 }
 .menu{
     grid-column: 1;

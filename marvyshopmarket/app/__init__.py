@@ -18,6 +18,8 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
+
     from .routes import main_bp
     app.register_blueprint(main_bp)
+
     return app
