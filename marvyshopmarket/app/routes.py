@@ -193,7 +193,7 @@ def ajustes_perfil():
 @main_bp.route('/cerrar-sesion', methods=['GET', 'POST'])
 @login_required
 def logout():
-    if 'tienda_Id' in session and 'adm_Id':
+    if 'tienda_Id' in session and 'adm_Id' in session:
         session.pop('tienda_Id', None)
         session.pop('adm_Id', None)
         return render_template('17_cerrar-sesion.html')
