@@ -188,6 +188,9 @@ table {
     grid-row: -1;
     height: auto;
 }
+#container-home footer p{
+    padding: 2%;
+}
 .menu{
     grid-column: 1;
     grid-row:1;
@@ -224,7 +227,7 @@ table {
     grid-row: 3;
     height: 50%;
     display: grid;
-    grid-template-columns: 42% 42%;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr;
     gap: 5%;
     /* flex-direction: column; */
@@ -241,6 +244,7 @@ table {
     background: var(--claro-secundario-2);
     padding: 2%;
 }
+
 .dark-mode .action{
     background: var(--oscuro-secundario-1);
 }
@@ -262,7 +266,7 @@ table {
 }
 .totales{
     grid-column: 1/-1;
-    grid-row: 4/-1;
+    grid-row: -2;
     display: flex;
     justify-content: space-around;
     font-size: 1.2rem;

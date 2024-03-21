@@ -105,10 +105,17 @@
                     <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
                 </div>
+                
                 <div class="action">
                     <div><form action="/registro-suministro" method="GET"><button>Registrar suministro</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
                 </div>
+
+                <div class="action">
+                    <div><form action="/registro-proveedores" method="GET"><button>Registrar proveedores</button></form></div>
+                    <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
+                </div>
+
             {% elif perfil=="tendero" %}
                 <div  style="grid-column: 1/-1; width: 100%; display: flex; text-align: center; justify-content: center;">
                     <div class="action" style="width: 50%;">
@@ -119,22 +126,22 @@
             {% else %}
                 <div><h1>ERROR 404</h1></div>
             {% endif %}
-            <div class="totales">
-                <div>
-                    <h4>Total De Venta:</h4>
-                    <p>$_______</p>
-                </div>
-                <div>
-                    <h4>Total De Gastos:</h4>
-                    <p>$_______</p>
-                </div>
-                <div>
-                    <h4>Total De Neto:</h4>
-                    <p>$_______</p>
-                </div>
+        </div>
+        <div class="totales">
+            <div>
+                <h4>Total De Venta:</h4>
+                <p>$_______</p>
+            </div>
+            <div>
+                <h4>Total De Gastos:</h4>
+                <p>$_______</p>
+            </div>
+            <div>
+                <h4>Total De Neto:</h4>
+                <p>$_______</p>
             </div>
         </div>
-        <footer>© Marvy shopmarket</footer>
+        <footer><p>© Marvy Shopmarket</p></footer>
     </div>
 
 {% endblock %}
