@@ -14,7 +14,7 @@
         <script>
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.pagina_principal') }}";
+                window.location.href = "{{ url_for('main.home') }}";
             }, 2000);
             }
         redirigirDespuesDeTiempo()
@@ -104,11 +104,11 @@
                 </div>
                 
                 <div class="action">
-                    <div><form action="/registro-suministro" method="GET"><button>Suministros</button></form></div>
+                    <div><form action="/suministros" method="GET"><button>Suministros</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/distribucion.png') }}" style="width: 150px;"></div>
                 </div>
                 <div class="action">
-                    <div><form action="/historial-productos" method="GET"><button>Productos</button></form></div>
+                    <div><form action="/productos" method="GET"><button>Productos</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/nuevo-producto.png') }}" style="width: 150px;"></div>
                 </div>
                 <div class="action">

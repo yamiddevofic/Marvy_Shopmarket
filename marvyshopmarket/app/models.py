@@ -77,7 +77,7 @@ class Informe(db.Model):
          self.inf_Datetime = fecha
          self.inf_Tipo = tipo
          self.inf_Doc = documento
-         self.tienda_Id = tienda_Id
+         self.tienda_Id = tienda
 
 class Productos(db.Model):
     __tablename__ = 'productos'
