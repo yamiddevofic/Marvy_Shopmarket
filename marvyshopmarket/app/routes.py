@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos
+from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -247,7 +247,7 @@ def nuevo_tendero():
             mensaje = "Registro éxitoso"
             estado = 1
             return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
-
+        
 @main_bp.route('/nuevo_producto', methods=['POST'])
 @login_required
 def nuevo_producto():
@@ -327,6 +327,32 @@ def historial_productos():
             estado=0
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
         
+@main_bp.route('/proveedores', methods=['GET'])    
+def proveedores():   
+     if request.method == 'GET':
+        return render_template('19_registro_proveedores.html')
+    
+@main_bp.route('/suministro', methods=['POST'])
+def registro():
+    try:
+        if request.method =='POST':
+            idfactura=request.form['id-registro-suministo']
+            Cantidad=request.form['cantidad-producto-suministro']
+            Fecha=request.form['fecha-producto-suministro']
+            Metododepago=request.form['metodo-pago-suministro']
+            Total=request.form['total-producto-suministro']
+            Pago=request.form['pago-producto-suministro']
+            Vueltos=request.form['vueltos-producto-suministro']
+            Tiendaid=request.form['tienda id-producto-suministro']
+        
+            nuevo_suministro=Suministros(sum_Id= idfactura,sum_Cantidad=Cantidad,sum_Datetime=Fecha,sum_Metodo_pago=Metododepago,sum_Total=Total,sum_Pago=Pago, sum_Vueltos= Vueltos,tienda_Id=Tiendaid)
+            db.session.add(nuevo_suministro)
+            db.session.commit()
+            return render_template("5_registro_suministro.html")
+    except Exception as e:
+        return f"ERROR {e}"
+    
+          
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method == 'POST':

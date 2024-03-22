@@ -32,7 +32,7 @@
         <p id="mensaje"></p>
     {%endif%}
     <div class="formulario">
-        <form method="post" action="/registro-suministro" enctype="multipart/form-data" id="form-suministro">
+        <form method="post" action="/suministro" enctype="multipart/form-data" id="form-suministro">
             <table>
                 <tbody>
                     <tr>
@@ -42,37 +42,43 @@
                         </td>
                         <td>
                             <label>Id: </label>
-                            <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Nombre: </label>
-                            <div><input placeholder="Nombre" id="nombre-producto-suministro" name="nombre-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-suministro" name="precio-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>% Ganancia: </label>
-                            <div>$<input type="number" placeholder="Ganancia" name="Ganancia" id="Ganancia-producto-suministro"></div>
+                            <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro" name="id-producto-suministro"></div>
                         </td>
                         <td>
                             <label>Cantidad: </label>
                             <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
                         </td>
                         <td>
+                            <label>Fecha: </label>
+                            <div><input type="date" placeholder="fecha" id="fecha-producto-suministro" name="fecha-producto-suministro"></div>
+                        </td>
+                        <td>
+                            <label>Metodo de pago: </label>
+                            <div><input placeholder="Nombre" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
+                        </td>
+                        <td>
                             <label>Total: </label>
                             <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
+                        </td>
+                        <td>
+                            <label> Pago: </label>
+                            <div><input type="number" placeholder="pago" name="pago-producto-suministro" id="pago-producto-suministro"></div>
+                        </td>
+                        <td>
+                            <label>Vueltos: </label>
+                            <div>$ <input type="number" placeholder="vueltos" id="vueltos-producto-suministro" name="vueltos-producto-suministro"></div>
+                        </td>
+                        <td>
+                            <label>Tienda id: </label>
+                            <div> <input type="number" placeholder="Tienda id" name="tienda id-producto-suministro" id="tienda id-producto-suministro"> </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div class="botom-confirmar">
+                <button>Confirmar</button>
+            </div>
         </form>
-        <div class="botom-confirmar">
-            <form action="/pagina-principal" method="GET">
-            <button>Confirmar</button>
-            </form>
-        </div>
 
         <div class="botom-atras">
             <form action="/pagina-principal" method="GET">

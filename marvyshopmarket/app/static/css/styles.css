@@ -266,7 +266,7 @@ table {
 }
 .totales{
     grid-column: 1/-1;
-    grid-row: -2;
+    grid-row: -1;
     display: flex;
     justify-content: space-around;
     font-size: 1.2rem;
@@ -536,6 +536,14 @@ img{
     background: none;
     border: none;
     display: block;
+}
+.formulario{
+    width: 100%;
+}
+.formulario #form-proveedor{
+    display:flex;
+    align-items: center; 
+    justify-content: center;
 }
 #form-ventas{
     display: flex;

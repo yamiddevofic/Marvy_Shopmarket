@@ -112,7 +112,7 @@
                 </div>
 
                 <div class="action">
-                    <div><form action="/registro-proveedores" method="GET"><button>Registrar proveedores</button></form></div>
+                    <div><form action="/proveedores" method="GET"><button>Registrar proveedores</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
                 </div>
 
@@ -126,21 +126,22 @@
             {% else %}
                 <div><h1>ERROR 404</h1></div>
             {% endif %}
+            <div class="totales">
+                <div>
+                    <h4>Total De Venta:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Gastos:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Neto:</h4>
+                    <p>$_______</p>
+                </div>
+            </div>
         </div>
-        <div class="totales">
-            <div>
-                <h4>Total De Venta:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Gastos:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Neto:</h4>
-                <p>$_______</p>
-            </div>
-        </div>
+       
         <footer><p>© Marvy Shopmarket</p></footer>
     </div>
 

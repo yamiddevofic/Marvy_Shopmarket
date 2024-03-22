@@ -32,31 +32,35 @@
         <p id="mensaje"></p>
     {%endif%}
     <div class="formulario">
-        <form method="post" action="/registro-suministro" enctype="multipart/form-data" id="form-suministro">
+        <form method="post" action="/registro-proveedores" enctype="multipart/form-data" id="form-proveedor">
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <label>Nombre: </label>
-                            <div><input placeholder="Nombre" id="nombre-producto-proveedores" name="nombre-producto-proveedores"></div>
+                            <label>ID:</label>
+                            <div><input type="number" placeholder="id-proveedor" id="id-proveedor" name="id-proveedor"></div>
                         </td>
+
+                        <td>
+                            <label>Nombre:</label>
+                            <div><input placeholder="Nombre" id="nombre-proveedor" name="nombre-proveedor"></div>
+                        </td>
+
                         <td>
                             <label>Telefono: </label>
-                            <div>$ <input type="number" placeholder="telefono" id="telefono-proveedores" name="telefono-proveedores"></div>
+                            <div>$ <input type="number" placeholder="telefono" id="telefono-proveedor" name="telefono-proveedor"></div>
                         </td>
-                            <label>Nombre producto: </label>
-                            <div><input placeholder="Nombre" id="nombre-producto-proveedores" name="nombre-producto-proveedores"></div>
-                        </td>
+
                         <td>
-                            <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-proveedores" name="precio-producto-proveedores"></div>
+                            <label>Ubicacion:</label>
+                            <div><input placeholder="Ubicacion" id="Ubicacion-proveedor" name="ubicacion-proveedor"></div>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <!-- <div class="botones-secundario">
-                <button type="proveedores" class="btn-proveedores">Confirmar</button>
-            </div> -->
+            <div class="botom-confirmar">
+                <button>Confirmar</button>
+            </div>
         </form>
         <div class="botom-confirmar">
             <form action="/pagina-principal" method="GET">
