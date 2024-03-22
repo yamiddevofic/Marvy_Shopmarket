@@ -4,13 +4,184 @@
 
     
 {% block content %}
-    <form action="/pagina-principal" method="GET">
+<div class="logo" id="logo">
+    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
+</div>
+<div class="registro" id="registro-ventas">
+    <div class="title">
+        <h1>Inventario de productos</h1>
+    </div>
+    {%if estado == 0%}
+        <p style="color: red" id="mensaje" class="mensaje">{{mensaje}}</p>
+        <script> 
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.registro_producto') }}";
+            }, 3500); 
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {%elif estado ==1%}
+        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+        
+        <script>
+            
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.historial_productos') }}";
+            }, 2000);   
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {%else%}
+        <p id="mensaje"></p>
+    {%endif%}
+    <div class="formulario">
+        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
+            <div class="formulario">
+                <!-- <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
+                    <div>
+                        <div><label for="prod_Id">Identificación:</label></div>
+                        <div><input type="number" name="prod_Id" class="input-style"></div>
+                    </div>
+                    <div>
+                        <div><label for="prod_Nombre">Nombre Producto:</label></div>
+                        <div><input type="text" name="prod_Nombre" class="input-style"></div>
+                    </div>
+                    <div>
+                        <div><label for="prod_Precio"> Precio:</label></div>
+                        <div><input type="number" name="prod_Precio" id="prod_Precio" class="input-style"></div>
+                    </div>
+                    <div>
+                        <div><label for="prod_Ganancia">Porcentaje de ganancia: </label></div>
+                        <div><input type="number" name="prod_Ganancia" id="prod_Ganancia" class="input-style"> %</div>
+                    </div>
+                    <div>
+                        <div><label for="prod_Cantidad">Cantidad Producto:</label></div>
+                        <div><input type="number" name="prod_Cantidad"></div>
+                    </div>
+                    <div>
+                        <div><label for="prod_Img">Imagen del producto</label></div>
+                        <div><input type="file" name="prod_Img" id="prod_Img"></div>
+                    </div>
+                    <div class="boton-confitmar">
+                        <button type="submit" class="btn-submit">Confirmar</button>
+                    </div>
+                </form> -->
+        
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Id: </label>
+                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Nombre: </label>
+                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Precio: </label>
+                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Cantidad: </label>
+                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                        </td>
+                        <td>
+                            <label>Ganancia: </label>
+                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"> %</div>
+                        </td>
+                        <td>
+                            <div class="botones-secundarios">
+                                <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="botones-secundario">
+                <button type="submit" class="btn-submit">Confirmar</button>
+            </div> -->
+        </form>
+    </div>
+    <!-- <form action="/pagina-principal" method="GET">
         <button style="margin: 2%; width: 50%;">Atrás</button>
     </form>
     <div class="title"><h1>Inventario de productos</h1></div>
     <form action="/pagina-principal" method="GET">
         <button style="margin: 2%; width: 50%;">Descargar</button>
     </form>
+    <div style="grid-row: 2; grid-column: 1/-1;" class="formulario">
+        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
+            <table >
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Id factura: </label>
+                            <div><input placeholder="#" id="id-venta" name="id-registro-venta"></div>
+                        </td>
+                        <td>
+                            <label>Id: </label>
+                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Nombre: </label>
+                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Precio: </label>
+                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Cantidad: </label>
+                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                        </td>
+                        <td>
+                            <div class="botones-secundarios">
+                                <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <!-- <div class="botones-secundario">
+                <button type="submit" class="btn-submit">Confirmar</button>
+            </div> -->
+        <!-- </form>
+        <div id="container-producto">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio bruto</th>
+                        <th>Cantidad</th>
+                        <th>Total bruto</th>
+                        <th>Ganancia</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                        <th>Imagen</th>
+                    </tr>
+    
+                </thead>
+                <tbody>
+                        {% for producto,imagen_codificada in resultado %}
+                        <tr>
+                            <td>{{ producto.prod_Nombre }}</td>
+                            <td>$ {{ producto.prod_Precio}}</td>
+                            <td>{{ producto.prod_Cantidad}}</td>
+                            <td>$ {{producto.prod_Total}}</td>
+                            <td>{{ producto.prod_Ganancia}}%</td>
+                            <td>$ {{producto.prod_TotalPrecio}}</td>
+                            <td>$ {{producto.prod_TotalGana}}</td>
+                            <td width="250"><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+                
+            </table>  
+        </div>
+    </div> -->
     <div id="container-producto">
         <table>
             <thead>
@@ -43,5 +214,8 @@
             
         </table>  
     </div>  
+    <form action="/pagina-principal" method="GET">
+        <button>Cancelar</button>
+    </form>    
 {% endblock %}
 

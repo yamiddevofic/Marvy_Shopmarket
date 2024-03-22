@@ -2,6 +2,7 @@ import base64
 import locale
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
 from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos
@@ -13,43 +14,83 @@ from datetime import datetime
 locale.setlocale(locale.LC_ALL, '')
 main_bp = Blueprint('main', __name__)
 
-def login_required(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-            return func(*args, **kwargs)
-        else:
-            mensaje = "ERROR: Debes iniciar sesión primero"
-            estado = 0
-            return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    return decorated_function
+class LoginRequired:
+    @staticmethod
+    def login_required(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+                return func(*args, **kwargs)
+            else:
+                mensaje = "ERROR: Debes iniciar sesión primero"
+                estado = 0
+                return render_template('1_login.html', mensaje=mensaje, estado=estado)
+        return decorated_function
 
-@main_bp.route('/')
-def index():
-    return render_template('0_welcome.html')
+class IndexView(MethodView):
+    def get(self):
+        return render_template('0_welcome.html')
 
-@main_bp.route('/login', methods=['GET', 'POST'])
-def login():
-    if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-        if ('adm_Id' in session and 'tienda_Id'in session):
-            tienda_id = session['tienda_Id']
-            adm_id = session['adm_Id']
-            tendero_id= session['tendero_Id']
-            informacion_tienda = obtener_informacion_tienda(tienda_id)
-            informacion_tendero = obtener_informacion_adm(tendero_id)
-            informacion_adm = obtener_informacion_adm(adm_id)
-            perfil="administrador"
-            return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil)
+class LoginView(MethodView):
+    def get(self):
+        if self.is_authenticated():
+            return self.render_authenticated_user()
         else:
-            if ('tendero_Id' in session and 'tienda_Id'in session) and not ('adm_Id' in session):
-                tienda_id = session['tienda_Id']
-                tendero_id = session['tendero_Id']
-                informacion_tienda = obtener_informacion_tienda(tienda_id)
-                informacion_tendero = obtener_informacion_tendero(tendero_id)
-                perfil="tendero"
-                return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero,perfil=perfil)
-    else:
+            return self.render_login_page()
+  
+    def is_authenticated(self):
+        return ('adm_Id' in session and 'tienda_Id' in session) or ('tendero_Id' in session and 'tienda_Id' in session)
+
+    def render_authenticated_user(self):
+        if 'adm_Id' in session and 'tienda_Id' in session:
+            return self.render_admin_page()
+        elif 'tendero_Id' in session and 'tienda_Id' in session:
+            return self.render_tender_page()
+    
+    def render_login_page(self):
         return render_template('1_login.html')
+
+    def render_admin_page(self):
+        tienda_id = session['tienda_Id']
+        adm_id = session['adm_Id']
+        tendero_id = session['tendero_Id']
+        informacion_tienda = obtener_informacion_tienda(tienda_id)
+        informacion_tendero = obtener_informacion_adm(tendero_id)
+        informacion_adm = obtener_informacion_adm(adm_id)
+        perfil = "administrador"
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil)
+        
+    def render_tender_page(self):
+        tienda_id = session['tienda_Id']
+        tendero_id = session['tendero_Id']
+        informacion_tienda = obtener_informacion_tienda(tienda_id)
+        informacion_tendero = obtener_informacion_tendero(tendero_id)
+        perfil = "tendero"
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,informacion_tendero=informacion_tendero, perfil=perfil)
+
+
+# @main_bp.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+#         if ('adm_Id' in session and 'tienda_Id'in session):
+#             tienda_id = session['tienda_Id']
+#             adm_id = session['adm_Id']
+#             tendero_id= session['tendero_Id']
+#             informacion_tienda = obtener_informacion_tienda(tienda_id)
+#             informacion_tendero = obtener_informacion_adm(tendero_id)
+#             informacion_adm = obtener_informacion_adm(adm_id)
+#             perfil="administrador"
+#             return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil)
+#         else:
+#             if ('tendero_Id' in session and 'tienda_Id'in session) and not ('adm_Id' in session):
+#                 tienda_id = session['tienda_Id']
+#                 tendero_id = session['tendero_Id']
+#                 informacion_tienda = obtener_informacion_tienda(tienda_id)
+#                 informacion_tendero = obtener_informacion_tendero(tendero_id)
+#                 perfil="tendero"
+#                 return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero,perfil=perfil)
+#     else:
+#         return render_template('1_login.html')
         
 
 @main_bp.route('/registro-exitoso', methods=['GET', 'POST'])
@@ -88,7 +129,8 @@ def pagina_principal():
 
 
 @main_bp.route('/registro-suministro', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def registro_suministro():
     if request.method == 'GET':
         if ('adm_Id' in session and 'tienda_Id'in session):
@@ -99,7 +141,8 @@ def registro_suministro():
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/registro-producto', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def registro_producto():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         if request.method == 'GET':
@@ -110,7 +153,8 @@ def registro_producto():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/registro-ventas', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def registro_ventas():
     if request.method == 'GET':
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -141,7 +185,8 @@ def registro_ventas():
         
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def generar_informe():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         return render_template('9_generar-informe.html')    
@@ -151,7 +196,8 @@ def generar_informe():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
     
 @main_bp.route('/ajustes-generales', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def ajustes_generales():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         return render_template('13_ajustes-generales.html')
@@ -161,7 +207,8 @@ def ajustes_generales():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
     
 @main_bp.route('/ajustes-cuenta', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def ajustes_cuenta():
     if request.method == 'GET':
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -172,7 +219,8 @@ def ajustes_cuenta():
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/ajuste-apariencia', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def ajuste_apariencia():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         return render_template('15_ajuste-apariencia.html')
@@ -181,7 +229,8 @@ def ajuste_apariencia():
         estado=0
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 @main_bp.route('/ajustes-perfil', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def ajustes_perfil():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         return render_template('16_ajustes-perfil.html')
@@ -191,9 +240,10 @@ def ajustes_perfil():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/cerrar-sesion', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def logout():
-    if 'tienda_Id' in session and 'adm_Id' in session:
+    if 'tienda_Id' in session or 'adm_Id' in session:
         session.pop('tienda_Id', None)
         session.pop('adm_Id', None)
         return render_template('17_cerrar-sesion.html')
@@ -203,7 +253,8 @@ def logout():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/registro-tendero', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def registro_tendero():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
         return render_template('18_registro-tendero.html')
@@ -213,7 +264,8 @@ def registro_tendero():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/nuevo_tendero', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def nuevo_tendero():
     if request.method == 'POST':
         id = request.form['id-tendero']
@@ -234,22 +286,16 @@ def nuevo_tendero():
             estado = 0
             return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
         else:
-            new_tendero = Tenderos(
-                tendero_Id=int(id),
-                tendero_Nombre=nombre,
-                tendero_Correo=correo,
-                tendero_Celular=celular,
-                tendero_Password=password,
-                tienda_Id=tienda_id
-            )
-            db.session.add(new_tendero)
+            tendero = Tenderos (id=int(id), nombre=nombre, correo=correo, celular=celular, password=password, tienda=tienda_id)
+            db.session.add(tendero)
             db.session.commit()
             mensaje = "Registro éxitoso"
             estado = 1
             return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/nuevo_producto', methods=['POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def nuevo_producto():
     if request.method == 'POST':
         id = request.form['prod_Id']
@@ -290,7 +336,8 @@ def nuevo_producto():
         return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/historial-productos', methods=['GET', 'POST'])
-@login_required
+@staticmethod
+@LoginRequired.login_required
 def historial_productos():
     if request.method == "GET":
         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -457,3 +504,8 @@ def verificar_usuario():
             mensaje = f"Error: {e}"
             estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
+
+# Se registran las rutas con las clases correspondientes
+main_bp.add_url_rule('/', view_func=IndexView.as_view('index'))
+
+main_bp.add_url_rule('/login', view_func=LoginView.as_view('login'))

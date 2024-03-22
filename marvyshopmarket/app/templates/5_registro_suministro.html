@@ -1,19 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
 {% block content %}
-<div class="logo" id="logo">
-    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
-</div>
+
 <div class="registro" id="registro-ventas">
     <div class="title">
         <h1>Registro de Suministro</h1>
     </div>
     {%if estado == 0%}
-        <p style="color: red" id="mensaje" class="mensaje">{{mensaje}}</p>
+        <p style="color: red"  class="mensaje">{{mensaje}}</p>
         <script> 
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_producto') }}";
+                window.location.href = "{{ url_for('main.registro_suministro') }}";
             }, 3500); 
             }
         redirigirDespuesDeTiempo()
@@ -34,34 +32,37 @@
         <p id="mensaje"></p>
     {%endif%}
     <div class="formulario">
-        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
+        <form method="post" action="/registro-suministro" enctype="multipart/form-data" id="form-suministro">
             <table>
                 <tbody>
                     <tr>
                         <td>
                             <label>Id factura: </label>
-                            <div><input placeholder="#" id="id-venta" name="id-registro-venta"></div>
+                            <div><input placeholder="#" id="id-suministro" name="id-registro-suministo"></div>
                         </td>
                         <td>
                             <label>Id: </label>
-                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                            <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro"></div>
                         </td>
                         <td>
                             <label>Nombre: </label>
-                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                            <div><input placeholder="Nombre" id="nombre-producto-suministro" name="nombre-producto-suministro"></div>
                         </td>
                         <td>
                             <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
+                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-suministro" name="precio-producto-suministro"></div>
+                        </td>
+                        <td>
+                            <label>% Ganancia: </label>
+                            <div>$<input type="number" placeholder="Ganancia" name="Ganancia" id="Ganancia-producto-suministro"></div>
                         </td>
                         <td>
                             <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                            <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
                         </td>
                         <td>
-                            <div class="botones-secundarios">
-                                <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
-                            </div>
+                            <label>Total: </label>
+                            <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
                         </td>
                     </tr>
                 </tbody>
@@ -70,9 +71,23 @@
                 <button type="submit" class="btn-submit">Confirmar</button>
             </div> -->
         </form>
-        <form action="/pagina-principal" method="GET">
+        <div class="botom-confirmar">
+            <form action="/pagina-principal" method="GET">
+            <button>Confirmar</button>
+            </form>
+        </div>
+
+        <div class="botom-atras">
+            <form action="/pagina-principal" method="GET">
+            <button>Atras</button>
+            </form>
+        </div>
+
+        <div class="botom-cancelar">
+            <form action="" method="GET">
             <button>Cancelar</button>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
