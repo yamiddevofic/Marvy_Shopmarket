@@ -69,11 +69,8 @@
                         <ul>
                             <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
                             {% if perfil=="administrador" %}
-                                <a href="historial-productos"><li><i class="fa-solid fa-shop"></i> Inventario de productos</li></a>
-                                <li><p><i class="fa-solid fa-cash-register"></i> Ver Historial De Ventas</p></li>
                                 <li><p><i class="fa-solid fa-filter-circle-dollar"></i> Registro de gastos</p></li>
                                 <a href="registro-tendero"><li><i class="fa-solid fa-user"></i> Registrar tendero</li></a>
-                                <li><i class="fa-solid fa-address-book"></i> Libreta de proveedores</li>
                             {% endif %}
 
                             <li><i class="fa-solid fa-gear"></i> Ajuste</li>
@@ -102,45 +99,48 @@
         <div class="botom">
             {% if perfil=="administrador" %}
                 <div class="action">
-                    <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
+                    <div><form action="/registro-ventas" method="GET"><button>Ventas</button></form></div>
                     <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
                 </div>
                 
                 <div class="action">
-                    <div><form action="/registro-suministro" method="GET"><button>Registrar suministro</button></form></div>
-                    <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
+                    <div><form action="/registro-suministro" method="GET"><button>Suministros</button></form></div>
+                    <div><img src="{{ url_for('static', filename='images/distribucion.png') }}" style="width: 150px;"></div>
                 </div>
-
                 <div class="action">
-                    <div><form action="/registro-proveedores" method="GET"><button>Registrar proveedores</button></form></div>
-                    <div><img src="{{ url_for('static', filename='images/suministro.png') }}" style="width: 150px;"></div>
+                    <div><form action="/historial-productos" method="GET"><button>Productos</button></form></div>
+                    <div><img src="{{ url_for('static', filename='images/nuevo-producto.png') }}" style="width: 150px;"></div>
                 </div>
-
+                <div class="action">
+                    <div><form action="/registro-proveedores" method="GET"><button>Proveedores</button></form></div>
+                    <div><img src="{{ url_for('static', filename='images/repartidor.png') }}" style="width: 150px;"></div>
+                </div>
             {% elif perfil=="tendero" %}
-                <div  style="grid-column: 1/-1; width: 100%; display: flex; text-align: center; justify-content: center;">
+                <div  style="grid-column: 2/4; width: 100%; display: flex; text-align: center; justify-content: center;">
                     <div class="action" style="width: 50%;">
-                        <div><form action="/registro-ventas" method="GET"><button>Registrar venta</button></form></div>
+                        <div><form action="/registro-ventas" method="GET"><button>Ventas</button></form></div>
                         <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
                     </div>
                 </div>
             {% else %}
                 <div><h1>ERROR 404</h1></div>
             {% endif %}
+            <div class="totales">
+                <div>
+                    <h4>Total De Venta:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Gastos:</h4>
+                    <p>$_______</p>
+                </div>
+                <div>
+                    <h4>Total De Neto:</h4>
+                    <p>$_______</p>
+                </div>
+            </div>
         </div>
-        <div class="totales">
-            <div>
-                <h4>Total De Venta:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Gastos:</h4>
-                <p>$_______</p>
-            </div>
-            <div>
-                <h4>Total De Neto:</h4>
-                <p>$_______</p>
-            </div>
-        </div>
+        
         <footer><p>© Marvy Shopmarket</p></footer>
     </div>
 
