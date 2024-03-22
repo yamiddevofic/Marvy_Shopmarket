@@ -4,7 +4,7 @@
 
 <div class="registro" id="registro-ventas">
     <div class="title">
-        <h1>Registro de Suministro</h1>
+        <h1>Registro de proveedores</h1>
     </div>
     {%if estado == 0%}
         <p style="color: red"  class="mensaje">{{mensaje}}</p>
@@ -37,36 +37,26 @@
                 <tbody>
                     <tr>
                         <td>
-                            <label>Id factura: </label>
-                            <div><input placeholder="#" id="id-suministro" name="id-registro-suministo"></div>
-                        </td>
-                        <td>
-                            <label>Id: </label>
-                            <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro"></div>
-                        </td>
-                        <td>
                             <label>Nombre: </label>
-                            <div><input placeholder="Nombre" id="nombre-producto-suministro" name="nombre-producto-suministro"></div>
+                            <div><input placeholder="Nombre" id="nombre-producto-proveedores" name="nombre-producto-proveedores"></div>
+                        </td>
+                        <td>
+                            <label>Telefono: </label>
+                            <div>$ <input type="number" placeholder="telefono" id="telefono-proveedores" name="telefono-proveedores"></div>
+                        </td>
+                            <label>Nombre producto: </label>
+                            <div><input placeholder="Nombre" id="nombre-producto-proveedores" name="nombre-producto-proveedores"></div>
                         </td>
                         <td>
                             <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-suministro" name="precio-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>% Ganancia: </label>
-                            <div>$<input type="number" placeholder="Ganancia" name="Ganancia" id="Ganancia-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Total: </label>
-                            <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
+                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-proveedores" name="precio-producto-proveedores"></div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <!-- <div class="botones-secundario">
+                <button type="proveedores" class="btn-proveedores">Confirmar</button>
+            </div> -->
         </form>
         <div class="botom-confirmar">
             <form action="/pagina-principal" method="GET">
