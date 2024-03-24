@@ -129,27 +129,136 @@ class RegistroSuministroView(AuthenticatedView,MethodView):
         
     def renderizar_suministro(self):
         return render_template('5_registro_suministro.html')
-    
-class RegistroProductoView(AuthenticatedView,MethodView):
+
+class RegistroProductoView(AuthenticatedView):
+    def __init__(self, tienda_id=None):
+        self.tienda_id = tienda_id
+
     @LoginRequired.login_required
-    def get(self):
+    def get(self, estado='', mensaje=""):
+        self.tienda_id = session.get('tienda_Id')
         if self.esta_autenticado():
-            return self.renderizar_producto()
+            return self.renderizar_producto(estado, mensaje)
         else:
             return self.renderizar_login()
-        
-    def renderizar_producto(self):
-        return render_template('11_historial_prod.html')
-    
-class RegistroVentaViews(AuthenticatedView, MethodView):
+
+    @LoginRequired.login_required
+    def post(self):
+        try:
+            if self.registrar_producto()['state']:
+                return self.get(estado=1, mensaje="Registro exitoso") 
+            else:
+                return self.get(estado=0, mensaje=self.registrar_producto()['message'])
+        except Exception as e:
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
+
+    def registrar_producto(self):
+        id = request.form['prod_Id']
+        nombre = request.form['prod_Nombre']
+        precio = request.form['prod_Precio']
+        cantidad = request.form['prod_Cantidad']
+        ganancia = request.form['prod_Ganancia']
+        imagen = request.files['prod_Img']
+        imagen_data = imagen.read()
+        tienda_id = session['tienda_Id']
+        if id=='':
+            id=0
+        nombre_min = nombre.lower()
+        producto_existente = Productos.query.filter(and_(Productos.prod_Id == int(id), Productos.tienda_Id == tienda_id)).first()
+
+        if not id or not nombre or not precio or not cantidad or not imagen:
+            return {'state':False, 'message':'Por favor, complete todos los datos'}  
+        elif producto_existente:
+            return {'state':False, 'message':'Ya existe un producto con esa identificación'} 
+        else:
+            adm_id = session['adm_Id']
+            new_product = Productos(producto_id=int(id), nombre=nombre, precio=precio, ganancia=ganancia, cantidad=cantidad, imagen=imagen_data, tienda=tienda_id, tendero=adm_id)
+
+            db.session.add(new_product)
+            db.session.commit()
+            return True
+
+    def renderizar_producto(self, estado, mensaje):
+        tienda_id = self.tienda_id
+        resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
+        productos_codificados = []
+        tienda_info = []
+
+        for producto, tienda in resultado:
+            if producto.tienda_Id == tienda_id:
+                if producto.prod_Img:
+                    img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
+                    productos_codificados.append((producto, img_codificada))
+                if producto.prod_Precio:
+                    producto.prod_Precio = "{:,}".format(int(producto.prod_Precio))
+                if producto.prod_TotalPrecio:
+                    producto.prod_TotalPrecio = "{:,}".format(int(producto.prod_TotalPrecio))
+                if producto.prod_Total:
+                    producto.prod_Total = "{:,}".format(int(producto.prod_Total))
+                if producto.prod_Ganancia:
+                    producto.prod_Ganancia = int(producto.prod_Ganancia)
+                if producto.prod_TotalGana:
+                    producto.prod_TotalGana = "{:,}".format(int(producto.prod_TotalGana))
+                tienda_info.append(tienda)
+
+        if not productos_codificados:
+            datos = []
+        if not tienda_info:
+            datosDos = []
+
+        return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, mensaje=mensaje, estado=estado)
+
+class RegistroVentaView(AuthenticatedView, MethodView):
      @LoginRequired.login_required
      def get(self):
          if self.esta_autenticado():
              return self.renderizar_venta()
          else:
              return self.renderizar_login()
+     def renderizar_venta(self):
+        return render_template('6_registro_ventas.html')
 
 
+# @usuario_bp.route('/home',methods=['GET','POST'])
+# def home():
+#     if 'user_Id' in session:
+#         user_id= session['user_Id']
+#         info_user= obtener_user(user_id)
+#         datos = obtener_egreso(user_id)
+#         datosDos= obtener_ingreso(user_id)
+#         datosTres= obtener_compra(user_id)
+#         total_egresos_query = db.session.query(Vista_total_egresos).first()
+#         total_egresos = total_egresos_query.total_egresos if total_egresos_query else 0
+
+#         #"{:,}".format(int(db.session.query(Vista_total_egresos).first().total_egresos))
+#         total_ingresos_query = db.session.query(Vista_total_ingresos).first()
+#         total_ingresos = total_ingresos_query.total_ingresos if total_ingresos_query else 0
+
+#         #"{:,}".format(int(db.session.query(Vista_total_ingresos).first().total_ingresos))
+        
+            
+#         presupuesto = "{:,}".format(int(total_ingresos-total_egresos))
+        
+#         # Verificar si hay datos disponibles, si no, enviar listas vacías
+#         if not datos:
+#             datos = []
+#         if not datosDos:
+#             datosDos = []
+#         if not datosTres:
+#             datosTres = []
+        
+    
+
+#         return render_template('3_home.html',user=info_user, egresos=datos, ingresos=datosDos, compras=datosTres,  total_egresos=total_egresos, total_ingresos=total_ingresos, presupuesto=presupuesto)
+#     else:
+#         estado=False
+#         mensaje="Primero debes iniciar sesión"
+#         return render_template('1_login.html',estado=estado, mensaje=mensaje)
+    
+# @usuario_bp.route('/home/<user>',methods=['GET','POST'])
+# def homeDos(user):
+#         info_user= obtener_user(user)
+#         return render_template('3_home.html',user=info_user)
 
 @LoginRequired.login_required
 def registro_ventas():
@@ -510,3 +619,4 @@ main_bp.add_url_rule('/signUp', view_func=SignUpView.as_view('sign_up'))
 main_bp.add_url_rule('/home', view_func=PaginaPrincipalView.as_view('home'))
 main_bp.add_url_rule('/suministros', view_func= RegistroSuministroView.as_view('suministros'))
 main_bp.add_url_rule('/productos', view_func= RegistroProductoView.as_view('productos'))
+main_bp.add_url_rule('/ventas', view_func= RegistroVentaView.as_view('ventas'))

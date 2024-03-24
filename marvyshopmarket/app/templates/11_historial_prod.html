@@ -4,6 +4,38 @@
 
     
 {% block content %}
+    {% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.productos') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+    {% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.productos') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+    {% else %}
+    <div class="mensaje">
+        <p class="mensaje-content">{{mensaje}}</p>
+    </div>
+    {% endif %}
 <div class="logo" id="logo">
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
@@ -11,33 +43,8 @@
     <div class="title">
         <h1>Inventario de productos</h1>
     </div>
-    {%if estado == 0%}
-        <p style="color: red" id="mensaje" class="mensaje">{{mensaje}}</p>
-        <script> 
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_producto') }}";
-            }, 3500); 
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {%elif estado ==1%}
-        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-        
-        <script>
-            
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.historial_productos') }}";
-            }, 2000);   
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {%else%}
-        <p id="mensaje"></p>
-    {%endif%}
     <div class="formulario">
-        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
+        <form method="post" action="/productos" enctype="multipart/form-data" id="form-ventas">
             <div class="formulario">
                 <!-- <form method="post" action="/nuevo_producto" enctype="multipart/form-data">
                     <div>
@@ -74,23 +81,29 @@
                     <tr>
                         <td>
                             <label>Id: </label>
-                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                            <div><input placeholder="Id producto" id="prod_Id" name="prod_Id" class="prod_Id"></div>
                         </td>
                         <td>
                             <label>Nombre: </label>
-                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                            <div><input placeholder="Nombre del producto" name="prod_Nombre" id="nombre-producto-venta" ></div>
                         </td>
                         <td>
                             <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
+                            <div>$ <input type="number" placeholder="prod_Precio" name="prod_Precio" id="prod_Precio" ></div>
                         </td>
                         <td>
                             <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                            <div><input type="number" placeholder="prod_Cantidad" name="prod_Cantidad" id="prod_Cantidad"></div>
                         </td>
                         <td>
                             <label>Ganancia: </label>
-                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"> %</div>
+                            <div><input type="number" placeholder="prod_Ganancia" name="prod_Ganancia" id="prod_Ganancia"> %</div>
+                        </td>
+                        <td>
+                            <div>
+                                <div><label for="prod_Img">Imagen del producto</label></div>
+                                <div><input type="file" name="prod_Img" id="prod_Img"></div>
+                            </div>
                         </td>
                         <td>
                             <div class="botones-secundarios">
