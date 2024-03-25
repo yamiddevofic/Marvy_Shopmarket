@@ -95,7 +95,8 @@ class Productos(db.Model):
     tendero_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tendero_Id'))
     tienda_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tienda_Id'))
 
-    def __init__(self, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
+    def __init__(self, id, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
+         self.Id = id
          self.prod_Id = producto_id
          self.prod_Nombre = nombre
          self.prod_Precio = precio
@@ -193,46 +194,45 @@ class Tiendas(db.Model):
 
 class Ventas(db.Model):
     __tablename__ = 'ventas'
-    venta_Id =db.Column(db.BigInteger, primary_key=True)
-    venta_Cantidad =db.Column(db.BigInteger)
-    venta_Metodo =db.Column(db.String(45))
-    venta_Datetime =db.Column(db.DateTime)
-    venta_Total =db.Column(db.Float)
-    venta_Pago =db.Column(db.Float)
-    venta_Vueltos =db.Column(db.Float)
-    tendero_Id =db.Column(db.BigInteger, ForeignKey('tenderos.tendero_Id'))
-    tienda_Id =db.Column(db.BigInteger, ForeignKey('tiendas.tienda_Id'))
+    venta_Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    venta_Cantidad = db.Column(db.Integer)
+    venta_Metodo = db.Column(db.String(45))
+    venta_Datetime = db.Column(db.DateTime)
+    venta_Total = db.Column(db.Float)
+    venta_Pago = db.Column(db.Float)
+    venta_Vueltos = db.Column(db.Float)
+    tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
+    tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
 
- 
-    tendero = relationship("Tenderos", backref="ventas")
+    tendero = db.relationship("Tenderos", backref="ventas")
+    tienda = db.relationship("Tiendas", backref="ventas")
 
-
-    tienda = relationship("Tiendas", backref="ventas")
-
-    
-    ventas_has_productos = db.relationship('VentasHasProductos', backref='ventas')
-
-    def __init__(self, id, cantidad, metodo_pago , fecha, total, pago, vueltos, tendero, tienda):
-         self.venta_Id = id
-         self.venta_Cantidad = cantidad
-         self.venta_Metodo = metodo_pago
-         self.venta_Datetime = fecha
-         self.venta_Total = total
-         self.venta_Pago = pago
-         self.venta_Vueltos = vueltos
-         self.tendero_Id = tendero
-         self.tienda_Id = tienda
+    def __init__(self, cantidad, metodo, datetime, total, pago, vueltos, tendero_id, tienda_id):
+        self.venta_Cantidad = cantidad
+        self.venta_Metodo = metodo
+        self.venta_Datetime = datetime
+        self.venta_Total = total
+        self.venta_Pago = pago
+        self.venta_Vueltos = vueltos
+        self.tendero_Id = tendero_id
+        self.tienda_Id = tienda_id
 
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'
-    id = db.Column(db.BIGINT, primary_key=True)
-    venta_id = db.Column(db.BIGINT, db.ForeignKey('ventas.venta_Id')) 
-    prod_id = db.Column(db.BIGINT, db.ForeignKey('productos.prod_Id'))
+    ventas_venta_Id = db.Column(db.BigInteger, db.ForeignKey('ventas.venta_Id'), primary_key=True)
+    ventas_tendero_Id = db.Column(db.BigInteger, primary_key=True)
+    ventas_tienda_Id = db.Column(db.BigInteger, primary_key=True)
+    productos_Id = db.Column(db.BigInteger, db.ForeignKey('productos.Id'), primary_key=True)
+    productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
+    productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
 
-    venta = db.relationship('Ventas', backref='productos_relacionados')
-    producto = db.relationship('Productos', backref='ventas_relacionadas')
+    venta = db.relationship('Ventas', backref='ventas_has_productos', foreign_keys=[ventas_venta_Id, ventas_tendero_Id, ventas_tienda_Id])
+    producto = db.relationship('Productos', backref='ventas_has_productos', foreign_keys=[productos_Id, productos_tendero_Id, productos_tienda_Id])
 
-    def __init__(self, id, venta, producto):
-         self.id = id
-         self.venta_id = venta
-         self.prod_id = producto
+    def __init__(self, venta_id, tendero_id, tienda_id, producto_id, producto_tendero_id, producto_tienda_id):
+        self.ventas_venta_Id = venta_id
+        self.ventas_tendero_Id = tendero_id
+        self.ventas_tienda_Id = tienda_id
+        self.productos_Id = producto_id
+        self.productos_tendero_Id = producto_tendero_id
+        self.productos_tienda_Id = producto_tienda_id

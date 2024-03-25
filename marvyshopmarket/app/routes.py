@@ -220,7 +220,17 @@ class EditarProducto(AuthenticatedView):
     def post(self, producto_id):
         return f"Actualizando producto con ID: {producto_id}"
 
-
+class EliminarProducto(AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self,id):
+        producto = Productos.query.filter_by(Id=id).first()
+        if producto:
+            db.session.delete(producto)
+            db.session.commit()
+            return render_template('11_historial_prod.html',mensaje="Se eliminó el producto con éxito", estado=1)
+        else:
+            return render_template('11_historial_prod.html',mensaje="No se pudo eliminar el producto", estado=0)
+        
 
 
 class RegistroVentaView(AuthenticatedView, MethodView):
@@ -635,5 +645,5 @@ main_bp.add_url_rule('/home', view_func=PaginaPrincipalView.as_view('home'))
 main_bp.add_url_rule('/suministros', view_func= RegistroSuministroView.as_view('suministros'))
 main_bp.add_url_rule('/productos', view_func= RegistroProductoView.as_view('productos'))
 main_bp.add_url_rule('/ventas', view_func= RegistroVentaView.as_view('ventas'))
-main_bp.add_url_rule('/editar_producto/<int:producto_id>', view_func=EditarProducto.as_view('editar_producto'))
-
+main_bp.add_url_rule('/editar-producto/<int:producto_id>', view_func=EditarProducto.as_view('editar-producto'))
+main_bp.add_url_rule('/eliminar-producto/<int:id>', view_func=EliminarProducto.as_view('eliminar-producto'))

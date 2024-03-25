@@ -174,8 +174,26 @@ table {
 .imagen-producto{
     width: 25%;
 }
-#editar_producto{
-    background: var(--claro-secundario-2)
+#editar-producto{
+    background: var(--claro-secundario-2);
+    color: var(--negro);
+    grid-row: 1/-1;
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#editar-producto form{
+    width: 100%;
+}
+#editar-producto input, #editar-producto label{
+    text-align: center;
+}
+#editar-producto button{
+    background: var(--btn-claro-cancelar);
+    color: var(--blanco);
+    cursor: pointer;
 }
 #container-home{
     grid-column: 1/-1;

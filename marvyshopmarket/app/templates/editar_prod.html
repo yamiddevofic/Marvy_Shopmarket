@@ -29,18 +29,47 @@
     </script>
 
 {% else %}
-    <div class="mensaje">
-        <p class="mensaje-content">Hola {{mensaje}}</p>
-    </div>
+<div class="mensaje">
+    <p class="mensaje-content">Hola {{mensaje}}</p>
+</div>
 {% endif %}
 <div class="logo" id="logo">
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
 <div id="editar-producto">
-    <p>ID: {{producto.prod_Id}}</p>
-    <p>Nombre: {{producto.prod_Nombre}}</p>
-    <p>Precio: {{producto.prod_Precio}}</p>
-    <p>Precio con ganancia: {{producto.prod_TotalPrecio}}</p>
+    <h2>Editar Producto</h2>
+    <form>
+        
+            <label for="id-prod">ID: </label>
+            <div>
+                <input type="text" id="id-prod" name="id-prod" placeholder="{{producto.prod_Id}}">
+            </div>
+        
+            <label for="nombre-prod">Nombre: </label>
+            <div>
+                <input type="text" id="nombre-prod" name="nombre-prod" placeholder="{{producto.prod_Nombre}}">
+            </div>
+        
+            <label for="precio-prod">Precio: </label>
+            <div>
+                <input type="text" id="precio-prod" name="precio-prod" placeholder="{{producto.prod_Precio}}">
+            </div>
+        
+            <label for="ganancia-prod">Precio: </label>
+            <div>
+                <input type="text" id="ganancia-prod" name="ganancia-prod" placeholder="{{producto.prod_Ganancia}}">
+            </div>
+        
+            <input type="submit" value="Editar producto" style="background-color: var(--btn-claro-continuar); cursor: pointer;">
+    </form>
+    
+
+    <h2>Eliminar Producto</h2>
+    <div>
+        <center>
+            <a href="/eliminar-producto/{{ producto.Id }}"><button >Eliminar producto {{producto.Id}}: {{producto.prod_Nombre}}</button></a>
+        </center>
+    </div>
 </div>
 <!-- <div class="registro">
     <div class="title"><h1>Registro Tendero</h1></div>
