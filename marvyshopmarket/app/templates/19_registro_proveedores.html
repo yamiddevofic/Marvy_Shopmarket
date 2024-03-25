@@ -11,7 +11,7 @@
         <script> 
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_suministro') }}";
+                window.location.href = "{{ url_for('main.registro_proveedores') }}";
             }, 3500); 
             }
         redirigirDespuesDeTiempo()
@@ -23,7 +23,7 @@
             
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.historial_productos') }}";
+                window.location.href = "{{ url_for('main.historial_suministro') }}";
             }, 2000);   
             }
         redirigirDespuesDeTiempo()
@@ -62,12 +62,6 @@
                 <button>Confirmar</button>
             </div>
         </form>
-        <div class="botom-confirmar">
-            <form action="/pagina-principal" method="GET">
-            <button>Confirmar</button>
-            </form>
-        </div>
-
         <div class="botom-atras">
             <form action="/pagina-principal" method="GET">
             <button>Atras</button>

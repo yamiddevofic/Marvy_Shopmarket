@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros
+from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros,Proveedores
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -332,8 +332,24 @@ def proveedores():
      if request.method == 'GET':
         return render_template('19_registro_proveedores.html')
     
+@main_bp.route('/registro-proveedores', methods=['POST'])
+def registro_proveedores():
+    try:
+        if request.method =='POST':
+            id=request.form['id-proveedor']
+            Nombre=request.form['nombre-proveedor']
+            Telefono=request.form['telefono-proveedor']
+            Ubicacion=request.form['ubicacion-proveedor']
+            
+            nuevo_Proveedores=Proveedores(prov_Id=id,prov_Nombre=Nombre,prov_Contacto= Telefono,prov_Ubicacion= Ubicacion)
+            db.session.add(nuevo_Proveedores)
+            db.session.commit()
+            return render_template("19_registro_proveedores.html")
+    except Exception as e:
+        return f"ERROR {e}"
+            
 @main_bp.route('/suministro', methods=['POST'])
-def registro():
+def suministro():
     try:
         if request.method =='POST':
             idfactura=request.form['id-registro-suministo']
