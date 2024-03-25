@@ -141,7 +141,8 @@ tbody tr {
 table {
     background-color: var(--blanco);
     color: var(--oscuro-secundario-1);
-    border: 1px solid var(--claro-secundario-1)
+    border: 1px solid var(--claro-secundario-1);
+    font-size: 0.9rem;
 }
 .dark-mode table{
     background: var(--oscuro-secundario-1);
@@ -172,6 +173,9 @@ table {
 }
 .imagen-producto{
     width: 25%;
+}
+#editar_producto{
+    background: var(--claro-secundario-2)
 }
 #container-home{
     grid-column: 1/-1;

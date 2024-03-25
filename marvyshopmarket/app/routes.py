@@ -208,6 +208,21 @@ class RegistroProductoView(AuthenticatedView):
 
         return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, mensaje=mensaje, estado=estado)
 
+class EditarProducto(AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, producto_id):
+        # Aquí puedes hacer lo que necesites con el ID del producto
+        # Por ejemplo, cargar los detalles del producto con el ID proporcionado
+        product = Productos.query.filter_by(prod_Id=producto_id).first()
+        return render_template('editar_prod.html', producto = product)
+
+    @LoginRequired.login_required
+    def post(self, producto_id):
+        return f"Actualizando producto con ID: {producto_id}"
+
+
+
+
 class RegistroVentaView(AuthenticatedView, MethodView):
      @LoginRequired.login_required
      def get(self):
@@ -620,3 +635,5 @@ main_bp.add_url_rule('/home', view_func=PaginaPrincipalView.as_view('home'))
 main_bp.add_url_rule('/suministros', view_func= RegistroSuministroView.as_view('suministros'))
 main_bp.add_url_rule('/productos', view_func= RegistroProductoView.as_view('productos'))
 main_bp.add_url_rule('/ventas', view_func= RegistroVentaView.as_view('ventas'))
+main_bp.add_url_rule('/editar_producto/<int:producto_id>', view_func=EditarProducto.as_view('editar_producto'))
+

@@ -10,3 +10,8 @@ cerrar.addEventListener('click',()=>{
     menuDesplegable.style.display = 'none'
 })
 
+// function eliminarRegistro(id) {
+//     // Aquí puedes hacer lo que quieras con el ID del registro
+//     console.log("Eliminar registro con ID:", id);
+//     // Por ejemplo, puedes enviar una solicitud AJAX para eliminar el registro del backend
+// }

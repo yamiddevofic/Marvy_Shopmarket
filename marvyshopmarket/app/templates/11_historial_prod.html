@@ -199,30 +199,36 @@
         <table>
             <thead>
                 <tr>
-                    <th>Nombre</th>
+                    <th>Id</th>
+                    <th  width="180">Nombre</th>
                     <th>Precio bruto</th>
                     <th>Cantidad</th>
                     <th>Total bruto</th>
                     <th>Ganancia</th>
                     <th>Precio Unitario</th>
                     <th>Total</th>
-                    <th>Imagen</th>
+                    <th  width="80">Imagen</th>
+                    <th  width="20">Editar/Eliminar</th></a>
                 </tr>
 
             </thead>
             <tbody>
-                    {% for producto,imagen_codificada in resultado %}
-                    <tr>
-                        <td>{{ producto.prod_Nombre }}</td>
-                        <td>$ {{ producto.prod_Precio}}</td>
-                        <td>{{ producto.prod_Cantidad}}</td>
-                        <td>$ {{producto.prod_Total}}</td>
-                        <td>{{ producto.prod_Ganancia}}%</td>
-                        <td>$ {{producto.prod_TotalPrecio}}</td>
-                        <td>$ {{producto.prod_TotalGana}}</td>
-                        <td width="250"><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td>
-                    </tr>
-                    {% endfor %}
+                    <!-- HTML y Jinja -->
+                {% for producto,imagen_codificada in resultado %}
+                <tr id="registro_{{ producto.prod_Id }}">
+                    <td>{{producto.prod_Id}}</td>
+                    <td>{{ producto.prod_Nombre }}</td>
+                    <td>$ {{ producto.prod_Precio}}</td>
+                    <td>{{ producto.prod_Cantidad}}</td>
+                    <td>$ {{producto.prod_Total}}</td>
+                    <td>{{ producto.prod_Ganancia}}%</td>
+                    <td>$ {{producto.prod_TotalPrecio}}</td>
+                    <td>$ {{producto.prod_TotalGana}}</td>
+                    <td width="250"><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td>
+                    <td><a href="/editar_producto/{{ producto.prod_Id }}" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                {% endfor %}
+
             </tbody>
             
         </table>  
