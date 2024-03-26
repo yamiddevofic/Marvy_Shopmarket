@@ -1,44 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
+{% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
 {% block content %}
 
-<div class="registro" id="registro-ventas">
+<div class="registro" id="registro-suministro">
     <div class="title">
         <h1>Registro de Suministro</h1>
     </div>
-    {%if estado == 0%}
-        <p style="color: red"  class="mensaje">{{mensaje}}</p>
+    {% if estado == 0 %}
+        <p style="color: red" class="mensaje">{{ mensaje }}</p>
         <script> 
             function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_suministro') }}";
-            }, 3500); 
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.registro_suministro') }}";
+                }, 3500); 
             }
-        redirigirDespuesDeTiempo()
+            redirigirDespuesDeTiempo()
         </script>
-    {%elif estado ==1%}
-        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
+    {% elif estado == 1 %}
+        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{ mensaje }}</p>
         
         <script>
-            
             function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.historial_suministro') }}";
-            }, 2000);   
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('main.registro_suministro') }}";
+                }, 2000);   
             }
-        redirigirDespuesDeTiempo()
+            redirigirDespuesDeTiempo()
         </script>
-    {%else%}
+    {% else %}
         <p id="mensaje"></p>
-    {%endif%}
+    {% endif %}
     <div class="formulario">
-        <form method="post" action="/suministro" enctype="multipart/form-data" id="form-suministro">
+        <form method="post , GET" action="/suministros" enctype="multipart/form-data" id="form-suministro">
             <table>
                 <tbody>
                     <tr>
                         <td>
                             <label>Id factura: </label>
-                            <div><input placeholder="#" id="id-suministro" name="id-registro-suministo"></div>
+                            <div><input placeholder="#" id="id-suministro" name="idregistro-suministo"></div>
                         </td>
                         <td>
                             <label>Id: </label>
@@ -80,18 +79,38 @@
             </div>
         </form>
 
-        <div class="botom-atras">
-            <form action="/pagina-principal" method="GET">
-            <button>Atras</button>
-            </form>
-        </div>
-
-        <div class="botom-cancelar">
-            <form action="" method="GET">
-            <button>Cancelar</button>
-            </form>
-        </div>
+    <!-- Mostrar información de suministros -->
+    <div class="suministros-info">
+        <h2>Lista de Suministros</h2>
+        <ul>
+            {% for suministro in suministros %}
+                <li>
+                    <p>Id: {{ suministro.sum_Id }}</p>
+                    <p>Cantidad: {{ suministro.sum_Cantidad }}</p>
+                    <p>Fecha: {{ suministro.sum_Datetime }}</p>
+                    <p>Método de pago: {{ suministro.sum_Metodo_pago }}</p>
+                    <p>Total: {{ suministro.sum_Total }}</p>
+                    <p>Pago: {{ suministro.sum_Pago }}</p>
+                    <p>Vueltos: {{ suministro.sum_Vueltos }}</p>
+                    <p>Tienda ID: {{ suministro.tienda_Id }}</p>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
+</div>
+
+
+<div class="botom-atras">
+    <form action="/pagina-principal" method="GET">
+        <button>Atras</button>
+    </form>
+</div>
+
+<div class="botom-cancelar">
+    <form action="" method="GET">
+        <button>Cancelar</button>
+    </form>
+</div>
 </div>
 
 {% endblock %}

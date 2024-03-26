@@ -131,15 +131,15 @@ class Suministros(db.Model):
     sum_Vueltos = db.Column(db.Float)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    # def __init__(self, id, cantidad, fecha, metodo_pago, total, pago, vueltos, tienda):
-    #     self.sum_Id = id
-    #     self.sum_Cantidad = cantidad
-    #     self.sum_Datetime = fecha
-    #     self.sum_Metodo_pago = metodo_pago
-    #     self.sum_Total = total
-    #     self.sum_Pago = pago
-    #     self.sum_Vueltos = vueltos
-    #     self.tienda_Id = tienda
+    def __init__(self, id, cantidad, fecha, metodo_pago, total, pago, vueltos, tienda):
+        self.sum_Id = id
+        self.sum_Cantidad = cantidad
+        self.sum_Datetime = fecha
+        self.sum_Metodo_pago = metodo_pago
+        self.sum_Total = total
+        self.sum_Pago = pago
+        self.sum_Vueltos = vueltos
+        self.tienda_Id = tienda
 
 class SuministrosProveedores(db.Model):
     __tablename__ = 'suministros_proveedores'

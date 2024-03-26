@@ -23,7 +23,7 @@
             
             function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.historial_suministro') }}";
+                window.location.href = "{{ url_for('main.historial_provedores') }}";
             }, 2000);   
             }
         redirigirDespuesDeTiempo()
@@ -62,6 +62,7 @@
                 <button>Confirmar</button>
             </div>
         </form>
+        
         <div class="botom-atras">
             <form action="/pagina-principal" method="GET">
             <button>Atras</button>
@@ -75,5 +76,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
