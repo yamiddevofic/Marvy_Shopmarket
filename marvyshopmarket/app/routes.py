@@ -89,19 +89,19 @@ class SignUpView(MethodView):
         return render_template('2_sign_up.html')
 
 class PaginaPrincipalView(AuthenticatedView,MethodView):
-    def get(self):
+    def get(self, state="",productos=""):
         if self.esta_autenticado():
-            return self.renderizar_principal()
+            return self.renderizar_principal(state,productos)
         else:
             return self.renderizar_login()
 
-    def renderizar_principal(self):
+    def renderizar_principal(self,state,productos):
         if 'adm_Id' in session and 'tienda_Id' in session:
-            return self.renderizar_admin()
+            return self.renderizar_admin(state,productos)
         elif 'tendero_Id' in session and 'tienda_Id' in session:
-            return self.renderizar_tendero()
+            return self.renderizar_tendero(state,productos)
 
-    def renderizar_admin(self):
+    def renderizar_admin(self,state, productos):
         tienda_id = session['tienda_Id']
         adm_id = session['adm_Id']
         tendero_id = session['tendero_Id']
@@ -109,15 +109,15 @@ class PaginaPrincipalView(AuthenticatedView,MethodView):
         informacion_tendero = obtener_informacion_adm(tendero_id)
         informacion_adm = obtener_informacion_adm(adm_id)
         perfil = "administrador"
-        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil)
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil,state=state,productos=productos)
 
-    def renderizar_tendero(self):
+    def renderizar_tendero(self, state,productos):
         tienda_id = session['tienda_Id']
         tendero_id = session['tendero_Id']
         informacion_tienda = obtener_informacion_tienda(tienda_id)
         informacion_tendero = obtener_informacion_tendero(tendero_id)
         perfil = "tendero"
-        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, perfil=perfil)
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, perfil=perfil,state=state,productos=productos)
     
 class RegistroSuministroView(AuthenticatedView,MethodView):    
     @LoginRequired.login_required
@@ -285,7 +285,34 @@ class RegistroVentaView(AuthenticatedView, MethodView):
             return render_template('6_registro_ventas.html', estado=estado, mensaje=mensaje)
      except Exception as e:
         print("Error: "+e)
+class Buscar(PaginaPrincipalView):
+    def get(self,state='', resultados=''):
+         print("Entré a get")
+         return self.renderizar_principal_2(state,resultados)
 
+    def renderizar_principal_2(self, state, resultados):
+        return super().renderizar_principal(state=state,productos=resultados)
+
+    def post(self):
+        state= 1
+        resultados = {}
+        return self.get(state,resultados)
+
+class Resultado(Buscar,PaginaPrincipalView):
+    def get(self,state='', resultados=''):
+         print("Entré a get")
+         return super().renderizar_principal(state=state,productos=resultados)
+
+    def post(self):
+        texto = request.form['texto_busqueda']
+        resultados = Productos.query.filter(Productos.prod_Nombre.ilike(f'%{texto}%')).all()
+        if not resultados:
+            resultados = [{"prod_Nombre":"Ninguno","prod_Precio":0,"prod_Cantidad":0}]
+            return super().renderizar_principal_2(state=1,resultados=resultados)
+        else:
+            return super().renderizar_principal_2(state=1,resultados=resultados)
+        
+        
 
 # @usuario_bp.route('/home',methods=['GET','POST'])
 # def home():
@@ -690,3 +717,5 @@ main_bp.add_url_rule('/productos', view_func= RegistroProductoView.as_view('prod
 main_bp.add_url_rule('/ventas', view_func= RegistroVentaView.as_view('ventas'))
 main_bp.add_url_rule('/editar-producto/<int:producto_id>', view_func=EditarProducto.as_view('editar-producto'))
 main_bp.add_url_rule('/eliminar-producto/<int:id>', view_func=EliminarProducto.as_view('eliminar-producto'))
+main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
+main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
