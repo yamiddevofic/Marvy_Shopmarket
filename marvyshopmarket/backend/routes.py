@@ -8,7 +8,7 @@ from sqlalchemy import and_
 from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
-from app import db
+from backend import db
 from datetime import datetime
 
 locale.setlocale(locale.LC_ALL, '')
@@ -264,14 +264,27 @@ class EliminarProducto(RegistroProductoView,AuthenticatedView):
 
 
 class RegistroVentaView(AuthenticatedView, MethodView):
-     @LoginRequired.login_required
-     def get(self):
-         if self.esta_autenticado():
-             return self.renderizar_venta()
-         else:
-             return self.renderizar_login()
-     def renderizar_venta(self):
-        return render_template('6_registro_ventas.html')
+     try:
+        @LoginRequired.login_required
+        def get(self):
+            if self.esta_autenticado():
+                return self.renderizar_venta(estado="",mensaje="")
+            else:
+                return self.renderizar_login()
+        def post(self):
+            if self.registrar_venta():
+                pass
+            else:
+                pass
+        def registrar_venta(self):
+            producto = request.form.get('id-producto-venta')
+            nombre = request.form.get('nombre-producto-venta')
+            precio  = request.form.get('precio-producto-venta')
+            cantidad = request.form.get('cantidad-producto-vendido')
+        def renderizar_venta(self,estado,mensaje):
+            return render_template('6_registro_ventas.html', estado=estado, mensaje=mensaje)
+     except Exception as e:
+        print("Error: "+e)
 
 
 # @usuario_bp.route('/home',methods=['GET','POST'])
@@ -315,34 +328,34 @@ class RegistroVentaView(AuthenticatedView, MethodView):
 #         info_user= obtener_user(user)
 #         return render_template('3_home.html',user=info_user)
 
-@LoginRequired.login_required
-def registro_ventas():
-    if request.method == 'GET':
-        if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-            return render_template('6_registro_ventas.html')
-        else:
-            mensaje="Debes iniciar sesión primero"
-            estado=0
-            return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    if request.method == 'POST':
-        if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-            # cantidad= request.form['cantidad-producto-vendido']
-            # fecha= datetime.now()
-            # print(fecha)
-            # tienda_id = session['tienda_Id']
-            # tendero_id = session['tendero_Id']
-            venta_Id=request.form=['id-registro-venta']
-            producto_Id= request.form=['id-producto-venta']
-            new_Venta= VentasHasProductos(
-                venta_Id = venta_Id,
-                producto_Id = producto_Id
-            )
-            db.session.add(new_Venta)
-            db.session.commit()
-        else:
-            mensaje="Debes iniciar sesión primero"
-            estado=0
-            return render_template('1_login.html', mensaje=mensaje, estado=estado)
+# @LoginRequired.login_required
+# def registro_ventas():
+#     if request.method == 'GET':
+#         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+#             return render_template('6_registro_ventas.html')
+#         else:
+#             mensaje="Debes iniciar sesión primero"
+#             estado=0
+#             return render_template('1_login.html', mensaje=mensaje, estado=estado)
+#     if request.method == 'POST':
+#         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
+#             # cantidad= request.form['cantidad-producto-vendido']
+#             # fecha= datetime.now()
+#             # print(fecha)
+#             # tienda_id = session['tienda_Id']
+#             # tendero_id = session['tendero_Id']
+#             venta_Id=request.form=['id-registro-venta']
+#             producto_Id= request.form=['id-producto-venta']
+#             new_Venta= VentasHasProductos(
+#                 venta_Id = venta_Id,
+#                 producto_Id = producto_Id
+#             )
+#             db.session.add(new_Venta)
+#             db.session.commit()
+#         else:
+#             mensaje="Debes iniciar sesión primero"
+#             estado=0
+#             return render_template('1_login.html', mensaje=mensaje, estado=estado)
         
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
@@ -355,7 +368,7 @@ def generar_informe():
         mensaje="Debes iniciar sesión primero"
         estado=0
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    
+
 @main_bp.route('/ajustes-generales', methods=['GET', 'POST'])
 
 @LoginRequired.login_required
