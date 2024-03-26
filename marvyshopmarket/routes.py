@@ -8,7 +8,7 @@ from sqlalchemy import and_
 from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
-from backend import db
+from app import db
 from datetime import datetime
 
 locale.setlocale(locale.LC_ALL, '')
