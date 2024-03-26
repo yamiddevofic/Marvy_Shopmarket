@@ -95,8 +95,7 @@ class Productos(db.Model):
     tendero_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tendero_Id'))
     tienda_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tienda_Id'))
 
-    def __init__(self, id, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
-         self.Id = id
+    def __init__(self, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
          self.prod_Id = producto_id
          self.prod_Nombre = nombre
          self.prod_Precio = precio

@@ -38,13 +38,10 @@
 </div>
 <div id="editar-producto">
     <h2>Editar Producto</h2>
-    <form>
-        
-            <label for="id-prod">ID: </label>
-            <div>
-                <input type="text" id="id-prod" name="id-prod" placeholder="{{producto.prod_Id}}">
-            </div>
-        
+    <div  style="width: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center;border-radius: 50%;">
+        <div><img src="data:image/png;base64,{{ imagen }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></div>
+    </div>
+    <form action="/editar-producto/{{producto.Id}}" method="POST">
             <label for="nombre-prod">Nombre: </label>
             <div>
                 <input type="text" id="nombre-prod" name="nombre-prod" placeholder="{{producto.prod_Nombre}}">
@@ -52,24 +49,20 @@
         
             <label for="precio-prod">Precio: </label>
             <div>
-                <input type="text" id="precio-prod" name="precio-prod" placeholder="{{producto.prod_Precio}}">
+                <input type="text" id="precio-prod" name="precio-prod" placeholder="$ {{producto.prod_Precio}}">
             </div>
-        
-            <label for="ganancia-prod">Precio: </label>
+            <label for="cantidad-prod">Cantidad: </label>
             <div>
-                <input type="text" id="ganancia-prod" name="ganancia-prod" placeholder="{{producto.prod_Ganancia}}">
+                <input type="text" id="cantidad-prod" name="cantidad-prod" placeholder="{{producto.prod_Cantidad}} unidades">
+            </div>
+            <label for="ganancia-prod">Ganancia: </label>
+            <div>
+                <input type="text" id="ganancia-prod" name="ganancia-prod" placeholder="{{producto.prod_Ganancia}} %">
             </div>
         
             <input type="submit" value="Editar producto" style="background-color: var(--btn-claro-continuar); cursor: pointer;">
     </form>
-    
-
-    <h2>Eliminar Producto</h2>
-    <div>
-        <center>
-            <a href="/eliminar-producto/{{ producto.Id }}"><button >Eliminar producto {{producto.Id}}: {{producto.prod_Nombre}}</button></a>
-        </center>
-    </div>
+    <a href="/productos" style="width: 76%;"><button>Atrás</button></a>
 </div>
 <!-- <div class="registro">
     <div class="title"><h1>Registro Tendero</h1></div>

@@ -176,13 +176,14 @@ class RegistroProductoView(AuthenticatedView):
 
             db.session.add(new_product)
             db.session.commit()
-            return True
+            return {'state':True, 'message':'Registro exitoso'}
 
     def renderizar_producto(self, estado, mensaje):
         tienda_id = self.tienda_id
         resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
         productos_codificados = []
         tienda_info = []
+        ganancias = []
 
         for producto, tienda in resultado:
             if producto.tienda_Id == tienda_id:
@@ -190,46 +191,75 @@ class RegistroProductoView(AuthenticatedView):
                     img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
                     productos_codificados.append((producto, img_codificada))
                 if producto.prod_Precio:
+                    precio = producto.prod_Precio
                     producto.prod_Precio = "{:,}".format(int(producto.prod_Precio))
+                if producto.prod_Ganancia:
+                    ganancia = producto.prod_Ganancia
+                    producto.prod_Ganancia = int(producto.prod_Ganancia)
                 if producto.prod_TotalPrecio:
+                    preciototal = producto.prod_TotalPrecio
                     producto.prod_TotalPrecio = "{:,}".format(int(producto.prod_TotalPrecio))
                 if producto.prod_Total:
+                    totalbruto = producto.prod_Total
                     producto.prod_Total = "{:,}".format(int(producto.prod_Total))
-                if producto.prod_Ganancia:
-                    producto.prod_Ganancia = int(producto.prod_Ganancia)
                 if producto.prod_TotalGana:
+                    totalgana= producto.prod_TotalGana
                     producto.prod_TotalGana = "{:,}".format(int(producto.prod_TotalGana))
+                gana = "{:,}".format(int(totalgana-totalbruto))
+                
+                ganancias.append(gana)
                 tienda_info.append(tienda)
 
-        if not productos_codificados:
-            datos = []
-        if not tienda_info:
-            datosDos = []
 
-        return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, mensaje=mensaje, estado=estado)
+        return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado)
 
-class EditarProducto(AuthenticatedView):
+class EditarProducto(RegistroProductoView,AuthenticatedView):
     @LoginRequired.login_required
     def get(self, producto_id):
         # Aquí puedes hacer lo que necesites con el ID del producto
         # Por ejemplo, cargar los detalles del producto con el ID proporcionado
         product = Productos.query.filter_by(prod_Id=producto_id).first()
-        return render_template('editar_prod.html', producto = product)
+        img_codificada = base64.b64encode(product.prod_Img).decode('utf-8')
+        return render_template('editar_prod.html', producto=product, imagen=img_codificada)
 
     @LoginRequired.login_required
     def post(self, producto_id):
-        return f"Actualizando producto con ID: {producto_id}"
-
-class EliminarProducto(AuthenticatedView):
+        # Buscar el producto en la base de datos
+        producto = Productos.query.filter_by(Id=producto_id).first()
+        
+        if producto:
+            # Obtener los datos del formulario HTML
+            nuevo_nombre = request.form.get('nombre-prod')
+            nuevo_precio = request.form.get('precio-prod')
+            nueva_cantidad = request.form.get('cantidad-prod')
+            nueva_ganancia = request.form.get('ganancia-prod')
+            
+            # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
+            if nuevo_nombre:
+                producto.prod_Nombre = nuevo_nombre
+            if nuevo_precio:
+                producto.prod_Precio = nuevo_precio
+            if nueva_cantidad:
+                producto.prod_Cantidad = nueva_cantidad
+            if nueva_ganancia:
+                producto.prod_Ganancia = nueva_ganancia
+            
+            # Guardar los cambios en la base de datos
+            db.session.commit()
+            
+            return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
+        else:
+            return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
+class EliminarProducto(RegistroProductoView,AuthenticatedView):
     @LoginRequired.login_required
     def get(self,id):
         producto = Productos.query.filter_by(Id=id).first()
         if producto:
             db.session.delete(producto)
             db.session.commit()
-            return render_template('11_historial_prod.html',mensaje="Se eliminó el producto con éxito", estado=1)
+            return super().get( estado=1,mensaje="Eliminaste un producto exitosamente")
         else:
-            return render_template('11_historial_prod.html',mensaje="No se pudo eliminar el producto", estado=0)
+            return super().get(estado=0,mensaje="No se pudo eliminar el producto")
         
 
 

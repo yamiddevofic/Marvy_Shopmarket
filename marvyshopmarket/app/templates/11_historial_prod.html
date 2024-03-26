@@ -10,12 +10,15 @@
         
     </div>        
     <script>
+        // const mensajes = document.getElementsByClassName('mensaje');
+
         function redirigirDespuesDeTiempo() {
-        setTimeout(function() {
-            window.location.href = "{{ url_for('main.productos') }}";
-        }, 2000);   
+            setTimeout(function() {
+                window.location.href = '/productos'; 
+            }, 2000);   
         }
-        redirigirDespuesDeTiempo()
+
+        redirigirDespuesDeTiempo();
     </script>
     {% elif estado==0 %}
     <div class="mensaje" style="display: flex;">
@@ -23,12 +26,15 @@
     </div>
                 
     <script>
+        // const mensajes2 = document.getElementsByClassName('mensaje');
+
         function redirigirDespuesDeTiempo() {
-        setTimeout(function() {
-            window.location.href = "{{ url_for('main.productos') }}";
-        }, 2000);   
+            setTimeout(function() {
+                window.location.href = '/productos'; 
+            }, 2000);   
         }
-    redirigirDespuesDeTiempo()
+
+        redirigirDespuesDeTiempo();
     </script>
 
     {% else %}
@@ -75,29 +81,76 @@
                         <button type="submit" class="btn-submit">Confirmar</button>
                     </div>
                 </form> -->
-        
-            <table>
+                <style>
+                    /* Estilos para la tabla */
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                    }
+                    
+                    th, td {
+                        padding: 12px 15px;
+                        text-align: left;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    
+                    th {
+                        background-color: #f2f2f2;
+                        font-weight: bold;
+                        color: #333;
+                    }
+                    th,td,tr{
+                        text-align: center;
+                    }
+                    /* Estilo para las filas impares */
+                    tr:nth-child(odd) {
+                        background-color: #f9f9f9;
+                    }
+                    
+                    /* Estilo para las filas al pasar el mouse */
+                    tr:hover {
+                        background-color: #e9e9e9;
+                    }
+                    
+                    /* Estilos para las celdas al pasar el mouse */
+                    td:hover {
+                        background-color: #dcdcdc;
+                    }
+                    
+                    /* Estilo para la primera columna */
+                    td:first-child, th:first-child {
+                        border-left: 0;
+                    }
+                    
+                    /* Estilo para la última columna */
+                    td:last-child, th:last-child {
+                        border-right: 0;
+                    }
+                </style>
+                  
+            <table style="font-size: 0.5rem;">
                 <tbody>
                     <tr>
                         <td>
                             <label>Id: </label>
-                            <div><input placeholder="Id producto" id="prod_Id" name="prod_Id" class="prod_Id"></div>
+                            <div><input placeholder="id del producto" id="prod_Id" name="prod_Id" class="prod_Id"></div>
                         </td>
                         <td>
                             <label>Nombre: </label>
-                            <div><input placeholder="Nombre del producto" name="prod_Nombre" id="nombre-producto-venta" ></div>
+                            <div><input placeholder="nombre del producto" name="prod_Nombre" id="nombre-producto-venta" ></div>
                         </td>
                         <td>
                             <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="prod_Precio" name="prod_Precio" id="prod_Precio" ></div>
+                            <div>$ <input type="number" placeholder="precio" name="prod_Precio" id="prod_Precio" ></div>
                         </td>
                         <td>
                             <label>Cantidad: </label>
-                            <div><input type="number" placeholder="prod_Cantidad" name="prod_Cantidad" id="prod_Cantidad"></div>
+                            <div><input type="number" placeholder="cantidad" name="prod_Cantidad" id="prod_Cantidad"></div>
                         </td>
                         <td>
                             <label>Ganancia: </label>
-                            <div><input type="number" placeholder="prod_Ganancia" name="prod_Ganancia" id="prod_Ganancia"> %</div>
+                            <div><input type="number" placeholder="ganancia" name="prod_Ganancia" id="prod_Ganancia"> %</div>
                         </td>
                         <td>
                             <div>
@@ -199,42 +252,51 @@
         <table>
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th  width="180">Nombre</th>
+                    <th>Código</th>
+                    <th  width="180">Producto</th>
                     <th>Precio bruto</th>
-                    <th>Cantidad</th>
-                    <th>Total bruto</th>
                     <th>Ganancia</th>
                     <th>Precio Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Total bruto</th>
                     <th>Total</th>
-                    <th  width="80">Imagen</th>
+                    <th>Gana</th>
+                    <!-- <th  width="80">Imagen</th> -->
                     <th  width="20">Editar/Eliminar</th></a>
                 </tr>
 
             </thead>
             <tbody>
                     <!-- HTML y Jinja -->
-                {% for producto,imagen_codificada in resultado %}
-                <tr id="registro_{{ producto.prod_Id }}">
-                    <td>{{producto.prod_Id}}</td>
-                    <td>{{ producto.prod_Nombre }}</td>
-                    <td>$ {{ producto.prod_Precio}}</td>
-                    <td>{{ producto.prod_Cantidad}}</td>
-                    <td>$ {{producto.prod_Total}}</td>
-                    <td>{{ producto.prod_Ganancia}}%</td>
-                    <td>$ {{producto.prod_TotalPrecio}}</td>
-                    <td>$ {{producto.prod_TotalGana}}</td>
-                    <td width="250"><img src="data:image/png;base64,{{ imagen_codificada}}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td>
-                    <td><a href="/editar-producto/{{ producto.prod_Id }}" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                </tr>
-                {% endfor %}
+                    {% for index in range(resultado | length) %}
+                        {% set producto, imagen_codificada = resultado[index] %}
+                        {% set ganancia = ganancias[index] %}
+                        <tr id="registro_{{ producto.prod_Id }}">
+                            <td>{{ producto.prod_Id }}</td>
+                            <td>{{ producto.prod_Nombre }}</td>
+                            <td>$ {{ producto.prod_Precio }}</td>
+                            <td>{{ producto.prod_Ganancia }}%</td>
+                            <td>$ {{ producto.prod_TotalPrecio }}</td>
+                            <td>{{ producto.prod_Cantidad }}</td>
+                            <td>$ {{ producto.prod_Total }}</td>
+                            <td>$ {{ producto.prod_TotalGana }}</td>
+                            <td>$ {{ ganancia }}</td>
+                            <!-- <td width="250"><img src="data:image/png;base64,{{ imagen_codificada }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td> -->
+                            <td>
+                                <a href="/editar-producto/{{ producto.prod_Id }}" style="color: var(--claro-principal);" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="/eliminar-producto/{{ producto.Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i></a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+
 
             </tbody>
             
         </table>  
     </div>  
     <form action="/home" method="GET">
-        <button>Cancelar</button>
+        <button>Atrás</button>
     </form>    
 {% endblock %}
 
