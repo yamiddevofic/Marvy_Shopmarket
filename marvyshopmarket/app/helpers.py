@@ -1,6 +1,6 @@
 import random
 import string
-from .models import Productos, Tiendas, Tenderos, Administrador
+from .models import Productos, Tiendas, Tenderos, Administrador,Ventas
 import base64
 
 def generar_codigo():
@@ -54,6 +54,21 @@ def obtener_informacion_tienda(tienda_id):
     except Exception as e:
         print(f"Error al obtener información de la tienda: {e}")
     return None
+
+def obtener_informacion_total_ventas(tienda_id):
+    try:
+        # Aquí debes incluir la lógica para consultar el total de ventas
+        # para la tienda con el tienda_id proporcionado.
+        # Por ejemplo, podrías hacer una consulta a la base de datos.
+        total_ventas = 0
+        # Suponiendo que tengas un modelo de Ventas donde almacenas las ventas por tienda
+        ventas_tiendas = Ventas.query.filter_by(tienda_Id=tienda_id).all()
+        for venta in ventas_tiendas:
+            total_ventas += venta.total  # Asumiendo que tienes un campo 'total' en tu modelo de Ventas
+        return total_ventas
+    except Exception as e:
+        print(f"Error al obtener la información de total_ventas para la tienda {tienda_id}: {e}")
+        return None
 
 # def obtener_informacion_venta(venta_id):
 #     try:

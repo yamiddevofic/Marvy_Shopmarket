@@ -46,26 +46,30 @@
     <div class="title">
         <h1>Registro de Venta</h1>
     </div>
-    <div class="formulario">
-        <form method="post" action="/registro-ventas" enctype="multipart/form-data" id="form-ventas">
-            <table>
+    <div class="formulario" style="width: 100%;">
+        <form method="post" action="/ventas" enctype="multipart/form-data" id="form-ventas">
+            <table width="100%">
                 <tbody>
                     <tr>
                         <td>
-                            <label>Producto: </label>
-                            <div><input placeholder="Id producto" id="id-producto-venta" class="id-producto-venta"></div>
+                            <label>Id del del producto: </label>
+                            <div><input type="number" placeholder="Id producto" id="id-producto-venta" name="id-producto-venta" class="id-producto-venta"></div>
                         </td>
                         <td>
-                            <label>Nombre: </label>
+                            <label>Nombre del producto: </label>
                             <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
+                        </td>
+                        <td>
+                            <label>Cantidad: </label>
+                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
                         </td>
                         <td>
                             <label>Precio: </label>
                             <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
                         </td>
                         <td>
-                            <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
+                            <label>Metodo de Pago: </label>
+                            <div><input type="text" placeholder="Metodo de pago" name="metodo-pago-vendido" id="metodo-pago-vendido"></div>
                         </td>
                         <td>
                             <div class="botones-secundarios">
@@ -79,10 +83,52 @@
                 <button type="submit" class="btn-submit">Confirmar</button>
             </div> -->
         </form>
-        <form action="/home" method="GET">
-            <button>Cancelar</button>
-        </form>
     </div>
-</div>
+    <div style="grid-column: 1/-1">
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Id venta</th>
+                    <th>Id producto</th>
+                    <th>Nombre</th>
+                    <th>Fecha y Hora Venta</th>
+                    <th>Cantidad Vendido</th>
+                    <th>Precio Unitario</th>
+                    <th  width="20">Editar/Eliminar</th>
+                    <th>Total</th>
+                    <!-- <th  width="80">Imagen</th> -->
+                   
+                </tr>
+    
+            </thead>
+            <tbody>
+                    <!-- HTML y Jinja -->
+            {% for venta in resultado %}
+                <tr id="registro_{{ loop.index }}">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ venta.id_producto }}</td>
+                    <td>{{ venta.nombre }}</td>
+                    <td>{{ venta.fecha }}</td>
+                    <td>{{ venta.cantidad_vendido }}</td>
+                    <td>{{ venta.precio }}</td>
+                    <td>
+                        <a href="/editar-producto/{{ venta.venta_Id }}" style="color: var(--claro-principal);" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="/eliminar-producto/{{ venta.venta_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                    <td>{{ venta.total }}</td>
+                </tr>
+            {% endfor %}
 
+                </tbody>
+            </table>
+            <div style="padding: 2%; background-color: white; margin-top: 2%; display: flex; justify-content: space-between;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="background-color: var(--btn-oscuro-continuar); color: var(--blanco); padding: 1%;">Producto más vendido: {{total_ventas}}</p></div>
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="background-color: var(--btn-claro-cancelar); color: var(--blanco); padding: 1%;">Producto menos vendido: {{total_ventas}}</p></div>
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="background-color: var(--claro-secundario-2); color: var(--negro); padding: 1%;">Total de ventas: ${{total_ventas}}</p></div>
+            </div>
+    </div>
+    <form action="/home" method="GET">
+        <button>Cancelar</button>
+    </form>
+</div>
 {% endblock %}

@@ -138,6 +138,21 @@ class Suministros(db.Model):
          self.sum_Pago = pago
          self.sum_Vueltos = vueltos
          self.tienda_Id = tienda
+class SuministrosHasProductos(db.Model):
+    __tablename__ = 'suministros_has_productos'
+
+    suministros_sum_Id = db.Column(db.BigInteger, primary_key=True)
+    suministros_tienda_Id = db.Column(db.BigInteger, primary_key=True)
+    productos_Id = db.Column(db.BigInteger, primary_key=True)
+    productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
+    productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
+
+    def __init__(self, suministro, tienda, producto, tendero, productos_tienda):
+        self.suministros_sum_Id = suministro
+        self.suministros_tienda_Id = tienda
+        self.productos_Id = producto
+        self.productos_tendero_Id = tendero
+        self.productos_tienda_Id = productos_tienda
 
 class SuministrosProveedores(db.Model):
     __tablename__ = 'suministros_proveedores'
@@ -197,22 +212,18 @@ class Ventas(db.Model):
     venta_Cantidad = db.Column(db.Integer)
     venta_Metodo = db.Column(db.String(45))
     venta_Datetime = db.Column(db.DateTime)
-    venta_Total = db.Column(db.Float)
     venta_Pago = db.Column(db.Float)
-    venta_Vueltos = db.Column(db.Float)
     tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
 
     tendero = db.relationship("Tenderos", backref="ventas")
     tienda = db.relationship("Tiendas", backref="ventas")
 
-    def __init__(self, cantidad, metodo, datetime, total, pago, vueltos, tendero_id, tienda_id):
+    def __init__(self, cantidad, metodo, datetime, pago, tendero_id, tienda_id):
         self.venta_Cantidad = cantidad
         self.venta_Metodo = metodo
         self.venta_Datetime = datetime
-        self.venta_Total = total
         self.venta_Pago = pago
-        self.venta_Vueltos = vueltos
         self.tendero_Id = tendero_id
         self.tienda_Id = tienda_id
 
@@ -228,10 +239,10 @@ class VentasHasProductos(db.Model):
     venta = db.relationship('Ventas', backref='ventas_has_productos', foreign_keys=[ventas_venta_Id, ventas_tendero_Id, ventas_tienda_Id])
     producto = db.relationship('Productos', backref='ventas_has_productos', foreign_keys=[productos_Id, productos_tendero_Id, productos_tienda_Id])
 
-    def __init__(self, venta_id, tendero_id, tienda_id, producto_id, producto_tendero_id, producto_tienda_id):
-        self.ventas_venta_Id = venta_id
-        self.ventas_tendero_Id = tendero_id
-        self.ventas_tienda_Id = tienda_id
-        self.productos_Id = producto_id
-        self.productos_tendero_Id = producto_tendero_id
-        self.productos_tienda_Id = producto_tienda_id
+    def __init__(self, ventas_venta_Id, ventas_tendero_Id, ventas_tienda_Id, productos_Id, productos_tendero_Id, productos_tienda_Id):
+        self.ventas_venta_Id = ventas_venta_Id
+        self.ventas_tendero_Id = ventas_tendero_Id
+        self.ventas_tienda_Id = ventas_tienda_Id
+        self.productos_Id = productos_Id
+        self.productos_tendero_Id = productos_tendero_Id
+        self.productos_tienda_Id = productos_tienda_Id
