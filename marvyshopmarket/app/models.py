@@ -1,8 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
+
 from sqlalchemy import LargeBinary, ForeignKey
 from sqlalchemy.orm import relationship
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class Administrador(db.Model):
     __tablename__ = 'administrador'
@@ -114,11 +116,11 @@ class Proveedores(db.Model):
     prov_Ubicacion = db.Column(db.String(100))
     prov_Contacto = db.Column(db.String(50))
 
-    # def __init__(self, id, nombre, ubicacion, contacto):
-    #     self.prov_Id = id
-    #     self.prov_Nombre = nombre
-    #     self.prov_Ubicacion = ubicacion
-    #     self.prov_Contacto = contacto
+    def __init__(self, id, nombre, ubicacion, contacto):
+        self.prov_Id = id
+        self.prov_Nombre = nombre
+        self.prov_Ubicacion = ubicacion
+        self.prov_Contacto = contacto
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
@@ -153,11 +155,11 @@ class SuministrosProveedores(db.Model):
         db.ForeignKeyConstraint(['prov_Id'], ['proveedores.prov_Id']),
     )
 
-    # def __init__(self, id, suministro, tienda, proveedor):
-    #     self.id = id
-    #     self.sum_Id = suministro
-    #     self.tienda_Id = tienda
-    #     self.prov_Id = proveedor
+# def __init__(self, id, suministro, tienda, proveedor):
+#     self.id = id
+#     self.sum_Id = suministro
+#     self.tienda_Id = tienda
+#     self.prov_Id = proveedor
 
 class Tenderos(db.Model):
     __tablename__ = 'tenderos'

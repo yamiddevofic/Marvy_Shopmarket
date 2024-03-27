@@ -1,79 +1,66 @@
-{% extends 'base.html' %}
-{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
-{% block content %}
-
-<div class="registro" id="registro-ventas">
-    <div class="title">
-        <h1>Registro de proveedores</h1>
-    </div>
-    {%if estado == 0%}
-        <p style="color: red"  class="mensaje">{{mensaje}}</p>
-        <script> 
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_proveedores') }}";
-            }, 3500); 
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {%elif estado ==1%}
-        <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{mensaje}}</p>
-        
-        <script>
+{
+    Copy code
+    {% extends 'base.html' %}
+    {% block title %}Marvy Shopmarket | Registro de Proveedores{% endblock %}
+    {% block content %}
+    
+    <div class="registro" id="registro-proveedores">
+        <div class="title">
+            <h1>Registro de Proveedores</h1>
+        </div>
+        {% if estado == 0 %}
+            <p style="color: red" class="mensaje">{{ mensaje }}</p>
+        {% elif estado == 1 %}
+            <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
+        {% endif %}
+    
+        <div class="formulario">
+            <form action="{{ url_for('/registro_proveedores') }}" method="GET">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>ID:</label>
+                                <div><input type="number" placeholder="ID" name="id-proveedor"></div>
+                            </td>
+    
+                            <td>
+                                <label>Nombre:</label>
+                                <div><input placeholder="Nombre" name="nombre-proveedor"></div>
+                            </td>
+    
+                            <td>
+                                <label>Ubicación:</label>
+                                <div><input placeholder="Ubicación" name="ubicacion-proveedor"></div>
+                            </td>
+    
+                            <td>
+                                <label>Contacto:</label>
+                                <div><input type="number" placeholder="Teléfono" name="telefono-proveedor"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="botom-confirmar">
+                    <button type="submit">Confirmar</button>
+                </div>
+            </form>
             
-            function redirigirDespuesDeTiempo() {
-            setTimeout(function() {
-                window.location.href = "{{ url_for('main.historial_provedores') }}";
-            }, 2000);   
-            }
-        redirigirDespuesDeTiempo()
-        </script>
-    {%else%}
-        <p id="mensaje"></p>
-    {%endif%}
-    <div class="formulario">
-        <form method="post" action="/registro-proveedores" enctype="multipart/form-data" id="form-proveedor">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <label>ID:</label>
-                            <div><input type="number" placeholder="id-proveedor" id="id-proveedor" name="id-proveedor"></div>
-                        </td>
-
-                        <td>
-                            <label>Nombre:</label>
-                            <div><input placeholder="Nombre" id="nombre-proveedor" name="nombre-proveedor"></div>
-                        </td>
-
-                        <td>
-                            <label>Telefono: </label>
-                            <div>$ <input type="number" placeholder="telefono" id="telefono-proveedor" name="telefono-proveedor"></div>
-                        </td>
-
-                        <td>
-                            <label>Ubicacion:</label>
-                            <div><input placeholder="Ubicacion" id="Ubicacion-proveedor" name="ubicacion-proveedor"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="botom-confirmar">
-                <button>Confirmar</button>
+            <div class="lista-proveedores">
+                <h2>Lista de Proveedores</h2>
+                <ul>
+                    {% for proveedor in proveedores %}
+                        <li>ID: {{ proveedor.prov_Id }}, Nombre: {{ proveedor.prov_Nombre }}, Ubicación: {{ proveedor.prov_Ubicacion }}, Contacto: {{ proveedor.prov_Contacto }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        </form>
-        
-        <div class="botom-atras">
-            <form action="/pagina-principal" method="GET">
-            <button>Atras</button>
-            </form>
-        </div>
-
-        <div class="botom-cancelar">
-            <form action="" method="GET">
-            <button>Cancelar</button>
-            </form>
+            
+            <div class="botom-atras">
+                <form action="{{ url_for('pagina_principal') }}" method="GET">
+                    <button type="submit">Atrás</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+    
+    {% endblock %}
