@@ -646,11 +646,12 @@ class RegistroProveedoresView(MethodView):
 
     def renderizar_proveedor(self, estado, mensaje):
         try:
-            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje)
+            proveedores_lista = Proveedores.query.all()  # Cambio de nombre de variable
+            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores_lista)  # Cambio de nombre de variable
         except Exception as e:
-            print(f"Error al renderizar proveedores: {str(e)}")
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error al renderizar la página")
-        
+            print(f"Error al renderizar suministros: {str(e)}")
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}")
+
         
         
 

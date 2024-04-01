@@ -1,66 +1,63 @@
-{
-    Copy code
-    {% extends 'base.html' %}
-    {% block title %}Marvy Shopmarket | Registro de Proveedores{% endblock %}
-    {% block content %}
-    
-    <div class="registro" id="registro-proveedores">
-        <div class="title">
-            <h1>Registro de Proveedores</h1>
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registro de Proveedores{% endblock %}
+{% block content %}
+
+<div class="title">
+    <h1>Registro de Proveedores</h1>
+</div>
+
+<div class="formulario">
+    <form method="post" action="/registro_proveedores" enctype="multipart/form-data" id="form-suministro">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label>ID:</label>
+                        <div><input type="number" placeholder="ID" name="id-proveedor"></div>
+                    </td>
+
+                    <td>
+                        <label>Nombre:</label>
+                        <div><input placeholder="Nombre" name="nombre-proveedor"></div>
+                    </td>
+
+                    <td>
+                        <label>Ubicación:</label>
+                        <div><input placeholder="Ubicación" name="ubicacion-proveedor"></div>
+                    </td>
+
+                    <td>
+                        <label>Contacto:</label>
+                        <div><input type="number" placeholder="Teléfono" name="telefono-proveedor"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="botom-confirmar">
+            <button type="submit">Confirmar</button> <!-- Corrección de tipo de botón -->
         </div>
-        {% if estado == 0 %}
-            <p style="color: red" class="mensaje">{{ mensaje }}</p>
-        {% elif estado == 1 %}
-            <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
-        {% endif %}
-    
-        <div class="formulario">
-            <form action="{{ url_for('/registro_proveedores') }}" method="GET">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <label>ID:</label>
-                                <div><input type="number" placeholder="ID" name="id-proveedor"></div>
-                            </td>
-    
-                            <td>
-                                <label>Nombre:</label>
-                                <div><input placeholder="Nombre" name="nombre-proveedor"></div>
-                            </td>
-    
-                            <td>
-                                <label>Ubicación:</label>
-                                <div><input placeholder="Ubicación" name="ubicacion-proveedor"></div>
-                            </td>
-    
-                            <td>
-                                <label>Contacto:</label>
-                                <div><input type="number" placeholder="Teléfono" name="telefono-proveedor"></div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="botom-confirmar">
-                    <button type="submit">Confirmar</button>
-                </div>
-            </form>
-            
-            <div class="lista-proveedores">
-                <h2>Lista de Proveedores</h2>
-                <ul>
-                    {% for proveedor in proveedores %}
-                        <li>ID: {{ proveedor.prov_Id }}, Nombre: {{ proveedor.prov_Nombre }}, Ubicación: {{ proveedor.prov_Ubicacion }}, Contacto: {{ proveedor.prov_Contacto }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            
-            <div class="botom-atras">
-                <form action="{{ url_for('pagina_principal') }}" method="GET">
-                    <button type="submit">Atrás</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    {% endblock %}
+    </form>
+</div>
+
+<!-- Mostrar información de proveedores -->
+<div class="proveedores-info">
+    <h2>Lista de proveedores</h2>
+    <ul>
+        {% for proveedor in proveedores %}
+            <li>
+                <p>ID: {{ proveedor.prov_Id }}</p>
+                <p>Nombre: {{ proveedor.prov_Nombre }}</p> <!-- Corrección de doble ":" -->
+                <p>Ubicación: {{ proveedor.prov_Ubicacion }}</p>
+                <p>Contacto: {{ proveedor.prov_Contacto }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% if estado == 0 %}
+    <p style="color: red" class="mensaje">{{ mensaje }}</p>
+{% elif estado == 1 %}
+    <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
+{% endif %}
+
+{% endblock %}
