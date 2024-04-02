@@ -1,3 +1,4 @@
+
 const menu = document.getElementById('menu-hamburguesa');
 const menuDesplegable = document.getElementById('menu-desplegable');
 const cerrar= document.querySelector('.cerrar')

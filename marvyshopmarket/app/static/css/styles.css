@@ -46,13 +46,14 @@ button, #registro-tienda-content, #registro-adm-content{
 body,html,.container {
     height: 100%;
     width: 100%;
-    background: rgb(34,193,195);
-    background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(0,191,102,1) 100%);/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #F28627;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
+    background-size: cover;
 }
-
+/* .container{
+    background: rgba(0,0,0,0.7)
+} */
 h1{
     font-size: 2rem;
 }
@@ -68,6 +69,7 @@ a{
     grid-template-columns: 5% 45% 45% 5%;
     grid-template-rows: 1fr 85% 10%;
 }
+
 .container .content{
     grid-column: 1/-1;
     grid-row: 1/-1;
@@ -133,17 +135,54 @@ tbody tr> * {
 /* #container-producto tbody tr:nth-child(even) {
     background-color: var(--blanco);
 } */
-  
-tbody tr {
-    background-image: url(noise.png);
-}
-  
+
+/* Estilos para la tabla */
 table {
-    background-color: var(--blanco);
-    color: var(--oscuro-secundario-1);
-    border: 1px solid var(--claro-secundario-1);
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
     font-size: 0.9rem;
 }
+
+th, td {
+    padding: 10px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+th,td,tr{
+    text-align: center;
+}
+/* Estilo para las filas impares */
+tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Estilo para las filas al pasar el mouse */
+tr:hover {
+    background-color: #e9e9e9;
+}
+
+/* Estilos para las celdas al pasar el mouse */
+td:hover {
+    background-color: #dcdcdc;
+}
+
+/* Estilo para la primera columna */
+td:first-child, th:first-child {
+    border-left: 0;
+}
+
+/* Estilo para la última columna */
+td:last-child, th:last-child {
+    border-right: 0;
+}
+                
 .dark-mode table{
     background: var(--oscuro-secundario-1);
 }
@@ -223,10 +262,12 @@ table {
 .buscador{
     grid-column: 3;
     grid-row: 1;
+    width: 100%;
+    justify-content: end;
 }
 .titulo{
-    grid-column: 2;
-    grid-row: 2;
+    grid-column: 1/-1;
+    grid-row: 1;
 }
 .nombre-img{
     grid-column: 1;
@@ -244,8 +285,8 @@ table {
 }
 .botom{
     grid-column: 1/-1;
-    grid-row: 3;
-    height: 50%;
+    grid-row: 1;
+    height: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr;
@@ -254,6 +295,7 @@ table {
     justify-content: space-around;
     padding: 2%;
 }
+
 .botom .action{
     border-radius: 10px;
     height: auto;
@@ -264,8 +306,9 @@ table {
     background: var(--claro-secundario-2);
     padding: 3%;
 }
-.botom .action button{
-    padding: 2%;
+.botom .action form button{
+    padding: 5%;
+    font-size: 1.5rem;
 }
 .dark-mode .action{
     background: var(--oscuro-secundario-1);
@@ -289,17 +332,23 @@ table {
 .totales{
     grid-column: 1/-1;
     grid-row: -1;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 5%;
     justify-content: space-around;
     font-size: 1.2rem;
-    margin: 2% 0;
     padding: 2%;
 }
+
 .totales div{
     background: var(--claro-secundario-3);
-    padding: 2%;
+    padding: 5%;
     color: var(--negro);
-    width: 30%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 .dark-mode .totales div{
     background: var(--oscuro-secundario-2);
@@ -374,7 +423,9 @@ table {
     height: auto;
     padding: 2%;
 }
-
+#redirigir-registro-user{
+    padding: 3%;
+}
 #content_signUp{
     display: grid;
     gap: 2%;
@@ -384,23 +435,9 @@ table {
     color: var(--oscuro-secundario-1);
     font-size: 0.5rem;
 }
+
 #section_tuTienda{
-    border-right: 1px solid var(--blanco);
     width: auto;
-    display: flex;
-    align-items:center;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    width: auto;
-    grid-row: 1/3;
-    grid-column: 1;
-    color: var(--oscuro-secundario-1);
-}
-.dark-mode #section_tuTienda{
-    color: var(--claro-secundario-2);
-}
-#section_usuario{
     display: flex;
     align-items:center;
     flex-direction: column;
@@ -409,6 +446,26 @@ table {
     width: auto;
     grid-row: 1/3;
     grid-column: 2;
+    color: var(--oscuro-secundario-1);
+}
+#registro-tienda-content input{
+    width: 80%;
+    font-size: 1.1rem
+}
+
+.dark-mode #section_tuTienda{
+    color: var(--claro-secundario-2);
+}
+#section_usuario{
+    border-right: 1px solid var(--blanco);
+    display: flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    width: auto;
+    grid-row: 1/3;
+    grid-column: 1;
 }
 .dark-mode #section_usuario{
     color: var(--claro-secundario-2);
@@ -470,9 +527,8 @@ table {
     padding: 5%;
     background: var(--claro-secundario-3);
     height: auto;
-    display: grid;
-    grid-template-rows: 20% 1fr;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction:column ;
     justify-content: center;
     align-items: center;
 }
@@ -493,13 +549,13 @@ table {
 .header_signUp{
     grid-column: 2;
     grid-row: 1;
-    padding: 5%;
+    padding: 1%;
     margin-bottom: 2%;
     width: 100%
 }
 #signUp{
     grid-column: 1/-1;
-    grid-row: 2/5;
+    grid-row: 1/4;
     display: flex;
     flex-direction: column;
     grid-template-columns: 1fr;
@@ -521,7 +577,7 @@ label{
     margin-top: 2%;
 }
 input{
-    margin-bottom: 3%;
+    margin-bottom: 2%;
 }
 label, input, .inputs, button{
     width: 80%;
@@ -529,6 +585,7 @@ label, input, .inputs, button{
 img{
     margin: 2%;
 }
+
 .title{
     grid-row: 1;
     grid-column: 2;
@@ -537,12 +594,11 @@ img{
 .registro{
     grid-row: 1/-1;
     grid-column: 2/3;
-    border-radius: 10px;
-    height: 95%;
+    height: auto;
     overflow: auto;
     width: 100%;
     padding: 2%;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     border: 1px solid var(--oscuro-secundario-1);
     background: var(--claro-secundario-2);
     color: var(--oscuro-secundario-1);
@@ -552,6 +608,7 @@ img{
     align-items: center;
     margin-top: 2%;
 }
+
 #registro-ventas{
     grid-row: 1/-1;
     grid-column: 1/-1;
@@ -559,6 +616,7 @@ img{
     border: none;
     display: block;
 }
+
 #form-ventas{
     display: flex;
     justify-content: center;
@@ -568,7 +626,7 @@ img{
     width: 100%;
 }
 .registro form{
-    padding: 2%;
+    padding: 2% 0%;
     height: auto;
 }
 .regitro form div{
@@ -674,6 +732,13 @@ img{
     grid-template-rows: 1fr 1fr 1fr 1fr;
     align-items: center;
     flex-direction: center;
+    
+}
+#login{
+    width: 100%;
+}
+#login form input{
+    width: 80%;
 }
 #content-login .logo{
     width: 100%
@@ -905,4 +970,112 @@ form label{
 }
 #prod_Ganancia{
     width: 30%;
+}
+#searcher{
+    padding: 2%; 
+    width:auto ; 
+    height: auto; 
+    background: var(--blanco); 
+    color: var(--negro);
+}
+.input {
+    width: 100%;
+    max-width: 300px;
+    height: 45px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1.5px solid lightgrey;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0px 0px 20px -18px;
+  }
+  
+  .input:hover {
+    border: 2px solid lightgrey;
+    box-shadow: 0px 0px 20px -17px;
+  }
+  
+  .input:active {
+    transform: scale(0.95);
+  }
+  
+  .input:focus {
+    border: 2px solid grey;
+  }
+@media screen and (max-width:990px){
+    .botom{
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-auto-rows: minmax(1fr, auto);
+        padding: 10% 5%;
+    }
+
+    .totales{
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 5%;
+    }  
+    .totales div{
+        margin-bottom: 2%;
+    }
+    #menu-desplegable {
+        width: 50%; /* El menú ocupará el 100% del ancho de la pantalla */
+        border-right: none; /* Quitamos el borde derecho en pantallas más pequeñas */
+    } 
+    #content-login{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #content-login #container_login{
+        width: 80%;
+        grid-column: 1/-1;
+    }
+    #content_signUp{
+        grid-template-columns: 1fr;
+    }
+    #content_signUp #section_tuTienda{
+        width: 100%;
+        grid-column: 1/-1;
+        grid-row: 2;
+        margin-top: 2%;
+    }
+    #content_signUp #section_usuario{
+        grid-column: 1/-1;
+        grid-row: 1;
+        margin-top: 2%;
+    }
+}
+@media screen and (max-width: 600px){
+    body, html, .container{
+        width: 100vw;
+        height: 100vh;
+    }
+    .menu #menu-hamburguesa{
+        width: auto;
+    }
+    #menu-desplegable {
+        width: 100%;
+        height: 100vh; /* El menú ocupará el 100% del ancho de la pantalla */
+        border-right: none; /* Quitamos el borde derecho en pantallas más pequeñas */
+    }
+    .listado ul li{
+        text-align: center;
+    }
+    #searcher{
+        height: 100%;
+        width: 100%;
+    }   
+    .buscador-container{
+        height: 100vh;
+        background: red;
+    }
+    .mensaje p{
+        width: 100%;
+        height: 100%;
+        background-color: black;
+    }
+    
+    #login form input{
+        font-size: 1rem;
+    }
 }

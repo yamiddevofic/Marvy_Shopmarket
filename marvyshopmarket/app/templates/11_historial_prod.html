@@ -271,8 +271,8 @@
                     {% for index in range(resultado | length) %}
                         {% set producto, imagen_codificada = resultado[index] %}
                         {% set ganancia = ganancias[index] %}
-                        <tr id="registro_{{ producto.prod_Id }}">
-                            <td>{{ producto.prod_Id }}</td>
+                        <tr id="registro_{{ producto.Id }}">
+                            <td>{{ producto.Id }}</td>
                             <td>{{ producto.prod_Nombre }}</td>
                             <td>$ {{ producto.prod_Precio }}</td>
                             <td>{{ producto.prod_Ganancia }}%</td>

@@ -44,6 +44,7 @@
             </script>
         {% endif %}
         <div id="content-login">
+            
             <div id="container_login" class="container_login">
                 <div id="header_login" class="header">
                     <div class="logo"><img class="logo-login" id="logo.login" src="{{ url_for('static', filename='images/logo_marvy.png') }}" alt="logo marvy" width="30%"></div>
@@ -62,11 +63,11 @@
                         <!-- Agregar un campo oculto para enviar el ID de tendero -->
                         <input type="hidden" name="tendero_ID" value="{{ tendero_ID }}">
                         <div class="botons-login" id="botons_login">
-                            <button type="submit" name="btnSubmit_login" class="btnSubmit-login" id="btnSubmit_login">Iniciar sesión</button> 
+                            <input type="submit" name="btnSubmit_login" class="btnSubmit-login" id="btnSubmit_login" value="Iniciar Sesión">
                         </div>
                     </form>
                     <form action="/signUp" method="GET">
-                        <button type="submit" id="btnSubmit_reg">Registrarse</button>
+                        <p id="redirigir-registro-user">¿Usuario nuevo? <a href="{{ url_for('main.sign_up') }}">Registrate</a></p>
                     </form>              
                 </div>
             </div>

@@ -35,11 +35,10 @@
         <p class="mensaje-content">{{mensaje}}</p>
     </div>
     {% endif %}
-    <div><a href="/login"><button>Atrás</button></a></href></div>
-    <div id="header_signUp" class="header_signUp">
-        <h1>Registrarse</h1>
-    </div>
     <main id="signUp" class="signUp">
+        <div id="header_signUp" class="header_signUp">
+            <h1>Registrarse</h1>
+        </div>
         <form id="form_signUp" method="post" action="/nuevo_usuario" enctype="multipart/form-data">
             <div class="content-signUp" id="content_signUp">
                 <!-- <div class="content-logo"><img class="logo" id="logo-signUp" src="{{ url_for('static', filename='images/logo_marvy.png') }}" alt=""></div> -->
@@ -68,25 +67,21 @@
                 <section id="section_tuTienda" class="section_tuTienda">
                     <div id="registro-tienda-content">
                         <div class="tutienda-title"><h2>Tu Tienda</h2></div>
-                        <div class="inputs nit">
-                            <div class="label">
-                                <label for="id_tienda">Id/NIT</label>
-                            </div>
-                            <input type="number" class="id_tienda" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 50%;">
-                            <button id="generar_nit" style="width: 50%;">Generar</button>
-                        </div>
                         <div class="inputs">
+                            <div><label for="id_tienda">Id/NIT</label></div>
+                            <input type="number" class="id_tienda input" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 80%;">
+                            <input type="button" value="Generar" id="id-tienda" class="generar-id" name="generar-id" style="width: 50%;">
                             <div><label for="tiendaname">Nombre de la tienda: </label></div>
-                            <input type="text" class="tiendaname" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
+                            <input type="text" class="tiendaname input" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
                         </div>
                         <div class="inputs">
                             <div><label>Contacto: </label></div>
-                            <div><input type="email" class="contact" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;"></div>
-                            <input type="number" class="contact" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
+                            <div><input type="email" class="contact input" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;"></div>
+                            <input type="number" class="contact input" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
                         </div>
                         <div class="inputs">
                             <div><label for="ubi_tienda">Ubicación: </label></div>
-                            <input type="text" class="ubi_tienda" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
+                            <input type="text" class="ubi_tienda input" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
                         </div>
                         <div class="inputs">
                             <div><label for="tienda_img">Logo de la tienda: </label></div>
@@ -96,11 +91,11 @@
                 </section>
             </div>
             <div class="btn-submit">
-                <button type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="enviar-registro-g" >Registrarse</button>
+                <input type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="enviar-registro-g" value="Registrarse">
             </div>
         </form> 
         <form action="/login" method="GET">
-            <button class="btn-cancelar" id="cancelar-registro-g">Cancelar registro</button>
+            <input type="submit" class="btn-cancelar" id="cancelar-registro-g" value="Cancelar registro">
         </form>
     </main>
 {% endblock %}

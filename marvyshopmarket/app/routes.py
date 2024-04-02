@@ -1,15 +1,22 @@
 import base64
+import os
 import locale
+import traceback
+import logging
+import json
+import socket
+from threading import Thread
 from functools import wraps
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos
+from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos,Gastos
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
 from datetime import datetime
+from .config import SOCKET_HOST, SOCKET_PORT
 
 locale.setlocale(locale.LC_ALL, '')
 main_bp = Blueprint('main', __name__)
@@ -39,9 +46,9 @@ class AuthenticatedView(MethodView):
 
 class IndexView(MethodView):
     def get(self):
-        return render_template('0_welcome.html')
+       return render_template('index.html')
 
-class LoginView(MethodView):
+class LoginView(AuthenticatedView,MethodView):
     def get(self):
         if self.esta_autenticado():
             return self.renderizar_user_autenticado()
@@ -87,120 +94,164 @@ class RegistroExitosoView(MethodView):
 class SignUpView(MethodView):
     def get(self):
         return render_template('2_sign_up.html')
-
-class RegistroVentaView(AuthenticatedView, MethodView):
-        @LoginRequired.login_required
-        def get(self, estado="", mensaje=""):
-            if self.esta_autenticado():
-                return self.renderizar_venta(estado,mensaje)
+class VentaView(AuthenticatedView):
+    def __init__(self, ventas=[]):
+        self.ventas = ventas
+    
+    def post(self):
+        try:
+            if self.registrar_venta()['state']:
+                return self.get(estado=1, mensaje="Registro de venta exitoso")
             else:
-                return self.renderizar_login()
-            
-        def post(self):
-            try:
-                if self.registrar_venta()['state']:
-                    return self.get(estado=1, mensaje="Registro de venta exitoso") 
-                else:
-                    return self.get(estado=0, mensaje=self.registrar_venta()['message'])
-            except Exception as e:
-                return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
-            
-        
-        def registrar_venta(self):
-            try:
-                tienda_id = session['tienda_Id']
-                producto_id = int(request.form['id-producto-venta'])
-                precio = request.form.get('precio-producto-venta')
-                cantidad = request.form.get('cantidad-producto-vendido')
-                metodo = request.form.get('metodo-pago-vendido')
-                fecha = datetime.now()
+                return self.get(estado=0, mensaje=self.registrar_venta()['message'])
+        except Exception as e:
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
 
-                if not precio or not cantidad or not metodo or not producto_id:
-                    return {'state': False, 'message': 'Por favor, complete todos los datos'}
+    def registrar_venta(self):
+        try:
+            tienda_id = session['tienda_Id']
+            producto_id = int(request.form['id-producto-venta'])
+            precio = request.form.get('precio-producto-venta')
+            cantidad = request.form.get('cantidad-producto-vendido')
+            metodo = request.form.get('metodo-pago-vendido')
+            fecha = datetime.now()
 
-                adm_id = int(session['adm_Id'])
-                new_venta = Ventas(cantidad=cantidad, metodo=metodo, datetime=fecha, pago=precio, tendero_id=adm_id, tienda_id=tienda_id)
-                db.session.add(new_venta)
+            if not precio or not cantidad or not metodo or not producto_id:
+                return {'state': False, 'message': 'Por favor, complete todos los datos'}
+
+            adm_id = int(session['adm_Id'])
+
+            new_venta = Ventas(cantidad, metodo, fecha, precio, adm_id, tienda_id)
+
+            db.session.add(new_venta)
+            db.session.commit()
+
+            # Obtener el ID de la venta recién creada
+            venta_id = new_venta.venta_Id
+
+            # Verificar si el producto existe antes de insertarlo en ventas_has_productos
+            producto_existente = Productos.query.filter_by(Id=producto_id).first()
+            if producto_existente:
+
+                # Crear una instancia de VentasHasProductos con el ID de la venta
+                ventas_has_productos = VentasHasProductos(
+                    ventas_venta_Id=venta_id,
+                    ventas_tendero_Id=adm_id,
+                    ventas_tienda_Id=tienda_id,
+                    productos_Id=producto_id,
+                    productos_tendero_Id=adm_id,
+                    productos_tienda_Id=tienda_id
+                )
+
+                db.session.add(ventas_has_productos)
                 db.session.commit()
 
-                # Obtener el ID de la venta recién creada
-                venta_id = new_venta.venta_Id
+                # Disminuir la cantidad de productos en la tabla Productos
+                producto_existente.prod_Cantidad -= int(cantidad)
+                db.session.commit()
+                return {'state': True, 'message': 'Registro exitoso'}
+            else:
+                return {'state': False, 'message': 'El producto no existe en la base de datos'}
 
-                # Verificar si el producto existe antes de insertarlo en ventas_has_productos
-                producto_existente = Productos.query.filter_by(Id=producto_id).first()
-                if producto_existente:
-                    # Crear una instancia de VentasHasProductos con el ID de la venta
-                    ventas_has_productos = VentasHasProductos(
-                        ventas_venta_Id=venta_id,
-                        ventas_tendero_Id=adm_id,
-                        ventas_tienda_Id=tienda_id,
-                        productos_Id=producto_id,
-                        productos_tendero_Id=adm_id,
-                        productos_tienda_Id=tienda_id
-                    )
-                    db.session.add(ventas_has_productos)
-                    db.session.commit()
-                    return {'state': True, 'message': 'Registro exitoso'}
-                else:
-                    return {'state': False, 'message': 'El producto no existe en la base de datos'}
-
-            except IntegrityError as e:
-                db.session.rollback()
-                return {'state': False, 'message': f"Error de integridad referencial: {str(e)}"}
-            except Exception as e:
-                db.session.rollback()
-                return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
-        def obtener_total_ventas(self,ventas):
-            total_ventas = sum(venta["total"] for venta in ventas)
-            return total_ventas
+        except IntegrityError as e:
+            db.session.rollback()
+            return {'state': False, 'message': f"Error de integridad referencial: {str(e)}"}
+        except Exception as e:
+            db.session.rollback()
+            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
         
-        def renderizar_venta(self,estado,mensaje):
-            try:
-                tienda_id = session['tienda_Id']
-                resultado = db.session.query(Ventas, Productos).join(Productos, Ventas.tienda_Id == Productos.tienda_Id).all()
-                datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).all()
-                datos_relacionados_dos = db.session.query(VentasHasProductos, Ventas).join(Ventas).all()
-                ventas = []
-                for relacion1, relacion2 in zip(datos_relacionados, datos_relacionados_dos):
-                    obj = {
-                        "id": relacion1.VentasHasProductos.ventas_venta_Id,
-                        "nombre": relacion1.Productos.prod_Nombre,
-                        "cantidad_vendido": relacion2.Ventas.venta_Cantidad,
-                        "cantidad_total": relacion1.Productos.prod_Cantidad,
-                        "id_producto": relacion1.Productos.Id,
-                        "fecha": relacion2.Ventas.venta_Datetime,
-                        "precio": relacion1.Productos.prod_Precio,
-                        "total": (int(relacion2.Ventas.venta_Cantidad) * int(relacion1.Productos.prod_Precio))
-                    }
-                    ventas.append(obj)
+    def guardar_en_json(self, objeto, nombre_archivo):
+        with open(nombre_archivo, 'w') as archivo:
+            json.dump(objeto, archivo)
+        return True        
+    
+    def renderizar_venta(self, estado, mensaje):
+        try:
+            tienda_id = session['tienda_Id']
+            resultado = db.session.query(Ventas, Productos).join(Productos, Ventas.tienda_Id == Productos.tienda_Id).all()
+            datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).all()
+            datos_relacionados_dos = db.session.query(VentasHasProductos, Ventas).join(Ventas).all()
+            ventas = []  # Aquí almacenaremos las ventas
+            tienda_info = []
+            total_ventas = 0
+            for relacion1, relacion2 in zip(datos_relacionados, datos_relacionados_dos):
+                fecha_iso = relacion2.Ventas.venta_Datetime.isoformat()
+                total = (int(relacion2.Ventas.venta_Cantidad) * int(relacion1.Productos.prod_Precio))
+                total_ventas += total
+                obj = {
+                    "id": relacion1.VentasHasProductos.ventas_venta_Id,
+                    "nombre": relacion1.Productos.prod_Nombre,
+                    "cantidad_vendido": relacion2.Ventas.venta_Cantidad,
+                    "cantidad_total": relacion1.Productos.prod_Cantidad,
+                    "id_producto": relacion1.Productos.Id,
+                    "fecha": fecha_iso,
+                    "precio": relacion1.Productos.prod_Precio,
+                    "total": total,
+                    "total_ventas": total_ventas
+                }
+                ventas.append(obj)
+                self.guardar_en_json( obj,'datos_venta.json')
+            if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
+                with open('datos_venta.json', 'r') as archivo:
+                    datos_venta = json.load(archivo)
+                
+            else:
+                datos_venta = {}
 
-                total_ventas = self.obtener_total_ventas(ventas)
-                tienda_info = []
+            if datos_venta:
+                producto_id = datos_venta.get('id_producto')
+                cantidad_total = datos_venta.get('cantidad_total')
+                cantidad_vendido = datos_venta.get('cantidad_vendido')
+                registro_a_modificar = Productos.query.filter_by(Id=producto_id).first()
+                print(f"{producto_id} | {cantidad_total} | {cantidad_vendido} | {registro_a_modificar}")
 
-                for venta, tienda in resultado:
-                    if venta.tienda_Id == tienda_id:
-                        if venta.venta_Pago:
-                            venta.venta_Pago = str(venta.venta_Pago).replace(',', '')  # Eliminar la coma de la cadena
-                            venta.venta_Pago = int(float(venta.venta_Pago))  # Convertir la cadena a un número decimal
-                    tienda_info.append(tienda)
+            for venta, tienda in resultado:
+                if hasattr(venta, 'venta_Pago') and venta.venta_Pago is not None:
+                    venta.venta_Pago = str(venta.venta_Pago).replace(',', '')
+                    venta.venta_Pago = int(float(venta.venta_Pago))
+                tienda_info.append(tienda)
 
-                return render_template('6_registro_ventas.html', resultado=ventas, tienda_info=tienda_info, mensaje=mensaje, estado=estado, total_ventas= total_ventas)
-            except Exception as e:
-                print("Error: "+e)
-class PaginaPrincipalView(RegistroVentaView,AuthenticatedView,MethodView):
-    def get(self, state="",productos=""):
+            return render_template('6_ventas.html', resultado=ventas, tienda_info=tienda_info, mensaje=mensaje, estado=estado)
+        except Exception as e:
+            print("Error: " + str({e}))
+            return render_template('6_ventas.html', estado=0, mensaje=str(e))
+class EliminarVentas(AuthenticatedView, MethodView):
+    def get(self):
+        try:
+            # Eliminar registros de ventas_has_productos
+            db.session.query(VentasHasProductos).delete()
+            db.session.commit()
+            
+            # Eliminar registros de la tabla Ventas
+            db.session.query(Ventas).delete()
+            db.session.commit()
+            
+            with open('datos_venta.json', 'w') as archivo:
+                pass
+            return redirect(url_for('main.ventas'))
+        except Exception as e:
+            db.session.rollback()
+            # Manejar cualquier error que ocurra durante la eliminación
+            return f"Error al eliminar ventas: {str(e)}"
+
+class PaginaPrincipalView(VentaView, AuthenticatedView, MethodView):
+    def __init__(self):
+        super().__init__(ventas=[])  # Proporciona una lista vacía como ventas
+        self.ventas = []
+
+    def get(self, state="", productos=""):
         if self.esta_autenticado():
-            return self.renderizar_principal(state,productos)
+            return self.renderizar_principal(state, productos)
         else:
             return self.renderizar_login()
 
-    def renderizar_principal(self,state,productos):
+    def renderizar_principal(self, state, productos):
         if 'adm_Id' in session and 'tienda_Id' in session:
-            return self.renderizar_admin(state,productos)
+            return self.renderizar_admin(state, productos)
         elif 'tendero_Id' in session and 'tienda_Id' in session:
-            return self.renderizar_tendero(state,productos)
+            return self.renderizar_tendero(state, productos)
 
-    def renderizar_admin(self,state, productos):
+    def renderizar_admin(self, state, productos):
         tienda_id = session['tienda_Id']
         adm_id = session['adm_Id']
         tendero_id = session['tendero_Id']
@@ -208,16 +259,33 @@ class PaginaPrincipalView(RegistroVentaView,AuthenticatedView,MethodView):
         informacion_tendero = obtener_informacion_adm(tendero_id)
         informacion_adm = obtener_informacion_adm(adm_id)
         perfil = "administrador"
-        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil,state=state,productos=productos)
 
-    def renderizar_tendero(self, state,productos):
+        if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
+            with open('datos_venta.json', 'r') as archivo:
+                datos_venta = json.load(archivo)
+            total_ventas = datos_venta.get('total_ventas', {})
+        else:
+            total_ventas = 0
+
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
+                               informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,
+                               perfil=perfil, state=state, productos=productos, total_ventas=total_ventas)
+
+    def renderizar_tendero(self, state, productos):
         tienda_id = session['tienda_Id']
         tendero_id = session['tendero_Id']
         informacion_tienda = obtener_informacion_tienda(tienda_id)
         informacion_tendero = obtener_informacion_tendero(tendero_id)
         perfil = "tendero"
-        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero, perfil=perfil,state=state,productos=productos)
-    
+
+        # Accede al atributo ventas directamente desde la instancia
+        ventas = self.ventas
+        # Llama al método obtener_total_ventas con la lista de ventas como argumento
+        total_ventas = self.obtener_total_ventas(ventas)
+
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
+                               informacion_tendero=informacion_tendero, perfil=perfil, state=state,
+                               productos=productos, total_ventas=total_ventas)
 class RegistroSuministroView(AuthenticatedView,MethodView):    
     @LoginRequired.login_required
     def get(self):
@@ -229,7 +297,7 @@ class RegistroSuministroView(AuthenticatedView,MethodView):
     def renderizar_suministro(self):
         return render_template('5_registro_suministro.html')
 
-class RegistroProductoView(AuthenticatedView):
+class ProductoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = tienda_id
 
@@ -312,7 +380,7 @@ class RegistroProductoView(AuthenticatedView):
 
         return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado)
 
-class EditarProducto(RegistroProductoView,AuthenticatedView):
+class EditarProducto(ProductoView,AuthenticatedView):
     @LoginRequired.login_required
     def get(self, producto_id):
         # Aquí puedes hacer lo que necesites con el ID del producto
@@ -349,19 +417,172 @@ class EditarProducto(RegistroProductoView,AuthenticatedView):
             return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
         else:
             return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
-class EliminarProducto(RegistroProductoView,AuthenticatedView):
+class EliminarProducto(ProductoView, AuthenticatedView):
     @LoginRequired.login_required
-    def get(self,id):
+    def get(self, id):
+        # Intenta encontrar el producto en la base de datos
         producto = Productos.query.filter_by(Id=id).first()
-        if producto:
-            db.session.delete(producto)
-            db.session.commit()
-            return super().get( estado=1,mensaje="Eliminaste un producto exitosamente")
-        else:
-            return super().get(estado=0,mensaje="No se pudo eliminar el producto")
+        ventas_productos = VentasHasProductos.query.filter_by(productos_Id=id).all()
         
+        if producto:
+            try:
+                # Elimina las entradas en la tabla ventas_has_productos relacionadas con el producto
+                for vp in ventas_productos:
+                    db.session.delete(vp)
 
+                # Elimina el producto de la sesión
+                db.session.delete(producto)
 
+                # Realiza la eliminación en la base de datos
+                db.session.commit()
+
+                # Retorna una respuesta exitosa
+                return super().get(estado=1, mensaje="Producto y relaciones eliminadas exitosamente")
+            except Exception as e:
+                # Si ocurre algún error, haz un rollback
+                db.session.rollback()
+                # Loguea el error para su posterior depuración
+                logging.error(f"Error al eliminar el producto y sus relaciones: {str(e)}")
+                # Retorna un mensaje de error
+                return super().get(estado=0, mensaje="Error al eliminar el producto y sus relaciones")
+        else:
+            # Si el producto no se encuentra, retorna un mensaje indicándolo
+            return super().get(estado=0, mensaje="No se encontró el producto")
+class EditarVenta(VentaView,AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, producto_id):
+        # Aquí puedes hacer lo que necesites con el ID del producto
+        # Por ejemplo, cargar los detalles del producto con el ID proporcionado
+        product = Productos.query.filter_by(prod_Id=producto_id).first()
+        img_codificada = base64.b64encode(product.prod_Img).decode('utf-8')
+        return render_template('editar_prod.html', producto=product, imagen=img_codificada)
+
+    @LoginRequired.login_required
+    def post(self, producto_id):
+        # Buscar el producto en la base de datos
+        producto = Productos.query.filter_by(Id=producto_id).first()
+        
+        if producto:
+            # Obtener los datos del formulario HTML
+            nuevo_nombre = request.form.get('nombre-prod')
+            nuevo_precio = request.form.get('precio-prod')
+            nueva_cantidad = request.form.get('cantidad-prod')
+            nueva_ganancia = request.form.get('ganancia-prod')
+            
+            # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
+            if nuevo_nombre:
+                producto.prod_Nombre = nuevo_nombre
+            if nuevo_precio:
+                producto.prod_Precio = nuevo_precio
+            if nueva_cantidad:
+                producto.prod_Cantidad = nueva_cantidad
+            if nueva_ganancia:
+                producto.prod_Ganancia = nueva_ganancia
+            
+            # Guardar los cambios en la base de datos
+            db.session.commit()
+            
+            return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
+        else:
+            return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
+        
+class EliminarVenta(VentaView, AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, id):
+        
+        # Intenta encontrar la venta en la base de datos
+        venta = Ventas.query.filter_by(venta_Id=id).first()
+        if venta:
+            try:
+                # Actualizar el total de ventas en el JSON
+                with open('datos_venta.json', 'r+') as archivo:
+                    data = json.load(archivo)
+                    
+                    # Calcular el total de la venta
+                    total_venta = 0
+                    # Obtener los productos asociados a la venta
+                    datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).filter(VentasHasProductos.ventas_venta_Id == id).all()
+                    for relacion in datos_relacionados:
+                        # Multiplicar la cantidad vendida por el precio unitario de cada producto y sumar al total de la venta
+                        total_venta += (int(venta.venta_Cantidad) * int(relacion.Productos.prod_Precio))
+                        cantidad = relacion.Productos.prod_Cantidad
+                        print(f"Cantidad de productos: {cantidad}")
+                        relacion.Productos.prod_Cantidad+=venta.venta_Cantidad
+                        print(f"Cantidad despues de eliminar venta: {relacion.Productos.prod_Cantidad}")
+                    # Restar el total de la venta eliminada del total de ventas
+                    data["total_ventas"] -= total_venta
+                    archivo.seek(0)  # Mover el puntero al inicio del archivo
+                    json.dump(data, archivo)  # Escribir los datos actualizados
+                    archivo.truncate()  # Truncar el archivo para eliminar datos anteriores si es necesario
+
+                # Eliminar las entradas en la tabla ventas_has_productos relacionadas con la venta
+                VentasHasProductos.query.filter_by(ventas_venta_Id=id).delete()
+
+                # Eliminar la venta misma
+                db.session.delete(venta)
+
+                # Realizar el commit manualmente
+                db.session.commit()
+
+                # Retornar una respuesta exitosa
+                return super().get(estado=1, mensaje="Venta eliminada exitosamente")
+            except Exception as e:
+                # Si ocurre algún error, hacer un rollback
+                db.session.rollback()
+                # Loguear el error para su posterior depuración
+                logging.error(f"Error al eliminar la venta: {e} ")
+                # Retornar un mensaje de error
+                return super().get(estado=0, mensaje=f"Error al eliminar la venta: {e}")
+        else:
+            # Si la venta no se encuentra, retornar un mensaje indicándolo
+            return super().get(estado=0, mensaje="No se encontró la venta")
+class GastoView(AuthenticatedView):
+    def __init__(self, tienda_id=None):
+        self.tienda_id = session.get('tienda_Id')
+    
+    @LoginRequired.login_required
+    def get(self, estado="", mensaje=""):
+        if self.esta_autenticado():
+            return self.renderizar_gasto(estado, mensaje)
+        else:
+            return self.renderizar_login()
+
+    def renderizar_gasto(self, estado, mensaje):
+        tienda_id = session.get('tienda_Id')
+        gastos = []
+
+        # Consulta de la base de datos
+        resultado = db.session.query(Gastos).filter_by(tienda_Id=tienda_id).all()
+
+        if resultado:
+            gastos = resultado
+        else:
+            gastos = []
+
+        # Renderizar la plantilla con los datos
+        return render_template('20_gastos.html', estado=estado, mensaje=mensaje, resultado=gastos)
+            
+    
+    def post(self):
+        try:
+            tienda_id = session.get('tienda_Id')
+            id = request.form.get('gasto-id')
+            precio = float(request.form.get('gasto-precio'))
+            descripcion = request.form.get('gasto-descripcion')
+            tipo = request.form.get('gasto-tipo')
+
+            if not id or not precio or not descripcion or not tipo or not tienda_id:
+                return self.get(estado=0, mensaje='Por favor, complete todos los datos')
+
+            # Crear instancia del gasto y guardarlo en la base de datos
+            new_gasto = Gastos(id, descripcion, tipo, precio, tienda_id)
+            db.session.add(new_gasto)
+            db.session.commit()
+
+            return self.get(estado=1, mensaje="Registro de gasto exitoso")
+        except Exception as e:
+            db.session.rollback()
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")            
 class Buscar(PaginaPrincipalView):
     def get(self,state='', resultados=''):
          print("Entré a get")
@@ -389,79 +610,8 @@ class Resultado(Buscar,PaginaPrincipalView):
         else:
             return super().renderizar_principal_2(state=1,resultados=resultados)
         
+#====================================================================================================
         
-
-# @usuario_bp.route('/home',methods=['GET','POST'])
-# def home():
-#     if 'user_Id' in session:
-#         user_id= session['user_Id']
-#         info_user= obtener_user(user_id)
-#         datos = obtener_egreso(user_id)
-#         datosDos= obtener_ingreso(user_id)
-#         datosTres= obtener_compra(user_id)
-#         total_egresos_query = db.session.query(Vista_total_egresos).first()
-#         total_egresos = total_egresos_query.total_egresos if total_egresos_query else 0
-
-#         #"{:,}".format(int(db.session.query(Vista_total_egresos).first().total_egresos))
-#         total_ingresos_query = db.session.query(Vista_total_ingresos).first()
-#         total_ingresos = total_ingresos_query.total_ingresos if total_ingresos_query else 0
-
-#         #"{:,}".format(int(db.session.query(Vista_total_ingresos).first().total_ingresos))
-        
-            
-#         presupuesto = "{:,}".format(int(total_ingresos-total_egresos))
-        
-#         # Verificar si hay datos disponibles, si no, enviar listas vacías
-#         if not datos:
-#             datos = []
-#         if not datosDos:
-#             datosDos = []
-#         if not datosTres:
-#             datosTres = []
-        
-    
-
-#         return render_template('3_home.html',user=info_user, egresos=datos, ingresos=datosDos, compras=datosTres,  total_egresos=total_egresos, total_ingresos=total_ingresos, presupuesto=presupuesto)
-#     else:
-#         estado=False
-#         mensaje="Primero debes iniciar sesión"
-#         return render_template('1_login.html',estado=estado, mensaje=mensaje)
-    
-# @usuario_bp.route('/home/<user>',methods=['GET','POST'])
-# def homeDos(user):
-#         info_user= obtener_user(user)
-#         return render_template('3_home.html',user=info_user)
-
-# @LoginRequired.login_required
-# def registro_ventas():
-#     if request.method == 'GET':
-#         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-#             return render_template('6_registro_ventas.html')
-#         else:
-#             mensaje="Debes iniciar sesión primero"
-#             estado=0
-#             return render_template('1_login.html', mensaje=mensaje, estado=estado)
-#     if request.method == 'POST':
-#         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-#             # cantidad= request.form['cantidad-producto-vendido']
-#             # fecha= datetime.now()
-#             # print(fecha)
-#             # tienda_id = session['tienda_Id']
-#             # tendero_id = session['tendero_Id']
-#             venta_Id=request.form=['id-registro-venta']
-#             producto_Id= request.form=['id-producto-venta']
-#             new_Venta= VentasHasProductos(
-#                 venta_Id = venta_Id,
-#                 producto_Id = producto_Id
-#             )
-#             db.session.add(new_Venta)
-#             db.session.commit()
-#         else:
-#             mensaje="Debes iniciar sesión primero"
-#             estado=0
-#             return render_template('1_login.html', mensaje=mensaje, estado=estado)
-        
-
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
 
 @LoginRequired.login_required
@@ -613,44 +763,6 @@ def nuevo_producto():
             db.session.commit()
         return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 
-# @main_bp.route('/historial-productos', methods=['GET', 'POST'])
-
-# @LoginRequired.login_required
-# def historial_productos():
-#     if request.method == "GET":
-#         if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-#             tienda_id = session['tienda_Id']
-#             try:
-#                 resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
-#                 productos_filtrados = [(producto, tienda) for producto, tienda in resultado if producto.tienda_Id == tienda_id]
-
-#                 productos_codificados = []
-#                 tienda_info = []
-
-#                 for producto, tienda in productos_filtrados:
-#                     if producto.prod_Img:
-#                         img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
-#                         productos_codificados.append((producto, img_codificada))
-#                     if producto.prod_Precio:
-#                         producto.prod_Precio= "{:,}".format(int(producto.prod_Precio))
-#                     if producto.prod_TotalPrecio:
-#                         producto.prod_TotalPrecio= "{:,}".format(int(producto.prod_TotalPrecio))
-#                     if producto.prod_Total:
-#                         producto.prod_Total= "{:,}".format(int(producto.prod_Total))
-#                     if producto.prod_Ganancia:
-#                         producto.prod_Ganancia= int(producto.prod_Ganancia)
-#                     if producto.prod_TotalGana:
-#                         producto.prod_TotalGana= "{:,}".format(int(producto.prod_TotalGana))
-#                     else:
-#                         productos_codificados.append((producto, None))
-#                     tienda_info.append(tienda)
-#                 return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info)
-#             except:
-#                 return render_template('11_historial_prod.html')
-#         else:
-#             mensaje="Debes iniciar sesión primero"
-#             estado=0
-#             return render_template('1_login.html', mensaje=mensaje, estado=estado)
         
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
@@ -782,6 +894,9 @@ def verificar_usuario():
             mensaje = f"Error: {e}"
             estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
+    else:
+        return redirect(url_for('main.home'))
+    
 
 # Se registran las rutas con las clases correspondientes
 main_bp.add_url_rule('/', view_func=IndexView.as_view('index'))
@@ -790,9 +905,13 @@ main_bp.add_url_rule('/registro-exitoso', view_func=RegistroExitosoView.as_view(
 main_bp.add_url_rule('/signUp', view_func=SignUpView.as_view('sign_up'))
 main_bp.add_url_rule('/home', view_func=PaginaPrincipalView.as_view('home'))
 main_bp.add_url_rule('/suministros', view_func= RegistroSuministroView.as_view('suministros'))
-main_bp.add_url_rule('/productos', view_func= RegistroProductoView.as_view('productos'))
-main_bp.add_url_rule('/ventas', view_func= RegistroVentaView.as_view('ventas'))
+main_bp.add_url_rule('/productos', view_func= ProductoView.as_view('productos'))
+main_bp.add_url_rule('/ventas', view_func= VentaView.as_view('ventas'))
 main_bp.add_url_rule('/editar-producto/<int:producto_id>', view_func=EditarProducto.as_view('editar-producto'))
 main_bp.add_url_rule('/eliminar-producto/<int:id>', view_func=EliminarProducto.as_view('eliminar-producto'))
+main_bp.add_url_rule('/editar-venta/<int:venta_id>', view_func=EditarVenta.as_view('editar-venta'))
+main_bp.add_url_rule('/eliminar-venta/<int:id>', view_func=EliminarVenta.as_view('eliminar-venta'))
+main_bp.add_url_rule('/eliminar-todas-las-ventas', view_func=EliminarVentas.as_view('eliminar-todas-las-ventas'))
+main_bp.add_url_rule('/gastos', view_func=GastoView.as_view('gastos'))
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))

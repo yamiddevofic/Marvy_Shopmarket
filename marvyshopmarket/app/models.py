@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import LargeBinary, ForeignKey
+from sqlalchemy import LargeBinary, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
@@ -216,6 +216,13 @@ class Ventas(db.Model):
     tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
 
+    # Restricción de clave externa con cascada
+    ForeignKeyConstraint(
+        ['venta_Id', 'tendero_Id', 'tienda_Id'],
+        ['ventas.venta_Id', 'ventas.tienda_Id', 'ventas.tendero_Id'],
+        ondelete="CASCADE"
+    )
+
     tendero = db.relationship("Tenderos", backref="ventas")
     tienda = db.relationship("Tiendas", backref="ventas")
 
@@ -226,7 +233,6 @@ class Ventas(db.Model):
         self.venta_Pago = pago
         self.tendero_Id = tendero_id
         self.tienda_Id = tienda_id
-
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'
     ventas_venta_Id = db.Column(db.BigInteger, db.ForeignKey('ventas.venta_Id'), primary_key=True)
