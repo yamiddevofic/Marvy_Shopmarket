@@ -97,7 +97,14 @@ class SignUpView(MethodView):
 class VentaView(AuthenticatedView):
     def __init__(self, ventas=[]):
         self.ventas = ventas
-    
+
+    @LoginRequired.login_required
+    def get(self, estado="", mensaje=""):
+        if self.esta_autenticado():
+            return self.renderizar_venta(estado, mensaje)
+        else:
+            return self.renderizar_login()
+        
     def post(self):
         try:
             if self.registrar_venta()['state']:
