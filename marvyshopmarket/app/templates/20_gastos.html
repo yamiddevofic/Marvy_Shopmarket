@@ -79,18 +79,19 @@
                     <th>Editar/Eliminar</th>
                 </thead>
                 <tbody>
-                    {% for gasto in resultado %}
-                        <tr id="registro_{{ gasto.id }}">
-                            <td>{{ loop.index }}</td>
-                            <td>{{ gasto.descripcion }}</td>
-                            <td>{{ gasto.tipo }}</td>
-                            <td>{{ gasto.precio }}</td>
+                    {% for gasto, tienda in resultado %}
+                        <tr id="registro_{{ gasto.gastos_Id }}">
+                            <td>{{ gasto.gastos_Id }}</td>
+                            <td>{{ gasto.gastos_Descr }}</td>
+                            <td>{{ gasto.gastos_Tipo }}</td>
+                            <td>{{ gasto.gastos_Precio }}</td>
                             <td>
-                                <a href="/editar-venta/{{ gasto.id }}" style="color: var(--claro-principal);" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/eliminar-venta/{{ gasto.id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i></a>
+                                <a href="/editar-gasto/{{ gasto_gastos_Id }}" style="color: var(--claro-principal);" class="editar-gasto"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="/eliminar-gasto/{{ gasto.gastos_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-gasto"><i class="fas fa-trash-alt"></i></a>
+
                             </td>
                         </tr>
-                    {% endfor %}
+                    {% endfor %}        
                 </tbody>
             </table>
         </div>

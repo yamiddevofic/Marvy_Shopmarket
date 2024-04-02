@@ -266,11 +266,15 @@ class PaginaPrincipalView(VentaView, AuthenticatedView, MethodView):
         informacion_tendero = obtener_informacion_adm(tendero_id)
         informacion_adm = obtener_informacion_adm(adm_id)
         perfil = "administrador"
-
-        if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
-            with open('datos_venta.json', 'r') as archivo:
-                datos_venta = json.load(archivo)
-            total_ventas = datos_venta.get('total_ventas', {})
+        ventas = len(db.session.query(Ventas).all())
+        print("Ventas: ",ventas)
+        if ventas>0:
+            if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
+                with open('datos_venta.json', 'r') as archivo:
+                    datos_venta = json.load(archivo)
+                total_ventas = datos_venta.get('total_ventas', {})
+            else:
+                total_ventas = 0
         else:
             total_ventas = 0
 
@@ -363,7 +367,6 @@ class ProductoView(AuthenticatedView):
             if producto.tienda_Id == tienda_id:
                 if producto.prod_Img:
                     img_codificada = base64.b64encode(producto.prod_Img).decode('utf-8')
-                    productos_codificados.append((producto, img_codificada))
                 if producto.prod_Precio:
                     precio = producto.prod_Precio
                     producto.prod_Precio = "{:,}".format(int(producto.prod_Precio))
@@ -381,6 +384,7 @@ class ProductoView(AuthenticatedView):
                     producto.prod_TotalGana = "{:,}".format(int(producto.prod_TotalGana))
                 gana = "{:,}".format(int(totalgana-totalbruto))
                 
+                productos_codificados.append((producto, img_codificada))
                 ganancias.append(gana)
                 tienda_info.append(tienda)
 
@@ -509,6 +513,7 @@ class EliminarVenta(VentaView, AuthenticatedView):
                     total_venta = 0
                     # Obtener los productos asociados a la venta
                     datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).filter(VentasHasProductos.ventas_venta_Id == id).all()
+                    
                     for relacion in datos_relacionados:
                         # Multiplicar la cantidad vendida por el precio unitario de cada producto y sumar al total de la venta
                         total_venta += (int(venta.venta_Cantidad) * int(relacion.Productos.prod_Precio))
@@ -516,8 +521,9 @@ class EliminarVenta(VentaView, AuthenticatedView):
                         print(f"Cantidad de productos: {cantidad}")
                         relacion.Productos.prod_Cantidad+=venta.venta_Cantidad
                         print(f"Cantidad despues de eliminar venta: {relacion.Productos.prod_Cantidad}")
-                    # Restar el total de la venta eliminada del total de ventas
-                    data["total_ventas"] -= total_venta
+                        
+                    # Sumar el total de la venta eliminada del total de ventas
+                    data["total_ventas"] += total_venta
                     archivo.seek(0)  # Mover el puntero al inicio del archivo
                     json.dump(data, archivo)  # Escribir los datos actualizados
                     archivo.truncate()  # Truncar el archivo para eliminar datos anteriores si es necesario
@@ -553,23 +559,7 @@ class GastoView(AuthenticatedView):
             return self.renderizar_gasto(estado, mensaje)
         else:
             return self.renderizar_login()
-
-    def renderizar_gasto(self, estado, mensaje):
-        tienda_id = session.get('tienda_Id')
-        gastos = []
-
-        # Consulta de la base de datos
-        resultado = db.session.query(Gastos).filter_by(tienda_Id=tienda_id).all()
-
-        if resultado:
-            gastos = resultado
-        else:
-            gastos = []
-
-        # Renderizar la plantilla con los datos
-        return render_template('20_gastos.html', estado=estado, mensaje=mensaje, resultado=gastos)
             
-    
     def post(self):
         try:
             tienda_id = session.get('tienda_Id')
@@ -589,7 +579,88 @@ class GastoView(AuthenticatedView):
             return self.get(estado=1, mensaje="Registro de gasto exitoso")
         except Exception as e:
             db.session.rollback()
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")            
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")  
+         
+    def renderizar_gasto(self, estado, mensaje):
+        tienda_id = self.tienda_id
+        resultado = db.session.query(Gastos, Tiendas).join(Tiendas, Gastos.tienda_Id == Tiendas.tienda_Id).all()
+        tienda_info = []
+        gastos = []
+
+        for gasto, tienda in resultado:
+            if gasto.tienda_Id == tienda_id:
+                if gasto.gastos_Precio:
+                    precio = gasto.gastos_Precio
+                    gasto.gastos_Precio = "{:,}".format(int(gasto.gastos_Precio))
+                
+                tienda_info.append(tienda)
+                gastos.append((gasto, tienda))  # Aquí añadimos una tupla de (gasto, tienda)
+
+        return render_template('20_gastos.html', resultado=gastos, tienda_info=tienda_info, mensaje=mensaje, estado=estado)
+class EditarGasto(GastoView,AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, gasto_id):
+        # Aquí puedes hacer lo que necesites con el ID del producto
+        # Por ejemplo, cargar los detalles del producto con el ID proporcionado
+        gasto = Gastos.query.filter_by(gasto_Id=gasto_id).first()
+        return render_template('editar_prod.html', gasto=gasto)
+
+    @LoginRequired.login_required
+    def post(self, producto_id):
+        # Buscar el producto en la base de datos
+        producto = Productos.query.filter_by(Id=producto_id).first()
+        
+        if producto:
+            # Obtener los datos del formulario HTML
+            nuevo_nombre = request.form.get('nombre-prod')
+            nuevo_precio = request.form.get('precio-prod')
+            nueva_cantidad = request.form.get('cantidad-prod')
+            nueva_ganancia = request.form.get('ganancia-prod')
+            
+            # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
+            if nuevo_nombre:
+                producto.prod_Nombre = nuevo_nombre
+            if nuevo_precio:
+                producto.prod_Precio = nuevo_precio
+            if nueva_cantidad:
+                producto.prod_Cantidad = nueva_cantidad
+            if nueva_ganancia:
+                producto.prod_Ganancia = nueva_ganancia
+            
+            # Guardar los cambios en la base de datos
+            db.session.commit()
+            
+            return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
+        else:
+            return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
+        
+class EliminarGasto(GastoView, AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, gasto_id):
+        # Intenta encontrar la venta en la base de datos
+        gasto = Gastos.query.filter_by(gastos_Id=gasto_id).first()
+        if gasto:
+            try:
+        
+                # Eliminar la venta misma
+                db.session.delete(gasto)
+
+                # Realizar el commit manualmente
+                db.session.commit()
+
+                # Retornar una respuesta exitosa
+                return super().get(estado=1, mensaje="Venta eliminada exitosamente")
+            except Exception as e:
+                # Si ocurre algún error, hacer un rollback
+                db.session.rollback()
+                # Loguear el error para su posterior depuración
+                logging.error(f"Error al eliminar la venta: {e} ")
+                # Retornar un mensaje de error
+                return super().get(estado=0, mensaje=f"Error al eliminar la venta: {e}")
+        else:
+            # Si la venta no se encuentra, retornar un mensaje indicándolo
+            return super().get(estado=0, mensaje="No se encontró la venta")
+                
 class Buscar(PaginaPrincipalView):
     def get(self,state='', resultados=''):
          print("Entré a get")
@@ -920,5 +991,7 @@ main_bp.add_url_rule('/editar-venta/<int:venta_id>', view_func=EditarVenta.as_vi
 main_bp.add_url_rule('/eliminar-venta/<int:id>', view_func=EliminarVenta.as_view('eliminar-venta'))
 main_bp.add_url_rule('/eliminar-todas-las-ventas', view_func=EliminarVentas.as_view('eliminar-todas-las-ventas'))
 main_bp.add_url_rule('/gastos', view_func=GastoView.as_view('gastos'))
+main_bp.add_url_rule('/editar-gasto/<int:gasto_id>', view_func=EditarGasto.as_view('editar-gasto'))
+main_bp.add_url_rule('/eliminar-gasto/<int:gasto_id>', view_func=EliminarGasto.as_view('eliminar-gasto'))
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
