@@ -10,7 +10,7 @@
     <script> 
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_suministro') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 3500); 
         }
         redirigirDespuesDeTiempo()
@@ -21,7 +21,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.registro_suministro') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 2000);   
         }
         redirigirDespuesDeTiempo()
@@ -30,7 +30,7 @@
     <p id="mensaje"></p>
 {% endif %}
 <div class="formulario">
-    <form method="post , GET" action="/suministros" enctype="multipart/form-data" id="form-suministro">
+    <form method="post" action="/suministros" enctype="multipart/form-data" id="form-suministro">
         <table>
             <tbody>
                 <tr>
@@ -59,14 +59,6 @@
                         <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
                     </td>
                     <td>
-                        <label> Pago: </label>
-                        <div><input type="number" placeholder="pago" name="pago-producto-suministro" id="pago-producto-suministro"></div>
-                    </td>
-                    <td>
-                        <label>Vueltos: </label>
-                        <div>$ <input type="number" placeholder="vueltos" id="vueltos-producto-suministro" name="vueltos-producto-suministro"></div>
-                    </td>
-                    <td>
                         <label>Tienda id: </label>
                         <div> <input type="number" placeholder="Tienda id" name="tienda id-producto-suministro" id="tienda id-producto-suministro"> </div>
                     </td>
@@ -74,27 +66,38 @@
             </tbody>
         </table>
         <div class="botom-confirmar">
-            <button>Confirmar</button>
+            <button type="submit">Confirmar</button>
         </div>
     </form>
+</div>
 
 <!-- Mostrar información de suministros -->
 <div class="suministros-info">
     <h2>Lista de Suministros</h2>
-    <ul>
-        {% for suministro in suministros %}
-            <li>
-                <p>Id: {{ suministro.sum_Id }}</p>
-                <p>Cantidad: {{ suministro.sum_Cantidad }}</p>
-                <p>Fecha: {{ suministro.sum_Datetime }}</p>
-                <p>Método de pago: {{ suministro.sum_Metodo_pago }}</p>
-                <p>Total: {{ suministro.sum_Total }}</p>
-                <p>Pago: {{ suministro.sum_Pago }}</p>
-                <p>Vueltos: {{ suministro.sum_Vueltos }}</p>
-                <p>Tienda ID: {{ suministro.tienda_Id }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Método de pago</th>
+                <th>Total</th>
+                <th>Tienda ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for suministro in suministros %}
+            <tr>
+                <td>{{ suministro.sum_Id }}</td>
+                <td>{{ suministro.sum_Cantidad }}</td>
+                <td>{{ suministro.sum_Datetime }}</td>
+                <td>{{ suministro.sum_Metodo_pago }}</td>
+                <td>{{ suministro.sum_Total }}</td>
+                <td>{{ suministro.tienda_Id }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

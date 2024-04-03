@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros, Proveedores
+from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros, Proveedores, SuministrosProveedores
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -80,7 +80,7 @@ def login():
                 return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda, informacion_tendero=informacion_tendero,perfil=perfil)
     else:
         return render_template('1_login.html')
-        
+
 
 @main_bp.route('/registro-exitoso', methods=['GET', 'POST'])
 def login_dos():
@@ -127,7 +127,7 @@ def pagina_principal():
 #         mensaje="Debes iniciar sesión primero"
 #         estado=0
 # return render_template('1_login.html', mensaje=mensaje, estado=estado)
-        
+
 # @main_bp.route('/suministro', methods=['POST'])
 # def suministro():
 #     try:
@@ -140,7 +140,7 @@ def pagina_principal():
 #             Pago=request.form['pago-producto-suministro']
 #             Vueltos=request.form['vueltos-producto-suministro']
 #             Tiendaid=request.form['tienda id-producto-suministro']
-        
+
 #             nuevo_suministro=Suministros(sum_Id= id,sum_Cantidad=Cantidad,sum_Datetime=Fecha,sum_Metodo_pago=Metododepago,sum_Total=Total,sum_Pago=Pago, sum_Vueltos= Vueltos,tienda_Id=Tiendaid)
 #             db.session.add(nuevo_suministro)
 #             db.session.commit()
@@ -191,18 +191,18 @@ def registro_ventas():
             mensaje="Debes iniciar sesión primero"
             estado=0
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
-        
+
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
 @login_required
 def generar_informe():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-        return render_template('9_generar-informe.html')    
+        return render_template('9_generar-informe.html')
     else:
         mensaje="Debes iniciar sesión primero"
         estado=0
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    
+
 @main_bp.route('/ajustes-generales', methods=['GET', 'POST'])
 @login_required
 def ajustes_generales():
@@ -212,7 +212,7 @@ def ajustes_generales():
         mensaje="Debes iniciar sesión primero"
         estado=0
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    
+
 @main_bp.route('/ajustes-cuenta', methods=['GET', 'POST'])
 @login_required
 def ajustes_cuenta():
@@ -300,7 +300,7 @@ def nuevo_tendero():
             mensaje = "Registro éxitoso"
             estado = 1
             return render_template('18_registro-tendero.html', mensaje=mensaje, estado=estado)
-        
+
 @main_bp.route('/nuevo_producto', methods=['POST'])
 @login_required
 def nuevo_producto():
@@ -379,12 +379,12 @@ def historial_productos():
             mensaje="Debes iniciar sesión primero"
             estado=0
             return render_template('1_login.html', mensaje=mensaje, estado=estado)
-        
-# @main_bp.route('/proveedores', methods=['GET'])    
-# def proveedores():   
+
+# @main_bp.route('/proveedores', methods=['GET'])
+# def proveedores():
 #      if request.method == 'GET':
 #         return render_template('19_registro_proveedores.html')
-    
+
 # @main_bp.route('/registro-proveedores', methods=['POST'])
 # def registro_proveedores():
 #     try:
@@ -393,15 +393,15 @@ def historial_productos():
 #             Nombre=request.form['nombre-proveedor']
 #             Telefono=request.form['telefono-proveedor']
 #             Ubicacion=request.form['ubicacion-proveedor']
-            
+
 #             nuevo_Proveedores=Proveedores(prov_Id=id,prov_Nombre=Nombre,prov_Contacto= Telefono,prov_Ubicacion= Ubicacion)
 #             db.session.add(nuevo_Proveedores)
 #             db.session.commit()
 #             return render_template("19_registro_proveedores.html")
 #     except Exception as e:
 #         return f"ERROR {e}"
-    
-          
+
+
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method == 'POST':
@@ -532,7 +532,6 @@ def verificar_usuario():
             mensaje = f"Error: {e}"
             estado = 0
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
-        
 
 class RegistroSuministroView(MethodView):
     def get(self, estado='', mensaje=""):
@@ -556,14 +555,7 @@ class RegistroSuministroView(MethodView):
 
     def esta_autenticado(self):
         return session.get('tienda_Id') is not None
-    def post(self):
-        try:
-            if self.registrar_producto()['state']:
-                return self.get(estado=1, mensaje="Registro exitoso") 
-            else:
-                return self.get(estado=0, mensaje=self.registrar_producto()['message'])
-        except Exception as e:
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
+
     def registrar_suministro(self):
         try:
             print("Intentando registrar suministro")
@@ -572,33 +564,38 @@ class RegistroSuministroView(MethodView):
             Fecha=request.form['fecha-producto-suministro']
             Metododepago=request.form['metodo-pago-suministro']
             Total=request.form['total-producto-suministro']
-            Pago=request.form['pago-producto-suministro']
-            Vueltos=request.form['vueltos-producto-suministro']
             Tiendaid=request.form['tienda id-producto-suministro']
+
+            if not id or not Cantidad or not Fecha or not Metododepago or not Total or not Tiendaid:
+                return {'state': False, 'message': 'Por favor, complete todos los datos'}
+
+            suministro_existente = Suministros.query.filter(Suministros.tienda_Id == Tiendaid).first()
+            if suministro_existente:
+                return {'state': False, 'message': 'Ya existe un proveedor con esa identificación'}
+
+            # Se supone que aquí deberías guardar los suministros en la base de datos
+            # Agregar código para guardar en la base de datos
+            new_suministros = Suministros(id=int(id), cantidad=Cantidad, fecha=Fecha, metodo_pago=Metododepago, total=Total,tienda=Tiendaid)
+            db.session.add(new_suministros)
+            db.session.commit()
+            return {'state': True, 'message': 'Registro exitoso'}
+
+        except KeyError as e:
+            print(f"Error en registrar_suministro: {str(e)}")
+            return {'state': False, 'message': f"Error en el formulario: {str(e)}"}
         except Exception as e:
-            if id=='':
-                id=0
-                producto_existente = Suministros.query.filter(and_(Suministros.prod_Id == int(id), Suministros.tienda_Id == Tiendaid)).first()
-                if not id or not Cantidad or not Fecha or not  Metododepago or not Total or not Pago or not Vueltos or not Tiendaid:
-                    return {'state':False, 'message':'Por favor, complete todos los datos'}  
-                elif producto_existente:
-                    return {'state':False, 'message':'Ya existe un producto con esa identificación'} 
-            else:
-                adm_id = session['adm_Id']
-            
-                new_suministros = Suministros(Suministros_id=int(id), cantidad=Cantidad, fecha=Fecha, metodo_pago=Metododepago, total=Total, pago=Pago, vueltos=Vueltos, tienda=Tiendaid)
-                db.session.add(new_suministros)
-                db.session.commit()
-                return {'state':True, 'message':'Registro exitoso'}
+            print(f"Error en registrar_suministro: {str(e)}")
+            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
 
     def renderizar_suministro(self, estado, mensaje):
         try:
-            suministros = Suministros.query.all()  # Obtener todos los suministros de la base de datos
-            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministros)
+            suministros_lista = Suministros.query.all()  # Obtener todos los suministros de la base de datos
+            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministros_lista)
         except Exception as e:
             print(f"Error al renderizar suministros: {str(e)}")
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}")
-        
+            return render_template('5_registro_suministro.html', estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}", suministros=[])
+
+
 class RegistroProveedoresView(MethodView):
     def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
@@ -632,11 +629,11 @@ class RegistroProveedoresView(MethodView):
 
             if not id or not nombre or not ubicacion or not contacto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
-            
+
             proveedor_existente = Proveedores.query.filter_by(prov_Id=id).first()
             if proveedor_existente:
                 return {'state': False, 'message': 'Ya existe un proveedor con ese ID'}
-            
+
             new_proveedor = Proveedores(id=id, nombre=nombre, ubicacion=ubicacion, contacto=contacto)
             db.session.add(new_proveedor)
             db.session.commit()
@@ -646,15 +643,72 @@ class RegistroProveedoresView(MethodView):
 
     def renderizar_proveedor(self, estado, mensaje):
         try:
-            proveedores_lista = Proveedores.query.all()  # Cambio de nombre de variable
-            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores_lista)  # Cambio de nombre de variable
+            proveedores_lista = Proveedores.query.all() 
+            print(proveedores_lista)
+            proveedores=[]
+            
+            for proveedor in proveedores_lista:
+                proveedores.append({
+                'prov_Id': proveedor.prov_Id,
+                'prov_Nombre': proveedor.prov_Nombre,
+                'prov_Ubicacion': proveedor.prov_Ubicacion,
+                'prov_Contacto': proveedor.prov_Contacto
+            })
+            print(proveedores)
+                
+            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores)  
         except Exception as e:
-            print(f"Error al renderizar suministros: {str(e)}")
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}")
+            print(f"Error al renderizar proveedores: {str(e)}")
+            return render_template('19_registro_proveedores.html', mensaje="Ha ocurrido un error al renderizar los proveedores.")
 
-        
-        
+# class EditarProveedor(AuthenticatedView,RegistroProveedoresView):
+#     @LoginRequired.login_required
+#     def get(self, proveedor_id):
+#         # Obtener el proveedor de la base de datos
+#         proveedor = Proveedores.query.filter_by(id=proveedor_id).first()
+#         if proveedor:
+#             return render_template('Editar_proveedores.html', proveedor=proveedor)
+#         else:
+#             pass
+#             # Si el proveedor no se encuentra, redirigir o mostrar un mensaje de error
+#             # flash("El proveedor no se encontró en la base de datos", "error")
+#             # return redirect(url_for("ruta_donde_mostrar_el_error"))
+
+#     @LoginRequired.login_required
+#     def post(self, proveedor_id):
+#         # Buscar el proveedor en la base de datos
+#         proveedor = Proveedores.query.filter_by(id=proveedor_id).first()
+
+#         if proveedor:
+#             # Obtener los datos del formulario HTML
+#             nuevo_nombre = request.form.get('ID-prov')
+#             nuevo_telefono = request.form.get('telefono-prov')
+#             nueva_direccion = request.form.get('direccion-prov')
+
+#             # Actualizar solo los campos que se proporcionaron
+#             if nuevo_nombre:
+#                 proveedor.nombre = nuevo_nombre
+#             if nuevo_telefono:
+#                 proveedor.telefono = nuevo_telefono
+#             if nueva_direccion:
+#                 proveedor.direccion = nueva_direccion
+
+#             # Guardar los cambios en la base de datos
+#             db.session.commit()
+
+#             # Redirigir a alguna página de éxito o mostrar un mensaje de éxito
+#         #     flash("Proveedor actualizado exitosamente", "success")
+#         #     return redirect(url_for("ruta_donde_redirigir_después_de_la_actualización"))
+#         # else:
+#         #     # Si el proveedor no se encuentra, mostrar un mensaje de error
+#         #     flash("El proveedor no se encontró en la base de datos", "error")
+#         #     return redirect(url_for("ruta_donde_mostrar_el_error"))
+
+
+
+
 
 main_bp.add_url_rule('/registro_proveedores', view_func=RegistroProveedoresView.as_view('registro_proveedores'))
-    
+# main_bp.add_url_rule('/editar-proveedores/<int:prov_Id>', view_func=EditarProveedor.as_view('editar-proveedores'))
+
 main_bp.add_url_rule('/suministros', view_func=RegistroSuministroView.as_view('suministros'))
