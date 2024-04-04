@@ -15,6 +15,9 @@ cerrar.addEventListener('click',()=>{
 cerrar_dos.addEventListener('click', ()=>{
     window.location.href= '/home';
 })
+
+
+
 // function eliminarRegistro(id) {
 //     // Aquí puedes hacer lo que quieras con el ID del registro
 //     console.log("Eliminar registro con ID:", id);
