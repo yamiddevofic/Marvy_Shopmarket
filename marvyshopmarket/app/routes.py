@@ -305,10 +305,20 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
         informacion_tendero = obtener_informacion_tendero(tendero_id)
         perfil = "tendero"
 
-        # Accede al atributo ventas directamente desde la instancia
-        ventas = self.ventas
-        # Llama al método obtener_total_ventas con la lista de ventas como argumento
-        total_ventas = self.obtener_total_ventas(ventas)
+        
+        ventas = len(db.session.query(Ventas).all())
+
+        print("Ventas: ",ventas)
+
+        if ventas>0:
+            if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
+                with open('datos_venta.json', 'r') as archivo:
+                    datos_venta = json.load(archivo)
+                total_ventas = datos_venta.get('total_ventas', {})
+            else:
+                total_ventas = 0
+        else:
+            total_ventas = 0
 
         return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
                                informacion_tendero=informacion_tendero, perfil=perfil, state=state,

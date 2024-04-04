@@ -101,9 +101,6 @@
                     </div>
                 </div>
                 <h3>{{informacion_tendero.nombre}}</h3>
-                {% if perfil=="tendero" %}
-                    <div><h3>{{informacion_tendero.nombre}}</h3></div>
-                {% endif %}
                 <div class="listado">
                     <div>
                         <ul>
@@ -130,18 +127,25 @@
         </div> -->
         <div style="grid-row: 3/-1; grid-column: 1/-1; margin-top: 2%;">
             <div class="totales">
-                <div style="background: rgb(57, 179, 16); color: var(--blanco);">
-                    <h4>Total De Venta:</h4>
-                    <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
-                </div>
-                <div style="background: red; color: var(--blanco);">
-                    <h4>Total De Gastos:</h4>
-                    <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_gastos}}</strong></p>
-                </div>
-                <div style="background: blue;color: var(--blanco);">
-                    <h4>Total De Neto:</h4>
-                    <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"> </i><strong> {{total_neto}}</strong></p>
-                </div>
+                {% if perfil=="tendero" %}
+                    <div style="background: rgb(57, 179, 16); color: var(--blanco); width: 100%;grid-column: 1/-1;">
+                        <h4>Total De Venta:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                    </div>
+                {% elif perfil=="administrador" %}
+                    <div style="background: rgb(57, 179, 16); color: var(--blanco);">
+                        <h4>Total De Venta:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                    </div>
+                    <div style="background: red; color: var(--blanco);">
+                        <h4>Total De Gastos:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_gastos}}</strong></p>
+                    </div>
+                    <div style="background: blue;color: var(--blanco);">
+                        <h4>Total De Neto:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"> </i><strong> {{total_neto}}</strong></p>
+                    </div>
+                {% endif %}
             </div>
             <div></div>
             <div class="botom">
@@ -165,9 +169,13 @@
                     </div>
                     
                 {% elif perfil=="tendero" %}
-                    <div  style="grid-column: 2/4; width: 100%; display: flex; text-align: center; justify-content: center;">
-                        <div class="action" style="width: 50%;">
-                            <div><form action="/registro-ventas" method="GET"><button>Ventas</button></form></div>
+                    <div  style="width: 100%; display: flex; text-align: center; justify-content: center;">
+                        <div style="background: rgb(57, 179, 16); color: var(--blanco); width: 100%;grid-column: 1/-1;">
+                            <h4>Total De Venta:</h4>
+                            <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                        </div>
+                        <div class="action" style="width: 100%;">
+                            <div><form action="/ventas" method="GET"><button>Ventas</button></form></div>
                             <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
                         </div>
                         
