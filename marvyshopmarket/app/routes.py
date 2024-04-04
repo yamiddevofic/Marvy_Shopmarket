@@ -355,7 +355,12 @@ class ProductoView(AuthenticatedView):
                 return self.get(estado=0, mensaje=self.registrar_producto()['message'])
         except Exception as e:
             return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
-
+        
+    def guardar_en_json(self, objeto, nombre_archivo):
+        with open(nombre_archivo, 'w') as archivo:
+            json.dump(objeto, archivo)
+        return True 
+    
     def registrar_producto(self):
         id = request.form['prod_Id']
         nombre = request.form['prod_Nombre']
@@ -388,7 +393,7 @@ class ProductoView(AuthenticatedView):
         productos_codificados = []
         tienda_info = []
         ganancias = []
-
+        colores = []
         for producto, tienda in resultado:
             if producto.tienda_Id == tienda_id:
                 if producto.prod_Img:
@@ -410,12 +415,40 @@ class ProductoView(AuthenticatedView):
                     producto.prod_TotalGana = "{:,}".format(int(producto.prod_TotalGana))
                 gana = "{:,}".format(int(totalgana-totalbruto))
                 
+                if producto.prod_Cantidad <= 7:
+                     obj = {
+                        "color": "orange",
+                        "producto_color" : producto.Id,
+                        "producto_name" : producto.prod_Nombre,
+                        "existencias": producto.prod_Cantidad
+                     }
+                     colores.append(obj)
+                     self.guardar_en_json(obj,'control_productos.json')
+                if producto.prod_Cantidad <= 7:
+                     obj = {
+                        "color": "orange",
+                        "producto_color" : producto.Id,
+                        "producto_name" : producto.prod_Nombre,
+                        "existencias": producto.prod_Cantidad
+                     }
+                     colores.append(obj)
+                     self.guardar_en_json(obj,'control_productos.json')
+                if producto.prod_Cantidad > 7:
+                     obj = {
+                        "color": "green",
+                        "producto_color" : producto.Id,
+                        "producto_name" : producto.prod_Nombre,
+                        "existencias": producto.prod_Cantidad
+                     }
+                     colores.append(obj)
+                     self.guardar_en_json(obj,'control_productos.json')
+                     
                 productos_codificados.append((producto, img_codificada))
                 ganancias.append(gana)
                 tienda_info.append(tienda)
+        print(colores)
 
-
-        return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado)
+        return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado,colores = colores)
 
 class EditarProducto(ProductoView,AuthenticatedView):
     @LoginRequired.login_required
