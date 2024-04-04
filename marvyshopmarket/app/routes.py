@@ -4,18 +4,23 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros, Proveedores, SuministrosProveedores
+from .models import Productos, Administrador, Tenderos, Tiendas, VentasHasProductos, Suministros, Proveedores
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
+from flask import render_template, request, redirect, session
 from app import db
 from datetime import datetime
 from flask import render_template, request, session
 from flask.views import MethodView
 from flask import render_template, request, session, redirect, url_for
-from flask.views import MethodView
 from sqlalchemy import and_
 
 from .models import db
+
+
+
+
+
 
 locale.setlocale(locale.LC_ALL, '')
 main_bp = Blueprint('main', __name__)
@@ -559,26 +564,25 @@ class RegistroSuministroView(MethodView):
     def registrar_suministro(self):
         try:
             print("Intentando registrar suministro")
-            id=request.form['id-registro-suministo']
-            Cantidad=request.form['cantidad-producto-suministro']
-            Fecha=request.form['fecha-producto-suministro']
-            Metododepago=request.form['metodo-pago-suministro']
-            Total=request.form['total-producto-suministro']
-            Tiendaid=request.form['tienda id-producto-suministro']
-
-            if not id or not Cantidad or not Fecha or not Metododepago or not Total or not Tiendaid:
+            id_registro = request.form['idregistro-suministro']
+            cantidad = request.form['cantidad-producto-suministro']
+            fecha = request.form['fecha-producto-suministro']
+            metodo_pago = request.form['metodo-pago-suministro']
+            total = request.form['total-producto-suministro']
+            tienda_id = request.form['tienda_id-producto-suministro']  # Cambio aquí
+            print(id_registro,cantidad,fecha,total,tienda_id, metodo_pago)
+            if not id_registro or not cantidad or not fecha or not metodo_pago or not total or not tienda_id:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
-            suministro_existente = Suministros.query.filter(Suministros.tienda_Id == Tiendaid).first()
+            suministro_existente = Suministros.query.filter_by(sum_Id=id_registro).first()
             if suministro_existente:
-                return {'state': False, 'message': 'Ya existe un proveedor con esa identificación'}
-
-            # Se supone que aquí deberías guardar los suministros en la base de datos
-            # Agregar código para guardar en la base de datos
-            new_suministros = Suministros(id=int(id), cantidad=Cantidad, fecha=Fecha, metodo_pago=Metododepago, total=Total,tienda=Tiendaid)
-            db.session.add(new_suministros)
-            db.session.commit()
-            return {'state': True, 'message': 'Registro exitoso'}
+                return {'state': False, 'message': 'Ya existe un suministro con esa identificación'}
+            else:
+                # Crear un nuevo suministro y guardarlo en la base de datos
+                nuevo_suministro = Suministros(id_registro,cantidad, fecha, metodo_pago, total, tienda_id)
+                db.session.add(nuevo_suministro)
+                db.session.commit()
+                return {'state': True, 'message': 'Suministro registrado exitosamente'}
 
         except KeyError as e:
             print(f"Error en registrar_suministro: {str(e)}")
@@ -608,10 +612,11 @@ class RegistroProveedoresView(MethodView):
     def post(self):
         try:
             print("POST request recibido")
-            if self.registrar_proveedor()['state']:
+            resultado_registro = self.registrar_proveedor()
+            if resultado_registro['state']:
                 return self.get(estado=1, mensaje="Proveedor registrado exitosamente")
             else:
-                return self.get(estado=0, mensaje=self.registrar_proveedor()['message'])
+                return self.get(estado=0, mensaje=resultado_registro['message'])
         except Exception as e:
             print(f"Error en POST request: {str(e)}")
             return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
@@ -622,93 +627,37 @@ class RegistroProveedoresView(MethodView):
     def registrar_proveedor(self):
         try:
             print("Intentando registrar proveedor")
-            id = request.form['id-proveedor']
-            nombre = request.form['nombre-proveedor']
-            ubicacion = request.form['ubicacion-proveedor']
-            contacto = request.form['telefono-proveedor']
+            id = request.form.get('id-proveedor')
+            nombre = request.form.get('nombre-proveedor')
+            ubicacion = request.form.get('ubicacion-proveedor')
+            contacto = request.form.get('telefono-proveedor')
 
             if not id or not nombre or not ubicacion or not contacto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             proveedor_existente = Proveedores.query.filter_by(prov_Id=id).first()
             if proveedor_existente:
+                print("Proveedor ya existe")
                 return {'state': False, 'message': 'Ya existe un proveedor con ese ID'}
-
-            new_proveedor = Proveedores(id=id, nombre=nombre, ubicacion=ubicacion, contacto=contacto)
-            db.session.add(new_proveedor)
-            db.session.commit()
-            return {'state': True, 'message': 'Registro exitoso'}
+            else:
+                print("Intentando registrar proveedor...")
+                new_proveedor = Proveedores(id,nombre,ubicacion,contacto)
+                db.session.add(new_proveedor)
+                db.session.commit()
+                print("producto registrado")
+                return {'state':  True, 'message': 'Registro exitoso'}
         except Exception as e:
+            print("Error al registrar proveedor ",{str(e)})
             return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
 
     def renderizar_proveedor(self, estado, mensaje):
         try:
-            proveedores_lista = Proveedores.query.all() 
-            print(proveedores_lista)
-            proveedores=[]
-            
-            for proveedor in proveedores_lista:
-                proveedores.append({
-                'prov_Id': proveedor.prov_Id,
-                'prov_Nombre': proveedor.prov_Nombre,
-                'prov_Ubicacion': proveedor.prov_Ubicacion,
-                'prov_Contacto': proveedor.prov_Contacto
-            })
-            print(proveedores)
-                
-            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores)  
+            proveedores_lista = Proveedores.query.all()
+            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores_lista)
         except Exception as e:
             print(f"Error al renderizar proveedores: {str(e)}")
-            return render_template('19_registro_proveedores.html', mensaje="Ha ocurrido un error al renderizar los proveedores.")
+            return render_template('19_registro_proveedores.html', estado=0, mensaje=f"Error: {str(e)}")
 
-# class EditarProveedor(AuthenticatedView,RegistroProveedoresView):
-#     @LoginRequired.login_required
-#     def get(self, proveedor_id):
-#         # Obtener el proveedor de la base de datos
-#         proveedor = Proveedores.query.filter_by(id=proveedor_id).first()
-#         if proveedor:
-#             return render_template('Editar_proveedores.html', proveedor=proveedor)
-#         else:
-#             pass
-#             # Si el proveedor no se encuentra, redirigir o mostrar un mensaje de error
-#             # flash("El proveedor no se encontró en la base de datos", "error")
-#             # return redirect(url_for("ruta_donde_mostrar_el_error"))
-
-#     @LoginRequired.login_required
-#     def post(self, proveedor_id):
-#         # Buscar el proveedor en la base de datos
-#         proveedor = Proveedores.query.filter_by(id=proveedor_id).first()
-
-#         if proveedor:
-#             # Obtener los datos del formulario HTML
-#             nuevo_nombre = request.form.get('ID-prov')
-#             nuevo_telefono = request.form.get('telefono-prov')
-#             nueva_direccion = request.form.get('direccion-prov')
-
-#             # Actualizar solo los campos que se proporcionaron
-#             if nuevo_nombre:
-#                 proveedor.nombre = nuevo_nombre
-#             if nuevo_telefono:
-#                 proveedor.telefono = nuevo_telefono
-#             if nueva_direccion:
-#                 proveedor.direccion = nueva_direccion
-
-#             # Guardar los cambios en la base de datos
-#             db.session.commit()
-
-#             # Redirigir a alguna página de éxito o mostrar un mensaje de éxito
-#         #     flash("Proveedor actualizado exitosamente", "success")
-#         #     return redirect(url_for("ruta_donde_redirigir_después_de_la_actualización"))
-#         # else:
-#         #     # Si el proveedor no se encuentra, mostrar un mensaje de error
-#         #     flash("El proveedor no se encontró en la base de datos", "error")
-#         #     return redirect(url_for("ruta_donde_mostrar_el_error"))
-
-
-
-
-
+# Agregar la regla de URL para la vista de registro de proveedores
 main_bp.add_url_rule('/registro_proveedores', view_func=RegistroProveedoresView.as_view('registro_proveedores'))
-# main_bp.add_url_rule('/editar-proveedores/<int:prov_Id>', view_func=EditarProveedor.as_view('editar-proveedores'))
-
 main_bp.add_url_rule('/suministros', view_func=RegistroSuministroView.as_view('suministros'))

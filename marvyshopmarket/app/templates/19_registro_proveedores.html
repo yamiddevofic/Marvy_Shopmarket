@@ -2,6 +2,12 @@
 {% block title %}Marvy Shopmarket | Registro de Proveedores{% endblock %}
 {% block content %}
 
+{% if estado == 0 %}
+    <p style="color: red" class="mensaje">{{ mensaje }}</p>
+{% elif estado == 1 %}
+    <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
+{% endif %}
+
 <div class="title">
     <h1>Registro de Proveedores</h1>
 </div>
@@ -13,22 +19,22 @@
                 <tr>
                     <td>
                         <label>ID:</label>
-                        <div><input type="number" placeholder="ID" name="id-proveedor"></div>
+                        <div><input type="text" placeholder="ID" name="id-proveedor"></div>
                     </td>
 
                     <td>
                         <label>Nombre:</label>
-                        <div><input placeholder="Nombre" name="nombre-proveedor"></div>
+                        <div><input type="text" placeholder="Nombre" name="nombre-proveedor"></div>
                     </td>
 
                     <td>
                         <label>Ubicación:</label>
-                        <div><input placeholder="Ubicación" name="ubicacion-proveedor"></div>
+                        <div><input type="text" placeholder="Ubicación" name="ubicacion-proveedor"></div>
                     </td>
 
                     <td>
                         <label>Contacto:</label>
-                        <div><input type="number" placeholder="Teléfono" name="telefono-proveedor"></div>
+                        <div><input type="text" placeholder="Teléfono" name="telefono-proveedor"></div>
                     </td>
                 </tr>
             </tbody>
@@ -43,6 +49,7 @@
 <div class="proveedores-info">
     <h2>Lista de proveedores</h2>
         <table>
+            <tbody>
                 {% for proveedor in proveedores %}
                 <tr>
                     <td>ID: {{ proveedor.prov_Id }}</td>
@@ -50,19 +57,12 @@
                     <td>Ubicación: {{ proveedor.prov_Ubicacion }}</td>
                     <td>Contacto: {{ proveedor.prov_Contacto }}</td>
                 </tr>
-                <td>
-                    <!--<a href="/editar-proveedores/{{ producto.prov_id }}" style="color: var(--claro-principal);" class="editar-proveedores"><i class="fa-solid fa-pen-to-square"></i></a> -->
-                   
-                </td>
                 {% endfor %}
+            </tbody>
         </table>
    
 </div>
 
-{% if estado == 0 %}
-    <p style="color: red" class="mensaje">{{ mensaje }}</p>
-{% elif estado == 1 %}
-    <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
-{% endif %}
+
 
 {% endblock %}

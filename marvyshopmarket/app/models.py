@@ -119,15 +119,17 @@ class Proveedores(db.Model):
 
     def __init__(self, id, nombre, ubicacion, contacto):
         self.prov_Id = id
-        self.prov_Nombre = nombre
-        self.prov_Ubicacion = ubicacion
-        self.prov_Contacto = contacto
+        self.prov_Nombre =nombre
+        self.prov_Ubicacion =ubicacion
+        self.prov_Contacto =contacto
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
     sum_Id = db.Column(db.BigInteger, primary_key=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
+    sum_Metodo_pago = db.Column(db.DateTime)
+    sum_Total = db.Column(db.DateTime)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
     def __init__(self, id, cantidad, fecha, metodo_pago, total, tienda):
