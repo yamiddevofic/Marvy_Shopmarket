@@ -250,24 +250,18 @@
     </div> -->
     <div id="container-producto">
         <div>
-            <h2>Productos disponibles: </h2>
-
-            {% for producto_agotado in colores %}
-                <div style="background: rgb(5, 163, 32);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}}</div>
-            {% endfor %}
-        </div>
-        <div>
             <h2>Productos a punto de agotarse: </h2>
             {% for producto_agotado in colores %}
-                <div style="background: rgb(255, 162, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}} {{producto_agotado.existencias}}</div>
+                {% if producto_agotado.color == "green" %}
+                <div style="background: rgb(13, 255, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}} {{producto_agotado.existencias}}</div>
+
+                {% elif producto_agotado.color == "orange" %}
+                <div style="background: rgb(255, 174, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}} {{producto_agotado.existencias}}</div>
+
+                {%endif%}
             {% endfor %}
         </div>
-        <div>
-            <h2>Productos agotados: </h2>
-            {% for producto_agotado in colores %}
-                <div style="background: rgb(255, 13, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}}</div>
-            {% endfor %}
-        </div>
+    
         <table>
             <thead>
                 <tr>
@@ -317,4 +311,3 @@
         <button>Atrás</button>
     </form>    
 {% endblock %}
-

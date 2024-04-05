@@ -107,37 +107,35 @@ class Productos(db.Model):
 
 class Proveedores(db.Model):
     __tablename__ = 'proveedores'
-    prov_Id = db.Column(db.BigInteger, primary_key=True)
+    id=db.Column(db.BigInteger, primary_key=True)
+    prov_Id = db.Column(db.String(50))
     prov_Nombre = db.Column(db.String(70))
     prov_Ubicacion = db.Column(db.String(100))
     prov_Contacto = db.Column(db.String(50))
 
     def __init__(self, id, nombre, ubicacion, contacto):
-         self.prov_Id = id
-         self.prov_Nombre = nombre
-         self.prov_Ubicacion = ubicacion
-         self.prov_Contacto = contacto
+        self.prov_Id = id
+        self.prov_Nombre =nombre
+        self.prov_Ubicacion =ubicacion
+        self.prov_Contacto =contacto
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
     sum_Id = db.Column(db.BigInteger, primary_key=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
-    sum_Metodo_pago = db.Column(db.String(45))
-    sum_Total = db.Column(db.Float)
-    sum_Pago = db.Column(db.Float)
-    sum_Vueltos = db.Column(db.Float)
+    sum_Metodo_pago = db.Column(db.DateTime)
+    sum_Total = db.Column(db.DateTime)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, cantidad, fecha, metodo_pago, total, pago, vueltos, tienda):
-         self.sum_Id = id
-         self.sum_Cantidad = cantidad
-         self.sum_Datetime = fecha
-         self.sum_Metodo_pago = metodo_pago
-         self.sum_Total = total
-         self.sum_Pago = pago
-         self.sum_Vueltos = vueltos
-         self.tienda_Id = tienda
+    def __init__(self, id, cantidad, fecha, metodo_pago, total, tienda):
+        self.sum_Id = id
+        self.sum_Cantidad = cantidad
+        self.sum_Datetime = fecha
+        self.sum_Metodo_pago = metodo_pago
+        self.sum_Total = total
+        self.tienda_Id = tienda
+
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
 
