@@ -1,107 +1,105 @@
 {% extends 'base.html' %}
-{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
+{% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
 {% block content %}
 
-{% if estado==1 %}
-<div class="mensaje" style="display: flex;">
-    <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+<div class="title">
+    <h1>Registro de Suministro</h1>
+</div>
+{% if estado == 0 %}
+    <p style="color: red" class="mensaje">{{ mensaje }}</p>
+    <script> 
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.suministros') }}";
+            }, 3500); 
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+{% elif estado == 1 %}
+    <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{ mensaje }}</p>
     
-</div>        
-<script>
-    // const mensajes = document.getElementsByClassName('mensaje');
-
-    function redirigirDespuesDeTiempo() {
-        setTimeout(function() {
-            window.location.href = '/productos'; 
-        }, 2000);   
-    }
-
-    redirigirDespuesDeTiempo();
-</script>
-{% elif estado==0 %}
-<div class="mensaje" style="display: flex;">
-    <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
-</div>
-            
-<script>
-    // const mensajes2 = document.getElementsByClassName('mensaje');
-
-    function redirigirDespuesDeTiempo() {
-        setTimeout(function() {
-            window.location.href = '/productos'; 
-        }, 2000);   
-    }
-
-    redirigirDespuesDeTiempo();
-</script>
-
+    <script>
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.suministros') }}";
+            }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
 {% else %}
-<div class="mensaje">
-    <p class="mensaje-content">{{mensaje}}</p>
-</div>
+    <p id="mensaje"></p>
 {% endif %}
-<div class="registro" id="registro-ventas">
-    <div class="title">
-        <h1>Registro de Suministro</h1>
-    </div>
-    <div class="formulario">
-        <form method="post" action="/registro-suministro" enctype="multipart/form-data" id="form-suministro">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <label>Id factura: </label>
-                            <div><input placeholder="#" id="id-suministro" name="id-registro-suministo"></div>
-                        </td>
-                        <td>
-                            <label>Id: </label>
-                            <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Nombre: </label>
-                            <div><input placeholder="Nombre" id="nombre-producto-suministro" name="nombre-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio" id="precio-producto-suministro" name="precio-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>% Ganancia: </label>
-                            <div>$<input type="number" placeholder="Ganancia" name="Ganancia" id="Ganancia-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
-                        </td>
-                        <td>
-                            <label>Total: </label>
-                            <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- <div class="botones-secundario">
-                <button type="submit" class="btn-submit">Confirmar</button>
-            </div> -->
-        </form>
+<div class="formulario">
+    <form method="post" action="/suministros" enctype="multipart/form-data" id="form-suministro">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label>Id factura: </label>
+                        <div><input placeholder="#" id="id-suministro" name="idregistro-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Id: </label>
+                        <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro" name="id-producto-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Cantidad: </label>
+                        <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Fecha: </label>
+                        <div><input type="date" placeholder="fecha" id="fecha-producto-suministro" name="fecha-producto-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Metodo de pago: </label>
+                        <div><input placeholder="Nombre" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Total: </label>
+                        <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
+                    </td>
+                    <td>
+                        <label>Tienda id: </label>
+                        <div> <input type="number" placeholder="Tienda id" name="tienda_id-producto-suministro" id="tienda_id-producto-suministro"> </div>  <!-- Cambio aquí -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <div class="botom-confirmar">
-            <form action="/home" method="GET">
-            <button>Confirmar</button>
-            </form>
+            <button type="submit">Confirmar</button>
         </div>
-
-        <div class="botom-atras">
-            <form action="/home" method="GET">
-            <button>Atras</button>
-            </form>
-        </div>
-
-        <div class="botom-cancelar">
-            <form action="" method="GET">
-            <button>Cancelar</button>
-            </form>
-        </div>
+    </form>
+    <div class="botom-confirmar">
+        <a href="/home"><button>atrás</button></a>
     </div>
+</div>
+<!-- Mostrar información de suministros -->
+<div class="suministros-info">
+    <h2>Lista de Suministros</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Método de pago</th>
+                <th>Total</th>
+                <th>Tienda ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for suministro in suministros %}
+            <tr>
+                <td>{{ suministro.sum_Id }}</td>
+                <td>{{ suministro.sum_Cantidad }}</td>
+                <td>{{ suministro.sum_Datetime }}</td>
+                <td>{{ suministro.sum_Metodo_pago }}</td>
+                <td>{{ suministro.sum_Total }}</td>
+                <td>{{ suministro.tienda_Id }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

@@ -11,7 +11,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos,Gastos
+from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos,Gastos, Suministros, Proveedores
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -313,16 +313,124 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
         return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
                                informacion_tendero=informacion_tendero, perfil=perfil, state=state,
                                productos=productos, total_ventas=total_ventas)
-class RegistroSuministroView(AuthenticatedView,MethodView):    
-    @LoginRequired.login_required
-    def get(self):
+class RegistroSuministroView(MethodView):
+    def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
-            return self.renderizar_suministro()
+            print("Usuario autenticado")
+            return self.renderizar_suministro(estado, mensaje)
         else:
+            print("Usuario no autenticado")
             return self.renderizar_login()
-        
-    def renderizar_suministro(self):
-        return render_template('5_registro_suministro.html')
+
+    def post(self):
+        try:
+            print("POST request recibido")
+            if self.registrar_suministro()['state']:
+                return self.get(estado=1, mensaje="Suministro registrado exitosamente")
+            else:
+                return self.get(estado=0, mensaje=self.registrar_suministro()['message'])
+        except Exception as e:
+            print(f"Error en POST request: {str(e)}")
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
+
+    def esta_autenticado(self):
+        return session.get('tienda_Id') is not None
+
+    def registrar_suministro(self):
+        try:
+            print("Intentando registrar suministro")
+            id_registro = request.form['idregistro-suministro']
+            cantidad = request.form['cantidad-producto-suministro']
+            fecha = request.form['fecha-producto-suministro']
+            metodo_pago = request.form['metodo-pago-suministro']
+            total = request.form['total-producto-suministro']
+            tienda_id = request.form['tienda_id-producto-suministro']  # Cambio aquí
+            print(id_registro,cantidad,fecha,total,tienda_id, metodo_pago)
+            if not id_registro or not cantidad or not fecha or not metodo_pago or not total or not tienda_id:
+                return {'state': False, 'message': 'Por favor, complete todos los datos'}
+
+            suministro_existente = Suministros.query.filter_by(sum_Id=id_registro).first()
+            if suministro_existente:
+                return {'state': False, 'message': 'Ya existe un suministro con esa identificación'}
+            else:
+                # Crear un nuevo suministro y guardarlo en la base de datos
+                nuevo_suministro = Suministros(id_registro,cantidad, fecha, metodo_pago, total, tienda_id)
+                db.session.add(nuevo_suministro)
+                db.session.commit()
+                return {'state': True, 'message': 'Suministro registrado exitosamente'}
+
+        except KeyError as e:
+            print(f"Error en registrar_suministro: {str(e)}")
+            return {'state': False, 'message': f"Error en el formulario: {str(e)}"}
+        except Exception as e:
+            print(f"Error en registrar_suministro: {str(e)}")
+            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
+
+    def renderizar_suministro(self, estado, mensaje):
+        try:
+            suministros_lista = Suministros.query.all()  # Obtener todos los suministros de la base de datos
+            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministros_lista)
+        except Exception as e:
+            print(f"Error al renderizar suministros: {str(e)}")
+            return render_template('5_registro_suministro.html', estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}", suministros=[])
+
+class RegistroProveedorView(MethodView):
+    def get(self, estado='', mensaje=""):
+        if self.esta_autenticado():
+            print("Usuario autenticado")
+            return self.renderizar_proveedor(estado, mensaje)
+        else:
+            print("Usuario no autenticado")
+            return self.renderizar_login()
+
+    def post(self):
+        try:
+            print("POST request recibido")
+            resultado_registro = self.registrar_proveedor()
+            if resultado_registro['state']:
+                return self.get(estado=1, mensaje="Proveedor registrado exitosamente")
+            else:
+                return self.get(estado=0, mensaje=resultado_registro['message'])
+        except Exception as e:
+            print(f"Error en POST request: {str(e)}")
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
+
+    def esta_autenticado(self):
+        return session.get('tienda_Id') is not None
+
+    def registrar_proveedor(self):
+        try:
+            print("Intentando registrar proveedor")
+            id = request.form.get('id-proveedor')
+            nombre = request.form.get('nombre-proveedor')
+            ubicacion = request.form.get('ubicacion-proveedor')
+            contacto = request.form.get('telefono-proveedor')
+
+            if not id or not nombre or not ubicacion or not contacto:
+                return {'state': False, 'message': 'Por favor, complete todos los datos'}
+
+            proveedor_existente = Proveedores.query.filter_by(prov_Id=id).first()
+            if proveedor_existente:
+                print("Proveedor ya existe")
+                return {'state': False, 'message': 'Ya existe un proveedor con ese ID'}
+            else:
+                print("Intentando registrar proveedor...")
+                new_proveedor = Proveedores(id,nombre,ubicacion,contacto)
+                db.session.add(new_proveedor)
+                db.session.commit()
+                print("producto registrado")
+                return {'state':  True, 'message': 'Registro exitoso'}
+        except Exception as e:
+            print("Error al registrar proveedor ",{str(e)})
+            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
+
+    def renderizar_proveedor(self, estado, mensaje):
+        try:
+            proveedores_lista = Proveedores.query.all()
+            return render_template('19_registro_proveedores.html', estado=estado, mensaje=mensaje, proveedores=proveedores_lista)
+        except Exception as e:
+            print(f"Error al renderizar proveedores: {str(e)}")
+            return render_template('19_registro_proveedores.html', estado=0, mensaje=f"Error: {str(e)}")
 
 class ProductoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
@@ -1068,6 +1176,7 @@ main_bp.add_url_rule('/registro-exitoso', view_func=RegistroExitosoView.as_view(
 main_bp.add_url_rule('/signUp', view_func=SignUpView.as_view('sign_up'))
 main_bp.add_url_rule('/home', view_func=PaginaPrincipalView.as_view('home'))
 main_bp.add_url_rule('/suministros', view_func= RegistroSuministroView.as_view('suministros'))
+main_bp.add_url_rule('/proveedores', view_func=RegistroProveedorView.as_view('proveedores'))
 main_bp.add_url_rule('/productos', view_func= ProductoView.as_view('productos'))
 main_bp.add_url_rule('/ventas', view_func= VentaView.as_view('ventas'))
 main_bp.add_url_rule('/editar-producto/<int:producto_id>', view_func=EditarProducto.as_view('editar-producto'))

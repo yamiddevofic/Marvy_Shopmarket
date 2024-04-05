@@ -125,6 +125,9 @@ a{
 #container-producto table td, #container-producto th{
     border: 1px solid var(--negro)
 } */
+tr{
+    color: black;
+}
 tbody tr td{
     border: 1px solid var(--claro-secundario-2);
 }
@@ -1006,6 +1009,33 @@ form label{
   .input:focus {
     border: 2px solid grey;
   }
+
+/* aca puse los css de que se vea vonito proveedores */
+
+/* Asegurar que el título esté centrado */
+.title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+}
+
+/* Colocar el formulario y el botón de continuar debajo del título */
+.formulario {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    color: black;
+}
+
+/* Colocar la información de proveedores debajo del formulario */
+.proveedores-info {
+    grid-column: 1 / -1;
+    grid-row: 3;
+}
+
+/* Ajustar el diseño según sea necesario */
+.botom-confirmar {
+    margin-top: 20px; /* Ajustar según sea necesario */
+}
 @media screen and (max-width:1200px){
     .botom{
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
