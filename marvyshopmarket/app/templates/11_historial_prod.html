@@ -249,18 +249,6 @@
         </div>
     </div> -->
     <div id="container-producto">
-        <div>
-            <h2>Productos a punto de agotarse: </h2>
-            {% for producto_agotado in colores %}
-                {% if producto_agotado.color == "green" %}
-                <div style="background: rgb(13, 255, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}} {{producto_agotado.existencias}}</div>
-
-                {% elif producto_agotado.color == "orange" %}
-                <div style="background: rgb(255, 174, 0);">{{producto_agotado.producto_color}} {{producto_agotado.producto_name}} {{producto_agotado.existencias}}</div>
-
-                {%endif%}
-            {% endfor %}
-        </div>
     
         <table>
             <thead>
@@ -292,7 +280,15 @@
                             <td>$ {{ producto.prod_Precio }}</td>
                             <td>{{ producto.prod_Ganancia }}%</td>
                             <td>$ {{ producto.prod_TotalPrecio }}</td>
-                            <td>{{ producto.prod_Cantidad }}</td>
+                            {% if producto.prod_Cantidad > 0 and producto.prod_Cantidad <=7 %}
+                                <td style="background-color: rgb(255, 183, 0);">{{ producto.prod_Cantidad }}</td>
+                            {% endif %}
+                            {% if producto.prod_Cantidad > 7 %}
+                                <td style="background-color: rgb(123, 241, 12);">{{ producto.prod_Cantidad }}</td>
+                            {% endif %}
+                            {% if producto.prod_Cantidad == 0 %}
+                                <td style="background-color: rgb(241, 58, 12);">{{ producto.prod_Cantidad }}</td> 
+                            {% endif %}
                             <td>$ {{ producto.prod_Total }}</td>
                             <td>$ {{ producto.prod_TotalGana }}</td>
                             <td>$ {{ ganancia }}</td>

@@ -1,1 +1,1 @@
-{"id": 1, "nombre": "Arroz", "cantidad_vendido": 2, "cantidad_total": 5, "id_producto": 1, "fecha": "2024-04-04T20:33:33", "precio": 4500.0, "total": 9000, "total_ventas": 9000}
+{"id": 1, "nombre": "Cafe", "cantidad_vendido": 3, "cantidad_total": 7, "id_producto": 1, "fecha": "2024-04-05T07:33:04", "precio": 10000.0, "total": 30000, "total_ventas": 30000}

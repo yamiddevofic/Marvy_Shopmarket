@@ -460,7 +460,7 @@ class ProductoView(AuthenticatedView):
         return True 
     
     def registrar_producto(self):
-        id = request.form['prod_Id']
+        id = int(request.form['prod_Id'])
         nombre = request.form['prod_Nombre']
         precio = request.form['prod_Precio']
         cantidad = request.form['prod_Cantidad']
@@ -468,11 +468,14 @@ class ProductoView(AuthenticatedView):
         imagen = request.files['prod_Img']
         imagen_data = imagen.read()
         tienda_id = session['tienda_Id']
+        
         if id=='':
             id=0
         nombre_min = nombre.lower()
+        
         producto_existente = Productos.query.filter(and_(Productos.prod_Id == int(id), Productos.tienda_Id == tienda_id)).first()
-
+        if id<0 or precio < 0 or cantidad < 0 or ganancia < 0:
+            return {'state': False, 'message': 'Por favor, ingrese valores no negativos para id, precio, cantidad y ganancia'}
         if not id or not nombre or not precio or not cantidad or not imagen:
             return {'state':False, 'message':'Por favor, complete todos los datos'}  
         elif producto_existente:
@@ -492,6 +495,7 @@ class ProductoView(AuthenticatedView):
         tienda_info = []
         ganancias = []
         colores = []
+        
         for producto, tienda in resultado:
             if producto.tienda_Id == tienda_id:
                 if producto.prod_Img:
@@ -511,7 +515,10 @@ class ProductoView(AuthenticatedView):
                 if producto.prod_TotalGana:
                     totalgana= producto.prod_TotalGana
                     producto.prod_TotalGana = "{:,}".format(int(producto.prod_TotalGana))
-                gana = "{:,}".format(int(totalgana-totalbruto))
+                if producto.prod_TotalGana ==0:
+                    gana = 0
+                else:
+                    gana = "{:,}".format(int(totalgana-totalbruto))
                 
                 if producto.prod_Cantidad <= 7:
                      obj = {
@@ -522,6 +529,7 @@ class ProductoView(AuthenticatedView):
                      }
                      colores.append(obj)
                      self.guardar_en_json(obj,'control_productos.json')
+                     
                 if producto.prod_Cantidad <= 7:
                      obj = {
                         "color": "orange",
@@ -531,6 +539,7 @@ class ProductoView(AuthenticatedView):
                      }
                      colores.append(obj)
                      self.guardar_en_json(obj,'control_productos.json')
+                     
                 if producto.prod_Cantidad > 7:
                      obj = {
                         "color": "green",
@@ -545,7 +554,7 @@ class ProductoView(AuthenticatedView):
                 ganancias.append(gana)
                 tienda_info.append(tienda)
         print(colores)
-
+        
         return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado,colores = colores)
 
 class EditarProducto(ProductoView,AuthenticatedView):
