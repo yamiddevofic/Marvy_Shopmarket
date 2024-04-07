@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Ajustes perfil {% endblock %}
+{% block content %}
+<div id="signout">
+    <div class="imagen-logo">
+        <img src="{{url_for('static',filename='images/puerta-de-salida.png')}}" width="50%" alt="logo Marvy Shopmarket" class="imagen">
+        <div class="texto"><h3>Has Cerrado Sesión Con Exito</h3></div>
+    </div>
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.login') }}";
+        }, 2500);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>    
+</div>
+
+{% endblock %}

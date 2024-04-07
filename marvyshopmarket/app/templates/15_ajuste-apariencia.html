@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Ajustes apariencia {% endblock %}
+{% block content %}
+<div class="title">
+    <div><h1>Ajustes De Apariencia</h1></div>
+</div>
+<div class="contenedor">
+    <div class="menu-desplegable">
+        <div class="title"><h2>Modo Claro/Modo Oscuro</h2></div>
+        <select id="formato">
+            <option value="" selected>Seleccione una modo</option>
+            <option value="claro">Claro</option>
+            <option value="oscuro">Oscuro</option>
+        </select>
+    </div>
+
+    <div class="menu-desplegable">
+        <div class="title"><h2>Tipografía</h2></div>
+        <select id="formato">
+            <option value="" selected>Seleccione una tipografía</option>
+            <option value="arial">Arial</option>
+            <option value="roboto">Roboto</option>
+            <option value="poppins">Poppins</option>
+            <option value="univers">Univers</option>
+            <option value="futura">Futura</option>
+        </select>
+    </div>
+
+    <div class="tamaño-letra">
+        <div><label for="tamaño-letra">Tamaño De Letra</label></div>
+        <div><input type="number" name="tamaño-letra" id="tamaño-letra"></div>
+    </div>
+
+
+    <div class="botones-secundario">
+        <div class="botom-generar">
+            <div><form action="" method="GET"><button>Continuar</button></form></div>
+        </div>
+        
+        <div class="botom-salir">
+            <div><form action="" method="GET"><button>Atras</button></form></div>
+    </div>
+</div>
+{% endblock %}

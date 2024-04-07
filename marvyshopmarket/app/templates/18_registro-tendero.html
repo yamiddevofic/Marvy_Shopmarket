@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Ajustes perfil {% endblock %}
+{% block content %}
+{% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.registro_tendero') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+{% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.registro_tendero') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+{% else %}
+    <div class="mensaje">
+        <p class="mensaje-content">Hola {{mensaje}}</p>
+    </div>
+{% endif %}
+<div class="logo" id="logo">
+    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
+</div>
+<div class="registro">
+    <div class="title"><h1>Registro Tendero</h1></div>
+    <div class="formulario">
+        <form method="post" action="nuevo_tendero">
+            <div>
+                <div><label for="nom-tendero">Identifación Tendero:</label></div>
+                <div><input type="number" id="id-tendero" name="id-tendero"></div>
+            </div>
+            <div>
+                <div><label for="nom-tendero">Nombre Tendero:</label></div>
+                <div><input type="text" name="nom-tendero" id="nom-tendero"></div>
+            </div>
+            <div>
+                <div><label for="correo-tendero">Correo:</label></div>
+                <div><input type="email" name="correo-tendero" id="correo-tendero"></div>
+            </div>
+            <div>
+                <div><label for="celular-tendero">Celular:</label></div>
+                <div><input type="number" name="celular-tendero" id="celular-tendero"></div>
+            </div>
+            <div>
+                <div><label for="password-tendero">Contraseña:</label></div>
+                <div><input type="password" name="password-tendero" id="password-tendero"></div>
+            </div>
+            
+            <!-- <div>
+                <div><label for="confi-contraseña">Confirmar Contraseña:</label></div>
+                <div><input type="number" name="confi-contraseña"></div>
+            </div> -->
+            <div class="boton-confitmar">
+                <input type="submit" class="btn-submit">Confirmar</input>
+            </div>
+        </form>
+        <form action="/home" method="GET">
+            <button>Cancelar</button>
+        </form> 
+    </div>
+</div>
+{% endblock %}

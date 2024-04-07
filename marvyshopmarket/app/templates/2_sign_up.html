@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Marvy Shopmarket | Registrarse {% endblock %}
+
+{% block content %}
+    {% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.login') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+    {% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.redirigir_registro') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+    {% else %}
+    <div class="mensaje">
+        <p class="mensaje-content">{{mensaje}}</p>
+    </div>
+    {% endif %}
+    <main id="signUp" class="signUp">
+        <div id="header_signUp" class="header_signUp">
+            <h1>Registrarse</h1>
+        </div>
+        <form id="form_signUp" method="post" action="/nuevo_usuario" enctype="multipart/form-data">
+            <div class="content-signUp" id="content_signUp">
+                <!-- <div class="content-logo"><img class="logo" id="logo-signUp" src="{{ url_for('static', filename='images/logo_marvy.png') }}" alt=""></div> -->
+                <section id="section_usuario" class="section_usuario">
+                    <div id="registro-adm-content">
+                        <div class="usuario-title" id="usuario_title"><h2>Administrador</h2></div>
+                        <div class="inputs">
+                            <div><label for="userid">Identificación: </label></div>
+                            <input type="number" class="usuario_signUp" name="userid" id="userid" placeholder="Escribe tu documento de identidad aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label id="username">Nombre completo:</label></div>
+                            <input type="text" class="usuario_signUp" name="username" id="username" placeholder="Escribe tu nombre completo...">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="userpassword">Contraseña: </label></div>
+                            <input type="password" class="password_signUp" name="userpassword" id="userpassword" placeholder="Escribe tu contraseña aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label>Contacto: </label></div>
+                            <div><input type="email" class="contact" name="useremail" id="useremail" placeholder="Escribe tu correo electrónico aquí..."></div>
+                            <input type="number" class="contact" name="userphone" id="userphone" placeholder="Escribe tu número de teléfono...">
+                        </div>
+                    </div>
+                </section>
+                <section id="section_tuTienda" class="section_tuTienda">
+                    <div id="registro-tienda-content">
+                        <div class="tutienda-title"><h2>Tu Tienda</h2></div>
+                        <div class="inputs">
+                            <div><label for="id_tienda">Id/NIT</label></div>
+                            <input type="number" class="id_tienda input" name="tiendaid" id="id_tienda" placeholder="Identifación de tu tienda" style="text-align: left; width: 80%;">
+                            <input type="button" value="Generar" id="id-tienda" class="generar-id" name="generar-id" style="width: 50%;">
+                            <div><label for="tiendaname">Nombre de la tienda: </label></div>
+                            <input type="text" class="tiendaname input" name="tiendaname" id="tiendaname" placeholder="Escribe el nombre de tu tienda aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label>Contacto: </label></div>
+                            <div><input type="email" class="contact input" name="tiendaemail" id="tiendatemail" placeholder="Escribe el correo de tu tienda aquí..." style="text-align: left;"></div>
+                            <input type="number" class="contact input" name="tiendaphone" id="tiendaphone" placeholder="Escribe el número de teléfono de tu tienda aquí..." style="text-align: left;">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="ubi_tienda">Ubicación: </label></div>
+                            <input type="text" class="ubi_tienda input" name="tiendaubicacion" id="tiendaubicacion" placeholder="Escribe la ubicación de tu tienda aquí...">
+                        </div>
+                        <div class="inputs">
+                            <div><label for="tienda_img">Logo de la tienda: </label></div>
+                            <input type="file" class="tienda_img" name="tienda_img" id="tienda_img">
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="btn-submit">
+                <input type="submit" class="btnSubmit_signUp" name="btnSubmit_signUp" id="enviar-registro-g" value="Registrarse">
+            </div>
+        </form> 
+        <form action="/login" method="GET">
+            <input type="submit" class="btn-cancelar" id="cancelar-registro-g" value="Cancelar registro">
+        </form>
+    </main>
+{% endblock %}

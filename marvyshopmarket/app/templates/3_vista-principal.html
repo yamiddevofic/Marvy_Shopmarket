@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Marvy Shopmarket | Home {% endblock %}
+
+{% block content %}
+    {% if estado==1 %}
+        <div id="content-login">
+
+        </div>
+        <div class="mensaje" style="display: flex;">
+            <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+
+        </div>
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.home') }}";
+            }, 2000);
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+        {% elif estado==0 %}
+        <div class="mensaje" style="display: flex;">
+            <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+        </div>
+
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.login') }}";
+            }, 2000);
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+
+        {% elif estado==2 %}
+        <div class="mensaje">
+            <p class="mensaje-content">{{mensaje}}</p>
+        </div>
+        <script>
+            function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.login') }}";
+            }, 2000);
+            }
+        redirigirDespuesDeTiempo()
+        </script>
+    {% endif %}
+    <header style="width: 100%;grid-column: 1/-1; grid-row: 1; display: flex; justify-content: space-between; background: #027368; position: fixed;">
+        <div class="menu">
+            <div><button id="menu-hamburguesa"><img src="{{url_for('static', filename='images/menu(1).png')}}" width="40%"></button></div>
+        </div>
+        <div style="padding: 2%;"><h3>{{informacion_tienda.nombre}} | {{perfil}}</h3></div>
+        <a href="/buscar" style="cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 2%;"><img src="{{ url_for('static', filename='images/lupa (1).png') }}" alt="buscar" width="50px"></a>
+        {%if state==1%}
+        <div style="position: absolute; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;" id="buscador-container" class="buscador-container">
+            <div id="searcher" class="searcher" >
+                <div><button class="cerrar_dos" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
+                <form  style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%;" class="buscador" action="/resultado" method="post">
+                    <h3>Buscar</h3>
+                    <input type="text" name="texto_busqueda" placeholder="Buscar productos..." style="width: 80%;">
+                    <input type="submit" value="Buscar" style="cursor: pointer; width: 80%;">
+                    <h3>Resultados</h3>
+                    <table style="width: auto;">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Existencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto.prod_Nombre }}</td>
+                                <td>${{ producto.prod_Precio }}</td>
+                                <td>{{producto.prod_Cantidad}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        {%elif state==0%}
+        <div>
+            <p>Hola desde estado 0</p>
+        </div>
+        {%endif%}
+    </header>
+    <div class="menu-desplegable" id="menu-desplegable">
+        <div class="menu-desplegable-content">
+            <div><button class="cerrar" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
+            <div class="imagen_perfil_content">
+                <div class="imagen_perfil">
+                    <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" style="border-radius: 50%;" alt="Imagen de la Tienda"></div>
+                </div>
+            </div>
+            <h3>{{informacion_tendero.nombre}}</h3>
+            <div class="listado">
+                <div>
+                    <ul>
+                        <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
+                        {% if perfil=="administrador" %}
+                        <a href="gastos"><li><p><i class="fa-solid fa-filter-circle-dollar"></i> Registro de gastos</p></li></a>
+                        <a href="registro-tendero"><li><i class="fa-solid fa-user"></i> Registrar tendero</li></a>
+                        {% endif %}
+
+                        <a href="/ajustes-generales"><li><i class="fa-solid fa-gear"></i> Ajustes</li></a>
+                    </ul>
+                </div>
+                <div class="boton-salir" style="padding: 2%;">
+                    <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--blanco)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container-home">
+        <!-- <div class="nombre-img">
+            <div class="imagen-perfil">
+                <img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda">
+            </div>
+            <div><h3>{{informacion_tienda.nombre}}</h3></div>
+        </div> -->
+
+        <div style="grid-row: 3/-1; grid-column: 1/-1; margin-top: 2%;">
+            <div class="totales">
+                {% if perfil=="tendero" %}
+                    <div style="background: rgb(57, 179, 16); color: var(--blanco); width: 100%;grid-column: 1/-1;">
+                        <h4>Total De Venta:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                    </div>
+                {% elif perfil=="administrador" %}
+                    <div style="background: rgb(57, 179, 16); color: var(--blanco);">
+                        <h4>Total De Venta:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                    </div>
+                    <div style="background: red; color: var(--blanco);">
+                        <h4>Total De Gastos:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_gastos}}</strong></p>
+                    </div>
+                    <div style="background: blue;color: var(--blanco);">
+                        <h4>Total De Neto:</h4>
+                        <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"> </i><strong> {{total_neto}}</strong></p>
+                    </div>
+                {% endif %}
+            </div>
+            <div></div>
+            <div class="botom">
+                {% if perfil=="administrador" %}
+                    <div class="action">
+                        <div><form action="/ventas" method="GET"><button>Ventas</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/comprador (1).png') }}" style="width: 150px;"></div>
+                    </div>
+                    
+                    <div class="action">
+                        <div><form action="/suministros" method="GET"><button>Suministros</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/camioneta.png') }}" style="width: 150px;"></div>
+                    </div>
+                    <div class="action">
+                        <div><form action="/productos" method="GET"><button>Inventario</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/caja.png') }}" style="width: 150px;"></div>
+                    </div>
+                    <div class="action">
+                        <div><form action="/proveedores" method="GET"><button>Proveedores</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/mujer-de-entrega.png') }}" style="width: 150px;"></div>
+                    </div>
+                    
+                {% elif perfil=="tendero" %}
+                    <div  style="width: 100%; display: flex; text-align: center; justify-content: center;">
+                        <div style="background: rgb(57, 179, 16); color: var(--blanco); width: 100%;grid-column: 1/-1;">
+                            <h4>Total De Venta:</h4>
+                            <p><i class="fa-solid fa-dollar-sign" style="color: var(--blanco)"></i> <strong>{{total_ventas}}</strong></p>
+                        </div>
+                        <div class="action" style="width: 100%;">
+                            <div><form action="/ventas" method="GET"><button>Ventas</button></form></div>
+                            <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
+                        </div>
+                        
+                    </div>
+                {% else %}
+                    <div><h1>ERROR 404</h1></div>
+                {% endif %}
+                <div><br></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

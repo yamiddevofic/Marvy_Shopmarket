@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
+{% block content %}
+    {% if estado==1 %}
+
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        // const mensajes = document.getElementsByClassName('mensaje');
+
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = '{{ url_for("main.gastos") }}';
+            }, 2000);   
+        }
+
+        redirigirDespuesDeTiempo();
+    </script>
+    {% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        // const mensajes2 = document.getElementsByClassName('mensaje');
+
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = '{{ url_for("main.gastos") }}';
+            }, 2000);   
+        }
+
+        redirigirDespuesDeTiempo();
+    </script>
+
+    {% else %}
+    <div class="mensaje">
+        <p class="mensaje-content">{{mensaje}}</p>
+    </div>
+    {% endif %}
+    <div style="grid-column: 1/-1;">
+        <h1 style="width: 100%; text-align: center;">Gastos</h1>
+        <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
+            <form action="/gastos" method="post" style="width: 90%;">
+                <table style="color: black; width: 100%;">
+                    <tr>
+                        <td>
+                            <div><label for="gasto-id">Id</label></div>
+                            <input type="text" name="gasto-id">
+                        </td>
+                        <td>
+                            <div><label for="gasto-descripcion">Descripción</label></div>
+                            <textarea name="gasto-descripcion" id="gasto-descripcion" cols="30" rows="2">
+                            </textarea></td>
+                        <td>
+                            <div><label for="gasto-tipo">Tipo</label></div>
+                            <input type="text" name="gasto-tipo" id="gasto-tipo">
+                        </td>
+                        <td>
+                            <div><label for="gasto-precio">Precio</label></div>
+                            <input type="number" name="gasto-precio" id="gasto-precio">
+                        </td>
+                        <td>
+                            <button type="submit">Enviar</button> 
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
+            <table style="color: black; width: 90%;">
+                <thead>
+                    <th>Id</th>
+                    <th>Descripción</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Editar/Eliminar</th>
+                </thead>
+                <tbody>
+                    {% for gasto, tienda in resultado %}
+                        <tr id="registro_{{ gasto.gastos_Id }}">
+                            <td>{{ gasto.gastos_Id }}</td>
+                            <td>{{ gasto.gastos_Descr }}</td>
+                            <td>{{ gasto.gastos_Tipo }}</td>
+                            <td>{{ gasto.gastos_Precio }}</td>
+                            <td>
+                                <a href="/editar-gasto/{{ gasto_gastos_Id }}" style="color: var(--claro-principal);" class="editar-gasto"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="/eliminar-gasto/{{ gasto.gastos_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-gasto"><i class="fas fa-trash-alt"></i></a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="grid-column: 1/-1;">
+        <div><a href="/home"><button style="width:90%">Atrás</button></a></div>
+    </div>
+{% endblock %}
