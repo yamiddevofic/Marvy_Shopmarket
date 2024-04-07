@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
 {% block content %}
-
-<div class="title">
-    <h1>Registro de Suministro</h1>
-</div>
 {% if estado == 0 %}
     <p style="color: red" class="mensaje">{{ mensaje }}</p>
     <script> 
@@ -27,7 +23,10 @@
         redirigirDespuesDeTiempo()
     </script>
 {% else %}
-    <p id="mensaje"></p>
+<p id="mensaje"></p>
+<div class="title">
+    <h1>Registro de Suministro</h1>
+</div>
 {% endif %}
 <div class="formulario">
     <form method="post" action="/suministros" enctype="multipart/form-data" id="form-suministro">

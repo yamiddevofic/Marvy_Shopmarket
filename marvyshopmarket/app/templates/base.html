@@ -7,34 +7,14 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
     <link rel="icon" type="image/png" href="{{url_for('static', filename='images/logo_marvy.png')}}">
     <script src="https://kit.fontawesome.com/8786a88843.js" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 </head>
 <body>
-   
-   <div class="container" id="container">        
-        <!-- <input type="checkbox" class="theme-checkbox" id="modo-oscuro">
-        <script>
-            
-            const switchInput = document.getElementById('modo-oscuro');
-            
-            // Agrega un evento 'change' al input del checkbox
-            switchInput.addEventListener('change', function() {
-                // Verifica si el checkbox está marcado (checked)
-                if (this.checked) {
-                    // Si está marcado, agrega una clase al body para activar el modo oscuro
-                    console.log("activado")
-                    document.body.classList.add('dark-mode');
-                } else {
-                    // Si no está marcado, remueve la clase del body para desactivar el modo oscuro
-                    document.body.classList.remove('dark-mode');
-                }
-            });
-        </script> -->
-        <div class="content" id="content">
-            {% block content %}{% endblock %}
-        </div>
-   </div>
-   <footer style="grid-column: 1/-1; grid-row: -1; text-align: center; background: #027368; bottom: 0;"><p style=" padding: 2%; color: var(--blanco)">© Marvy Shopmarket</p></footer>
-   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <div class="container" id="container">       
+            <div class="content" id="content">
+                {% block content %}{% endblock %}
+            </div>
+    </div>
+    <footer style="grid-column: 1/-1; grid-row: -1; text-align: center; background: #027368; bottom: 0;"><p style=" padding: 2%; color: var(--blanco)">© Marvy Shopmarket</p></footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

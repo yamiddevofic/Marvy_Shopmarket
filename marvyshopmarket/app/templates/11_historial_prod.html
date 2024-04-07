@@ -280,10 +280,13 @@
                             <td>$ {{ producto.prod_Precio }}</td>
                             <td>{{ producto.prod_Ganancia }}%</td>
                             <td>$ {{ producto.prod_TotalPrecio }}</td>
-                            {% if producto.prod_Cantidad > 0 and producto.prod_Cantidad <=7 %}
-                                <td style="background-color: rgb(255, 183, 0);">{{ producto.prod_Cantidad }}</td>
+                            {% if producto.prod_Cantidad > 0 and producto.prod_Cantidad <=5 %}
+                                <td style="background-color: rgb(255, 122, 0);">{{ producto.prod_Cantidad }}</td>
                             {% endif %}
-                            {% if producto.prod_Cantidad > 7 %}
+                            {% if producto.prod_Cantidad > 5 and producto.prod_Cantidad < 10 %}
+                            <td style="background-color: rgb(255, 255, 55);">{{ producto.prod_Cantidad }}</td>
+                            {% endif %}
+                            {% if producto.prod_Cantidad >= 10 %}
                                 <td style="background-color: rgb(123, 241, 12);">{{ producto.prod_Cantidad }}</td>
                             {% endif %}
                             {% if producto.prod_Cantidad == 0 %}

@@ -46,85 +46,83 @@
         redirigirDespuesDeTiempo()
         </script>
     {% endif %}
-
-    <div id="container-home">
-        <header style="width: 100%;grid-column: 1/-1; grid-row: 1; display: flex; justify-content: space-between; background: #027368; position: fixed;">
-            <div class="menu">
-                <div><button id="menu-hamburguesa"><img src="{{url_for('static', filename='images/menu(1).png')}}" width="40%"></button></div>
+    <header style="width: 100%;grid-column: 1/-1; grid-row: 1; display: flex; justify-content: space-between; background: #027368; position: fixed;">
+        <div class="menu">
+            <div><button id="menu-hamburguesa"><img src="{{url_for('static', filename='images/menu(1).png')}}" width="40%"></button></div>
+        </div>
+        <div style="padding: 2%;"><h3>{{informacion_tienda.nombre}} | {{perfil}}</h3></div>
+        <a href="/buscar" style="cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 2%;"><img src="{{ url_for('static', filename='images/lupa (1).png') }}" alt="buscar" width="50px"></a>
+        {%if state==1%}
+        <div style="position: absolute; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;" id="buscador-container" class="buscador-container">
+            <div id="searcher" class="searcher" >
+                <div><button class="cerrar_dos" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
+                <form  style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%;" class="buscador" action="/resultado" method="post">
+                    <h3>Buscar</h3>
+                    <input type="text" name="texto_busqueda" placeholder="Buscar productos..." style="width: 80%;">
+                    <input type="submit" value="Buscar" style="cursor: pointer; width: 80%;">
+                    <h3>Resultados</h3>
+                    <table style="width: auto;">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Existencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto.prod_Nombre }}</td>
+                                <td>${{ producto.prod_Precio }}</td>
+                                <td>{{producto.prod_Cantidad}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
             </div>
-            <div style="padding: 2%;"><h3>{{informacion_tienda.nombre}}<br>{{perfil}}</h3></div>
-            <form  class="buscador" action="/buscar" method="post">
-                <button type="submit" style="width: 100%; height: auto; margin-top: 2%;padding: 2%; border-radius: 10px; cursor: pointer;"><i class="fa-solid fa-search" id="buscar"></i></button>
-            </form>
-            {%if state==1%}
-            <div style="position: absolute; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;" id="buscador-container" class="buscador-container">
-                <div id="searcher" class="searcher" >
-                    <div><button class="cerrar_dos" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
-                    <form  style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%;" class="buscador" action="/resultado" method="post">
-                        <h3>Buscar</h3>
-                        <input type="text" name="texto_busqueda" placeholder="Buscar productos..." style="width: 80%;">
-                        <input type="submit" value="Buscar" style="cursor: pointer; width: 80%;">
-                        <h3>Resultados</h3>
-                        <table style="width: auto;">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio</th>
-                                    <th>Existencias</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for producto in productos %}
-                                <tr>
-                                    <td>{{ producto.prod_Nombre }}</td>
-                                    <td>${{ producto.prod_Precio }}</td>
-                                    <td>{{producto.prod_Cantidad}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </form>
+        </div>
+        {%elif state==0%}
+        <div>
+            <p>Hola desde estado 0</p>
+        </div>
+        {%endif%}
+    </header>
+    <div class="menu-desplegable" id="menu-desplegable">
+        <div class="menu-desplegable-content">
+            <div><button class="cerrar" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
+            <div class="imagen_perfil_content">
+                <div class="imagen_perfil">
+                    <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" style="border-radius: 50%;" alt="Imagen de la Tienda"></div>
                 </div>
             </div>
-            {%elif state==0%}
-            <div>
-                <p>Hola desde estado 0</p>
-            </div>
-            {%endif%}
-        </header>
-        <div class="menu-desplegable" id="menu-desplegable">
-            <div class="menu-desplegable-content">
-                <div><button class="cerrar" style="background: none; border: none;"><i class="fa-solid fa-circle-xmark" id="btn-cerrar"></i></button></div>
-                <div class="imagen_perfil_content">
-                    <div class="imagen_perfil">
-                        <div><img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" style="border-radius: 50%;" alt="Imagen de la Tienda"></div>
-                    </div>
-                </div>
-                <h3>{{informacion_tendero.nombre}}</h3>
-                <div class="listado">
-                    <div>
-                        <ul>
-                            <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
-                            {% if perfil=="administrador" %}
-                            <a href="gastos"><li><p><i class="fa-solid fa-filter-circle-dollar"></i> Registro de gastos</p></li></a>
-                            <a href="registro-tendero"><li><i class="fa-solid fa-user"></i> Registrar tendero</li></a>
-                            {% endif %}
+            <h3>{{informacion_tendero.nombre}}</h3>
+            <div class="listado">
+                <div>
+                    <ul>
+                        <li><p><i class="fa-solid fa-file" ></i> Generar Informe</p></li>
+                        {% if perfil=="administrador" %}
+                        <a href="gastos"><li><p><i class="fa-solid fa-filter-circle-dollar"></i> Registro de gastos</p></li></a>
+                        <a href="registro-tendero"><li><i class="fa-solid fa-user"></i> Registrar tendero</li></a>
+                        {% endif %}
 
-                            <a href="/ajustes-generales"><li><i class="fa-solid fa-gear"></i> Ajustes</li></a>
-                        </ul>
-                    </div>
-                    <div class="boton-salir" style="padding: 2%;">
-                        <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--blanco)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
-                    </div>
+                        <a href="/ajustes-generales"><li><i class="fa-solid fa-gear"></i> Ajustes</li></a>
+                    </ul>
+                </div>
+                <div class="boton-salir" style="padding: 2%;">
+                    <div><form action="/cerrar-sesion" method="GET"><button style="color: var(--blanco)"><div>Cerrar sesión</div><i class="fa-solid fa-door-open btn-principal"></i></button></form></div>
                 </div>
             </div>
         </div>
+    </div>
+    <div id="container-home">
         <!-- <div class="nombre-img">
             <div class="imagen-perfil">
                 <img src="data:image/png;base64,{{ informacion_tienda.imagen }}" width="50%" alt="Imagen de la Tienda">
             </div>
             <div><h3>{{informacion_tienda.nombre}}</h3></div>
         </div> -->
+
         <div style="grid-row: 3/-1; grid-column: 1/-1; margin-top: 2%;">
             <div class="totales">
                 {% if perfil=="tendero" %}
@@ -152,20 +150,20 @@
                 {% if perfil=="administrador" %}
                     <div class="action">
                         <div><form action="/ventas" method="GET"><button>Ventas</button></form></div>
-                        <div><img src="{{ url_for('static', filename='images/personal.png') }}" style="width: 150px;"></div>
+                        <div><img src="{{ url_for('static', filename='images/comprador (1).png') }}" style="width: 150px;"></div>
                     </div>
                     
                     <div class="action">
                         <div><form action="/suministros" method="GET"><button>Suministros</button></form></div>
-                        <div><img src="{{ url_for('static', filename='images/distribucion.png') }}" style="width: 150px;"></div>
+                        <div><img src="{{ url_for('static', filename='images/camioneta.png') }}" style="width: 150px;"></div>
                     </div>
                     <div class="action">
-                        <div><form action="/productos" method="GET"><button>Productos</button></form></div>
-                        <div><img src="{{ url_for('static', filename='images/nuevo-producto.png') }}" style="width: 150px;"></div>
+                        <div><form action="/productos" method="GET"><button>Inventario</button></form></div>
+                        <div><img src="{{ url_for('static', filename='images/caja.png') }}" style="width: 150px;"></div>
                     </div>
                     <div class="action">
                         <div><form action="/proveedores" method="GET"><button>Proveedores</button></form></div>
-                        <div><img src="{{ url_for('static', filename='images/repartidor.png') }}" style="width: 150px;"></div>
+                        <div><img src="{{ url_for('static', filename='images/mujer-de-entrega.png') }}" style="width: 150px;"></div>
                     </div>
                     
                 {% elif perfil=="tendero" %}

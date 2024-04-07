@@ -242,8 +242,9 @@ td:last-child, th:last-child {
     grid-row: 1/-1;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 8% 10% 30% 1fr 1fr;
+    grid-template-rows: 10% 10% 30% 1fr 1fr;
     height: 100%;
+    
 }
 #container-home footer{
     grid-column: 2;
@@ -271,6 +272,7 @@ td:last-child, th:last-child {
     justify-content: center;
     align-items: center;
     padding: 2%;
+    margin: 2%;
 }
 .titulo{
     grid-column: 1/-1;
@@ -293,7 +295,7 @@ td:last-child, th:last-child {
 }
 .botom{
     grid-column: 1/-1;
-    grid-row: 1;
+    grid-row: -4;
     height: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -310,7 +312,7 @@ td:last-child, th:last-child {
     display: grid;
     align-items: center;
     flex-direction: column;
-    background: var(--claro-secundario-2);
+    background: var(--blanco);
 }
 .botom .action form button{
     padding: 5%;
@@ -553,6 +555,15 @@ td:last-child, th:last-child {
     flex-direction: column;
     font-size: 1.5rem;
 }
+header{
+    height: 15%;
+}
+header div:nth-child(2), header h3{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .header_signUp{
     grid-column: 2;
     grid-row: 1;
@@ -695,9 +706,9 @@ img{
 }
 
 #menu-hamburguesa{
-    width: 5rem;
+    width: 6rem;
     cursor: pointer;
-    background-color: var(--claro-principal);
+    background: none;
     border: none;
     margin: 15%;
 
@@ -1036,6 +1047,8 @@ form label{
 .botom-confirmar {
     margin-top: 20px; /* Ajustar según sea necesario */
 }
+
+
 @media screen and (max-width:1200px){
     .botom{
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1046,9 +1059,16 @@ form label{
     .totales{
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         padding: 5%;
+        height: 35%;
     }  
     .totales div{
         margin-bottom: 2%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #container-home{
+        grid-template-rows: 0% 14% 30% 1fr 1fr;
     }
     #menu-desplegable {
         width: 50%; /* El menú ocupará el 100% del ancho de la pantalla */
@@ -1078,6 +1098,9 @@ form label{
         grid-row: 1;
         margin-top: 2%;
     }
+    .totales{
+        width: 100%;
+    }
 }
 @media screen and (max-width: 600px){
 
@@ -1086,7 +1109,7 @@ form label{
         height: 100vh;
     }
     .menu #menu-hamburguesa{
-        width: auto;
+        width: 50px;
     }
     #menu-desplegable {
         width: 100%;
@@ -1123,6 +1146,11 @@ form label{
         font-size: 0.8rem;
     }
     .totales{
+        grid-template-columns: 1fr;
         margin: 5% 0;
+        height: auto;
+    }
+    #imagen-home{
+        display: flex;
     }
 }

@@ -107,7 +107,7 @@ class Productos(db.Model):
 
 class Proveedores(db.Model):
     __tablename__ = 'proveedores'
-    id=db.Column(db.BigInteger, primary_key=True)
+    id=db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     prov_Id = db.Column(db.String(50))
     prov_Nombre = db.Column(db.String(70))
     prov_Ubicacion = db.Column(db.String(100))

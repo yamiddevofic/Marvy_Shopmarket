@@ -369,10 +369,10 @@ class RegistroSuministroView(MethodView):
     def renderizar_suministro(self, estado, mensaje):
         try:
             suministros_lista = Suministros.query.all()  # Obtener todos los suministros de la base de datos
-            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministros_lista)
+            return render_template('5_registro_suministro.html',estado=estado, mensaje=mensaje, suministros=suministros_lista)
         except Exception as e:
             print(f"Error al renderizar suministros: {str(e)}")
-            return render_template('5_registro_suministro.html', estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}", suministros=[])
+            return render_template('5_registro_suministro.html', informacion_estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}", suministros=[])
 
 class RegistroProveedorView(MethodView):
     def get(self, estado='', mensaje=""):
@@ -462,9 +462,9 @@ class ProductoView(AuthenticatedView):
     def registrar_producto(self):
         id = int(request.form['prod_Id'])
         nombre = request.form['prod_Nombre']
-        precio = request.form['prod_Precio']
-        cantidad = request.form['prod_Cantidad']
-        ganancia = request.form['prod_Ganancia']
+        precio = float(request.form['prod_Precio'])
+        cantidad = float(request.form['prod_Cantidad'])
+        ganancia = float(request.form['prod_Ganancia'])
         imagen = request.files['prod_Img']
         imagen_data = imagen.read()
         tienda_id = session['tienda_Id']
@@ -864,17 +864,12 @@ class EliminarGasto(GastoView, AuthenticatedView):
             return super().get(estado=0, mensaje="No se encontró la venta")
                 
 class Buscar(PaginaPrincipalView):
-    def get(self,state='', resultados=''):
+    def get(self,state=1, resultados={}):
          print("Entré a get")
          return self.renderizar_principal_2(state,resultados)
 
     def renderizar_principal_2(self, state, resultados):
         return super().renderizar_principal(state=state,productos=resultados)
-
-    def post(self):
-        state= 1
-        resultados = {}
-        return self.get(state,resultados)
 
 class Resultado(Buscar,PaginaPrincipalView):
     def get(self,state='', resultados=''):
