@@ -114,6 +114,8 @@ a{
     grid-column: 1/-1;
     grid-row: 3;
     display: grid;
+    gap: 2%;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 /* #container-producto table{
     grid-column: 1/-1;
@@ -541,8 +543,9 @@ td:last-child, th:last-child {
     justify-content: center;
     align-items: center;
 }
-.container_login .title{
+.container_login .title, .container_login .title h1 {
     color: black;
+    width: auto;
 }
 .mensaje-content{
     background-color: var(--blanco);
@@ -1152,5 +1155,8 @@ form label{
     }
     #imagen-home{
         display: flex;
+    }
+    .container_login .title h1{
+        font-size: 1.5rem;
     }
 }

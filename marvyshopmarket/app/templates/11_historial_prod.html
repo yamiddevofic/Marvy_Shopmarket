@@ -309,4 +309,38 @@
     <form action="/home" method="GET">
         <button>Atrás</button>
     </form>    
+    <button onclick="listFiles()">List Files</button>
+    <div id="output"></div>
+
+    <script>
+        async function listFiles() {
+            const accessToken = 'TU_ACCESS_TOKEN'; // Necesitarás obtener este token después de autenticar al usuario
+            const url = 'https://www.googleapis.com/drive/v3/files';
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            displayFiles(data);
+        }
+
+        function displayFiles(data) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = ''; // Limpiar contenido previo
+            if (data.files && data.files.length > 0) {
+                const fileList = document.createElement('ul');
+                data.files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file.name;
+                    fileList.appendChild(listItem);
+                });
+                outputDiv.appendChild(fileList);
+            } else {
+                outputDiv.textContent = 'No files found.';
+            }
+        }
+    </script>
 {% endblock %}

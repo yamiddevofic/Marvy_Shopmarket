@@ -7,7 +7,7 @@ import json
 import socket
 from threading import Thread
 from functools import wraps
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, current_app
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
@@ -870,6 +870,26 @@ class Buscar(PaginaPrincipalView):
 
     def renderizar_principal_2(self, state, resultados):
         return super().renderizar_principal(state=state,productos=resultados)
+
+@main_bp.route('/datos')
+def obtener_datos():
+    tienda_id = session['tienda_Id']
+    resultado_json = []
+    resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
+    for producto, tienda in resultado:
+        producto_dict = {
+            "id": producto.Id,
+            "nombre": producto.prod_Nombre,
+            "cantidad": producto.prod_Cantidad,
+            "precio": producto.prod_Precio,
+            "imagen": base64.b64encode(producto.prod_Img).decode('utf-8'),
+            "tienda": {
+                "nombre": tienda.tienda_Nombre,
+                "ubicacion": tienda.tienda_Ubicacion
+            }
+        }
+        resultado_json.append(producto_dict)
+    return jsonify(resultado_json)
 
 class Resultado(Buscar,PaginaPrincipalView):
     def get(self,state='', resultados=''):
