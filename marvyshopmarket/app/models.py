@@ -124,8 +124,8 @@ class Suministros(db.Model):
     sum_Id = db.Column(db.BigInteger, primary_key=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
-    sum_Metodo_pago = db.Column(db.DateTime)
-    sum_Total = db.Column(db.DateTime)
+    sum_Metodo_pago = db.Column(db.String(100))  # Cambio aquí
+    sum_Total = db.Column(db.Float)  # Cambio aquí
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
     def __init__(self, id, cantidad, fecha, metodo_pago, total, tienda):
@@ -135,6 +135,7 @@ class Suministros(db.Model):
         self.sum_Metodo_pago = metodo_pago
         self.sum_Total = total
         self.tienda_Id = tienda
+
 
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
