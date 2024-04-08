@@ -6,7 +6,7 @@
     <script> 
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/proveedores') }}";
+                window.location.href = "{{ url_for('main.proveedores') }}";
             }, 3500); 
         }
         redirigirDespuesDeTiempo()
@@ -17,7 +17,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/proveedores') }}";
+                window.location.href = "{{ url_for('main.proveedores') }}";
             }, 2000);   
         }
         redirigirDespuesDeTiempo()
