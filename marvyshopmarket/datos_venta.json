@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"id": 2, "nombre": "Arroz", "cantidad_vendido": 10, "cantidad_total": 0, "id_producto": 3, "fecha": "2024-04-08T09:31:21", "precio": 5000.0, "total": 50000, "total_ventas": 50000}
-=======
-{"id": 3, "nombre": "arroz", "cantidad_vendido": 1, "cantidad_total": 1, "id_producto": 1, "fecha": "2024-04-07T13:20:11", "precio": 5000.0, "total": 5000, "total_ventas": 5000}
->>>>>>> 851891a9d9d38fdc482b0fcf447f6c9ec52af997
+{"id": 3, "nombre": "Caf\u00e9", "cantidad_vendido": 10, "cantidad_total": 30, "id_producto": 5, "fecha": "2024-04-09T08:18:55", "precio": 4950.0, "total": 45000, "total_ventas": 45000}

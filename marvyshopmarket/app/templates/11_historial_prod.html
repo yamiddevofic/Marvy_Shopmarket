@@ -133,10 +133,6 @@
                 <tbody>
                     <tr>
                         <td>
-                            <label>Id: </label>
-                            <div><input placeholder="id del producto" id="prod_Id" name="prod_Id" class="prod_Id"></div>
-                        </td>
-                        <td>
                             <label>Nombre: </label>
                             <div><input placeholder="nombre del producto" name="prod_Nombre" id="nombre-producto-venta" ></div>
                         </td>
@@ -298,7 +294,6 @@
                             <!-- <td width="250"><img src="data:image/png;base64,{{ imagen_codificada }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td> -->
                             <td>
                                 <a href="/editar-producto/{{ producto.prod_Id }}" style="color: var(--claro-principal);" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/eliminar-producto/{{ producto.Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
