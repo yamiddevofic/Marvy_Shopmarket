@@ -48,9 +48,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`administrador` (
   CONSTRAINT `administrador_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
-
-
-
+    
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`caja`
 -- -----------------------------------------------------
@@ -64,8 +62,6 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`caja` (
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
 
-
-
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`factura`
 -- -----------------------------------------------------
@@ -76,11 +72,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`factura` (
   `tienda_Id` BIGINT NOT NULL,
   PRIMARY KEY (`fac_Id`, `tienda_Id`),
     FOREIGN KEY (`tienda_Id`)
-    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
-
-
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`gastos`
@@ -95,8 +87,6 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`gastos` (
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
 
-
-
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`informe`
 -- -----------------------------------------------------
@@ -110,8 +100,6 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`informe` (
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
 
-
-
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`tenderos`
 -- -----------------------------------------------------
@@ -124,10 +112,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`tenderos` (
   `tienda_Id` BIGINT NOT NULL,
   PRIMARY KEY (`tendero_Id`, `tienda_Id`),
     FOREIGN KEY (`tienda_Id`)
-    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
-;
-
-
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`productos`
@@ -150,21 +135,17 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`productos` (
     FOREIGN KEY (`tendero_Id` , `tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tenderos` (`tendero_Id` , `tienda_Id`));
 
-
-
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`proveedores`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`proveedores` (
- `id` BIGINT NOT NULL AUTO_INCREMENT ,
+  `id` BIGINT NOT NULL AUTO_INCREMENT ,
   `prov_Id` VARCHAR(50) NULL DEFAULT NULL,
   `prov_Nombre` VARCHAR(70) NULL DEFAULT NULL,
   `prov_Ubicacion` VARCHAR(100) NULL DEFAULT NULL,
   `prov_Contacto` VARCHAR(50) NULL DEFAULT NULL,
-   `prov_prod-nom` VARCHAR(50) NULL DEFAULT NULL,
- 
+  `prov_prod_nom` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`id`));
-  
 DROP TABLE proveedores;
 DROP TABLE suministros_has_proveedores;
 -- -----------------------------------------------------
@@ -181,8 +162,6 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros` (
   PRIMARY KEY (`sum_Id`, `tienda_Id`),
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
-
-
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros_has_productos`
@@ -203,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros_has_productos` (
     REFERENCES `marvy_shopmarket`.`productos` (`Id` , `tendero_Id` , `tienda_Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+    
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`ventas`
 -- -----------------------------------------------------
@@ -221,8 +201,10 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`ventas` (
     REFERENCES `marvy_shopmarket`.`tenderos` (`tendero_Id` , `tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
-
-
+DELETE FROM productos WHERE Id>1;
+DELETE FROM ventas_has_productos WHERE productos_Id>1;
+SELECT * FROM productos;
+SELECT * FROM ventas;
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`ventas_has_productos`

@@ -82,21 +82,18 @@ class Informe(db.Model):
 class Productos(db.Model):
     __tablename__ = 'productos'
     Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    prod_Id= db.Column(db.BigInteger)
     prod_Nombre = db.Column(db.String(70))
     prod_Precio = db.Column(db.Float)
     prod_Ganancia= db.Column(db.Float)
     prod_TotalPrecio = db.Column(db.Float,db.Computed('(prod_Precio*(prod_Ganancia/100))+prod_Precio'))
     prod_Cantidad = db.Column(db.BigInteger)
-    prod_Categoria = db.Column(db.String(45))
     prod_Total = db.Column(db.Float,db.Computed('(prod_Precio * prod_Cantidad)'))
     prod_TotalGana = db.Column(db.Float,db.Computed('(prod_TotalPrecio * prod_Cantidad)'))
     prod_Img= db.Column(db.LargeBinary)
     tendero_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tendero_Id'))
     tienda_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tienda_Id'))
 
-    def __init__(self, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
-         self.prod_Id = producto_id
+    def __init__(self, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
          self.prod_Nombre = nombre
          self.prod_Precio = precio
          self.prod_Ganancia = ganancia
