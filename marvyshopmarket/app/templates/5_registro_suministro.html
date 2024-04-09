@@ -23,7 +23,6 @@
         redirigirDespuesDeTiempo()
     </script>
 {% else %}
-<p id="mensaje"></p>
 <div class="title">
     <h1>Registro de Suministro</h1>
 </div>
@@ -38,9 +37,10 @@
                         <div><input placeholder="#" id="id-suministro" name="idregistro-suministro"></div>
                     </td>
                     <td>
-                        <label>Id: </label>
-                        <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro" name="id-producto-suministro"></div>
+                        <label> Nombre producto: </label>
+                        <div><input placeholder="producto" id="producto-suministro" name="producto-suministro"></div>
                     </td>
+                    
                     <td>
                         <label>Cantidad: </label>
                         <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
@@ -54,12 +54,8 @@
                         <div><input type="text" placeholder="Metodo de pago" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
                     </td>
                     <td>
-                        <label>Total: </label>
+                        <label> Precio: </label>
                         <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
-                    </td>
-                    <td>
-                        <label>Tienda id: </label>
-                        <div> <input type="number" placeholder="Tienda id" name="tienda_id-producto-suministro" id="tienda_id-producto-suministro"> </div> 
                     </td>
 
                     <td>
@@ -84,7 +80,7 @@
                 <th>Fecha</th>
                 <th>Método de pago</th>
                 <th>Total</th>
-                <th>Tienda ID</th>
+                <th>sumi_producto_nombre</th>
 
                 <th  width="20">Editar</th></a>
             </tr>
@@ -98,7 +94,7 @@
                 <td>{{ suministro.sum_Datetime }}</td>
                 <td>{{ suministro.sum_Metodo_pago }}</td>
                 <td>{{ suministro.sum_Total }}</td>
-                <td>{{ suministro.tienda_Id }}</td>
+                <td>{{ suministro.sum_Prod_Nom }}</td>
 
                 <td>
                     <a href="/editar-suministros/{{suministro.sum_Id }}" style="color: var(--claro-principal); cursor: pointer" class="editar-suministros"><i class="fa-solid fa-pen-to-square"></i></a>

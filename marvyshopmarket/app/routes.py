@@ -344,21 +344,22 @@ class RegistroSuministroView(AuthenticatedView):
     def registrar_suministro(self):
         try:
             print("Intentando registrar suministro")
-            id_registro = request.form['idregistro-suministro']
+            id = request.form['idregistro-suministro']
             cantidad = request.form['cantidad-producto-suministro']
             fecha = request.form['fecha-producto-suministro']
             metodo_pago = request.form['metodo-pago-suministro']
             total = request.form['total-producto-suministro']
             tienda_id = request.form['tienda_id-producto-suministro']
+            sumi_producto_nombre  = request.form['producto-suministro']
             
-            if not id_registro or not cantidad or not fecha or not metodo_pago or not total or not tienda_id:
+            if not id or not cantidad or not fecha or not metodo_pago or not total  or not sumi_producto_nombre:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
-            suministro_existente = Suministros.query.filter_by(sum_Id=id_registro).first()
+            suministro_existente = Suministros.query.filter_by(sum_Id=id).first()
             if suministro_existente:
                 return {'state': False, 'message': 'Ya existe un suministro con esa identificación'}
             else:
-                nuevo_suministro = Suministros(sum_Id=id_registro, sum_Cantidad=cantidad, sum_Datetime=fecha, sum_Metodo_pago=metodo_pago, sum_Total=total, tienda_Id=tienda_id)
+                nuevo_suministro = Suministros(id, cantidad,fecha,metodo_pago,total,sumi_producto_nombre )
                 db.session.add(nuevo_suministro)
                 db.session.commit()
                 return {'state': True, 'message': 'Suministro registrado exitosamente'}
@@ -401,6 +402,8 @@ class EditarSuministro(RegistroSuministroView, AuthenticatedView):
                 nuevo_fecha = request.form.get('fecha-suministro')
                 nuevo_metodo_pago = request.form.get('metodo-pago-suministro')
                 nuevo_total = request.form.get('total-suministro')
+                
+                
                 
                 if nueva_cantidad:
                     suministro.sum_Cantidad = nueva_cantidad
@@ -481,10 +484,11 @@ class RegistroProveedorView(AuthenticatedView):
 # editar proveedor 
 class Editarproveedores(RegistroProveedorView, AuthenticatedView):
     @LoginRequired.login_required
-    def get(self, prov_id=None):
+    def get(self, prov_id):
         try:
-            if prov_id is not None:
+            if prov_id:
                 proveedor = Proveedores.query.filter_by(prov_Id=prov_id).first()
+                print(proveedor)
                 if proveedor:
                     return render_template('editar_proveedor.html', proveedor=proveedor)
                 else:
@@ -495,19 +499,20 @@ class Editarproveedores(RegistroProveedorView, AuthenticatedView):
             return render_template('editar_proveedor.html', mensaje=f"Error al cargar el proveedores: {str(e)}")
 
     @LoginRequired.login_required
-    def post(self, prov_id=None):
+    def post(self, prov_id=''):
         try:
-            if prov_id is not None:
-                proveedor = Proveedores.query.get(prov_id)
+            if prov_id :
+                proveedor = Proveedores.query.filter_by(prov_Id=prov_id).first()
+                print(proveedor)
                 if proveedor:
-                    nueva_id = request.form.get('ID-PROVEEDORES')
+                    nuevo_id = request.form.get('ID-PROVEEDORES')
                     nuevo_nombre = request.form.get('Nombre-proveedores')
                     nuevo_ubicacion = request.form.get('Ubicacion_proveedores')
                     nuevo_contacto = request.form.get('Contacto_proveedores')
                     nuevo_producto = request.form.get('Producto_provedores')
                     
-                    if nueva_id:
-                        proveedor.prov_Id = nueva_id
+                    if nuevo_id:
+                        proveedor.prov_Id = nuevo_id
                     if nuevo_nombre:
                         proveedor.prov_Nombre = nuevo_nombre
                     if nuevo_ubicacion:
@@ -519,13 +524,13 @@ class Editarproveedores(RegistroProveedorView, AuthenticatedView):
                     
                     db.session.commit()
                     
-                    return redirect(url_for('main.proveedores', estado=1, mensaje="Actualizaste un suministro exitosamente"))
+                    return redirect(url_for('main.proveedores', estado=1, mensaje="Actualizaste un proveedor exitosamente",proveedor=proveedor))
                 else:
-                    return render_template('editar_proveedor.html',estado=0, mensaje="El suministro no se encontró en la base de datos")
+                    return render_template('editar_proveedor.html', mensaje="El proveedor no se encontró en la base de datos",proveedor=proveedor)
             else:
-                return render_template('editar_proveedor.html', estado=0, mensaje="No se proporcionó un ID de proveedor")
+                return render_template('editar_proveedor.html', estado=0, mensaje="No se proporcionó un ID de proveedor",proveedor=proveedor)
         except Exception as e:
-            return render_template('editar_proveedor.html', estado=0, mensaje=f"Error al editar el suministro: {str(e)}")
+            return render_template('editar_proveedor.html', estado=0, mensaje=f"Error al editar el proveedor: {str(e)}")
 class ProductoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = tienda_id

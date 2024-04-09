@@ -39,6 +39,11 @@
 <div id="editar-suministros">
     <h2>Editar suministros</h2>
     <form action="/editar-suministros/{{suministro.sum_Id}}" method="POST">
+
+        <label for="nombre-suministro">Nombre Producto:</label>
+        <div>
+            <input type="text" id="nombre-suministro" name="nombre-suministro" placeholder="{{ suministro. sum_Prod_Nom }}">
+        </div>
         <label for="cantidad-suministro">Cantidad:</label>
         <div>
             <input type="number" id="cantidad-suministro" name="cantidad-suministro" placeholder="{{ suministro.sum_Cantidad }}">
