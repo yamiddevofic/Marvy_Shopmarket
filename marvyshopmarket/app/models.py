@@ -112,29 +112,34 @@ class Proveedores(db.Model):
     prov_Nombre = db.Column(db.String(70))
     prov_Ubicacion = db.Column(db.String(100))
     prov_Contacto = db.Column(db.String(50))
+    prov_prod_nom = db.Column(db.String(500))
 
-    def __init__(self, id, nombre, ubicacion, contacto):
+    def __init__(self, id, nombre, ubicacion, contacto, productos):
         self.prov_Id = id
         self.prov_Nombre =nombre
-        self.prov_Ubicacion =ubicacion
-        self.prov_Contacto =contacto
+        self.prov_Ubicacion = ubicacion
+        self.prov_Contacto = contacto
+        self.prov_prod_nom = productos
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
     sum_Id = db.Column(db.BigInteger, primary_key=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
-    sum_Metodo_pago = db.Column(db.DateTime)
-    sum_Total = db.Column(db.DateTime)
+    sum_Metodo_pago = db.Column(db.String(100))  # Cambio aquí
+    sum_Total = db.Column(db.Float)  # Cambio aquí
+    sum_Prov_Nom = db.Column(db.String(65))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, cantidad, fecha, metodo_pago, total, tienda):
+    def __init__(self, id, cantidad, fecha, metodo_pago, total, proveedor, tienda):
         self.sum_Id = id
         self.sum_Cantidad = cantidad
         self.sum_Datetime = fecha
         self.sum_Metodo_pago = metodo_pago
         self.sum_Total = total
+        self.sum_Prov_Nom = proveedor
         self.tienda_Id = tienda
+
 
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
@@ -144,31 +149,15 @@ class SuministrosHasProductos(db.Model):
     productos_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
-
-    def __init__(self, suministro, tienda, producto, tendero, productos_tienda):
+    productos_prod_Nombre = db.Column(db.String(65))
+    
+    def __init__(self, suministro, tienda, producto,nombre_producto,tendero, productos_tienda):
         self.suministros_sum_Id = suministro
         self.suministros_tienda_Id = tienda
         self.productos_Id = producto
+        self.productos_prod_Nombre = nombre_producto
         self.productos_tendero_Id = tendero
         self.productos_tienda_Id = productos_tienda
-
-class SuministrosProveedores(db.Model):
-    __tablename__ = 'suministros_proveedores'
-    id = db.Column(db.BigInteger, primary_key=True)
-    sum_Id = db.Column(db.BigInteger,db.ForeignKey('suministros.sum_Id'))
-    tienda_Id = db.Column(db.BigInteger,db.ForeignKey('suministros.tienda_Id'))
-    prov_Id = db.Column(db.BigInteger,db.ForeignKey('proveedores.prov_Id'))
-    
-    __table_args__ = (
-        db.ForeignKeyConstraint(['sum_Id', 'tienda_Id'], ['suministros.sum_Id', 'suministros.tienda_Id']),
-        db.ForeignKeyConstraint(['prov_Id'], ['proveedores.prov_Id']),
-    )
-
-    def __init__(self, id, suministro, tienda, proveedor):
-         self.id = id
-         self.sum_Id = suministro
-         self.tienda_Id = tienda
-         self.prov_Id = proveedor
 
 class Tenderos(db.Model):
     __tablename__ = 'tenderos'

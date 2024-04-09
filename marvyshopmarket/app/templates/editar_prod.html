@@ -41,7 +41,7 @@
     <div  style="width: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center;border-radius: 50%;">
         <div><img src="data:image/png;base64,{{ imagen }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></div>
     </div>
-    <form action="/editar-producto/{{producto.Id}}" method="POST">
+    <form action="/editar-producto/{{producto.id}}" method="POST">
             <label for="nombre-prod">Nombre: </label>
             <div>
                 <input type="text" id="nombre-prod" name="nombre-prod" placeholder="{{producto.prod_Nombre}}">

@@ -1,17 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}Marvy Shopmarket | Registro de Proveedores{% endblock %}
+{% block title %}Marvy Shopmarket | Registrar suministro {% endblock %}
 {% block content %}
-
 {% if estado == 0 %}
     <p style="color: red" class="mensaje">{{ mensaje }}</p>
+    <script> 
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.proveedores') }}";
+            }, 3500); 
+        }
+        redirigirDespuesDeTiempo()
+    </script>
 {% elif estado == 1 %}
-    <p style="color: rgb(111, 255, 0)" class="mensaje">{{ mensaje }}</p>
-{% endif %}
-
+    <p style="color: rgb(111, 255, 0)" id="mensaje" class="mensaje">{{ mensaje }}</p>
+    
+    <script>
+        function redirigirDespuesDeTiempo() {
+            setTimeout(function() {
+                window.location.href = "{{ url_for('main.proveedores') }}";
+            }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+{% else %}
+<p id="mensaje"></p>
 <div class="title">
     <h1>Registro de Proveedores</h1>
 </div>
-
+{% endif %}
 <div class="formulario">
     <form method="post" action="/proveedores" enctype="multipart/form-data" id="form-suministro">
         <table>
@@ -36,35 +52,49 @@
                         <label>Contacto:</label>
                         <div><input type="text" placeholder="Teléfono" name="telefono-proveedor"></div>
                     </td>
+
+
+                    <td>
+                        <div class="botones-secundarios">
+                            <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <div class="botom-confirmar">
-            <button type="submit">Confirmar</button> <!-- Corrección de tipo de botón -->
-        </div>
+       
     </form>
-</div>
-<div>
-    <a href="/home"><button>Atrás</button></a>
 </div>
 <!-- Mostrar información de proveedores -->
 <div class="proveedores-info">
     <h2>Lista de proveedores</h2>
-        <table>
-            <tbody>
-                {% for proveedor in proveedores %}
-                <tr>
-                    <td>ID: {{ proveedor.prov_Id }}</td>
-                    <td>Nombre: {{ proveedor.prov_Nombre }}</td>
-                    <td>Ubicación: {{ proveedor.prov_Ubicacion }}</td>
-                    <td>Contacto: {{ proveedor.prov_Contacto }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-   
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>nombre</th>
+                <th>ubicacion</th>
+                <th>contacto</th>
+
+                <th  width="20">Editar/Eliminar</th></a>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            {% for proveedor in proveedores %}
+            <tr>
+                <td>ID: {{ proveedor.prov_Id }}</td>
+                <td>Nombre: {{ proveedor.prov_Nombre }}</td>
+                <td>Ubicación: {{ proveedor.prov_Ubicacion }}</td>
+                <td>Contacto: {{ proveedor.prov_Contacto }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-
+<form action="/home" method="GET">
+    <button>Atrás</button>
+</form>
 
 {% endblock %}

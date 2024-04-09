@@ -6,7 +6,7 @@
     <script> 
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.suministros') }}";
+                window.location.href = "{{ url_for('/suministros') }}";
             }, 3500); 
         }
         redirigirDespuesDeTiempo()
@@ -17,7 +17,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('main.suministros') }}";
+                window.location.href = "{{ url_for('/suministros') }}";
             }, 2000);   
         }
         redirigirDespuesDeTiempo()
@@ -51,7 +51,7 @@
                     </td>
                     <td>
                         <label>Metodo de pago: </label>
-                        <div><input placeholder="Nombre" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
+                        <div><input type="text" placeholder="Metodo de pago" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
                     </td>
                     <td>
                         <label>Total: </label>
@@ -59,21 +59,22 @@
                     </td>
                     <td>
                         <label>Tienda id: </label>
-                        <div> <input type="number" placeholder="Tienda id" name="tienda_id-producto-suministro" id="tienda_id-producto-suministro"> </div>  <!-- Cambio aquí -->
+                        <div> <input type="number" placeholder="Tienda id" name="tienda_id-producto-suministro" id="tienda_id-producto-suministro"> </div> 
+                    </td>
+
+                    <td>
+                        <div class="botones-secundarios">
+                            <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div class="botom-confirmar">
-            <button type="submit">Confirmar</button>
-        </div>
     </form>
-    <div class="botom-confirmar">
-        <a href="/home"><button>atrás</button></a>
-    </div>
 </div>
+
 <!-- Mostrar información de suministros -->
-<div class="suministros-info">
+<div class="suministros-info" style="grid-column: 1/-1;">
     <h2>Lista de Suministros</h2>
     <table>
         <thead>
@@ -84,8 +85,11 @@
                 <th>Método de pago</th>
                 <th>Total</th>
                 <th>Tienda ID</th>
+
+                <th  width="20">Editar/Eliminar</th></a>
             </tr>
         </thead>
+
         <tbody>
             {% for suministro in suministros %}
             <tr>
@@ -95,10 +99,19 @@
                 <td>{{ suministro.sum_Metodo_pago }}</td>
                 <td>{{ suministro.sum_Total }}</td>
                 <td>{{ suministro.tienda_Id }}</td>
+
+                <td>
+                    <a href="/editar-suministros/{{suministro.sum_Id }}" style="color: var(--claro-principal); cursor: pointer" class="editar-suministros"><i class="fa-solid fa-pen-to-square"></i></a>
+                </td>
             </tr>
+                
             {% endfor %}
         </tbody>
     </table>
 </div>
-
+<div style="grid-row: -1; grid-column: 2">
+    <form action="/home" method="GET" >
+        <input style="width: 100%;" type="submit" value="Atrás">
+    </form>
+</div>
 {% endblock %}
