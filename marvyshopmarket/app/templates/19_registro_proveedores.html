@@ -50,7 +50,12 @@
 
                     <td>
                         <label>Contacto:</label>
-                        <div><input type="text" placeholder="Teléfono" name="telefono-proveedor"></div>
+                        <div><input type="number" placeholder="Teléfono" name="telefono-proveedor"></div>
+                    </td>
+                    
+                    <td>
+                        <label>Nombre Producto:</label>
+                        <div><input type="text" placeholder="productos" name="proveedor_producto_nombre"></div>
                     </td>
 
 
@@ -75,8 +80,9 @@
                 <th>nombre</th>
                 <th>ubicacion</th>
                 <th>contacto</th>
+                <th>productos</th>
 
-                <th  width="20">Editar/Eliminar</th></a>
+                <th  width="20">Editar</th></a>
             </tr>
         </thead>
 
@@ -84,17 +90,24 @@
         <tbody>
             {% for proveedor in proveedores %}
             <tr>
-                <td>ID: {{ proveedor.prov_Id }}</td>
-                <td>Nombre: {{ proveedor.prov_Nombre }}</td>
-                <td>Ubicación: {{ proveedor.prov_Ubicacion }}</td>
-                <td>Contacto: {{ proveedor.prov_Contacto }}</td>
+                <td>{{ proveedor.prov_Id }}</td>
+                <td>{{ proveedor.prov_Nombre }}</td>
+                <td>{{ proveedor.prov_Ubicacion }}</td>
+                <td>{{ proveedor.prov_Contacto }}</td>
+                <td>{{ proveedor.prov_prod_nom }}</td>
+
+                <td>
+                    <a href="/editar-proveedores/{{proveedor.prov_Id }}" style="color: var(--claro-principal); cursor: pointer" class="editar-proveedores"><i class="fa-solid fa-pen-to-square"></i></a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<form action="/home" method="GET">
-    <button>Atrás</button>
-</form>
+<div style="grid-row: -1; grid-column: 2">
+    <form action="/home" method="GET" >
+        <input style="width: 100%;" type="submit" value="Atrás">
+    </form>
+</div>
 
 {% endblock %}

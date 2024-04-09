@@ -420,7 +420,7 @@ class EditarSuministro(RegistroSuministroView, AuthenticatedView):
             return render_template('editar_suministros.html', estado=0, mensaje=f"Error al editar el suministro: {str(e)}")
 
 
-class RegistroProveedorView(MethodView):
+class RegistroProveedorView(AuthenticatedView):
     def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
             print("Usuario autenticado")
@@ -451,8 +451,9 @@ class RegistroProveedorView(MethodView):
             nombre = request.form.get('nombre-proveedor')
             ubicacion = request.form.get('ubicacion-proveedor')
             contacto = request.form.get('telefono-proveedor')
+            productos = request.form.get('proveedor_producto_nombre')
 
-            if not id or not nombre or not ubicacion or not contacto:
+            if not id or not nombre or not ubicacion or not contacto or not productos:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             proveedor_existente = Proveedores.query.filter_by(prov_Id=id).first()
@@ -461,7 +462,7 @@ class RegistroProveedorView(MethodView):
                 return {'state': False, 'message': 'Ya existe un proveedor con ese ID'}
             else:
                 print("Intentando registrar proveedor...")
-                new_proveedor = Proveedores(id, nombre, ubicacion, contacto)
+                new_proveedor = Proveedores(id, nombre, ubicacion, contacto,  productos )
                 db.session.add(new_proveedor)
                 db.session.commit()
                 print("Proveedor registrado exitosamente")
@@ -477,9 +478,54 @@ class RegistroProveedorView(MethodView):
         except Exception as e:
             print(f"Error al renderizar proveedores: {str(e)}")
             return render_template('19_registro_proveedores.html', estado=0, mensaje=f"Error: {str(e)}")
+# editar proveedor 
+class Editarproveedores(RegistroProveedorView, AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, prov_id=None):
+        try:
+            if prov_id is not None:
+                proveedor = Proveedores.query.filter_by(prov_Id=prov_id).first()
+                if proveedor:
+                    return render_template('editar_proveedor.html', proveedor=proveedor)
+                else:
+                    return render_template('editar_proveedor.html', mensaje="El proveedor no se encontró en la base de datos")
+            else:
+                return render_template('editar_proveedor.html', mensaje="No se proporcionó un ID de proveedor")
+        except Exception as e:
+            return render_template('editar_proveedor.html', mensaje=f"Error al cargar el proveedores: {str(e)}")
 
-
-
+    @LoginRequired.login_required
+    def post(self, prov_id=None):
+        try:
+            if prov_id is not None:
+                proveedor = Proveedores.query.get(prov_id)
+                if proveedor:
+                    nueva_id = request.form.get('ID-PROVEEDORES')
+                    nuevo_nombre = request.form.get('Nombre-proveedores')
+                    nuevo_ubicacion = request.form.get('Ubicacion_proveedores')
+                    nuevo_contacto = request.form.get('Contacto_proveedores')
+                    nuevo_producto = request.form.get('Producto_provedores')
+                    
+                    if nueva_id:
+                        proveedor.prov_Id = nueva_id
+                    if nuevo_nombre:
+                        proveedor.prov_Nombre = nuevo_nombre
+                    if nuevo_ubicacion:
+                        proveedor.prov_Ubicacion = nuevo_ubicacion
+                    if nuevo_contacto:
+                        proveedor.prov_Contacto = nuevo_contacto
+                    if nuevo_producto:
+                        proveedor.prov_prod_nom = nuevo_producto
+                    
+                    db.session.commit()
+                    
+                    return redirect(url_for('main.proveedores', estado=1, mensaje="Actualizaste un suministro exitosamente"))
+                else:
+                    return render_template('editar_proveedor.html',estado=0, mensaje="El suministro no se encontró en la base de datos")
+            else:
+                return render_template('editar_proveedor.html', estado=0, mensaje="No se proporcionó un ID de proveedor")
+        except Exception as e:
+            return render_template('editar_proveedor.html', estado=0, mensaje=f"Error al editar el suministro: {str(e)}")
 class ProductoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = tienda_id
@@ -1262,3 +1308,4 @@ main_bp.add_url_rule('/eliminar-gasto/<int:gasto_id>', view_func=EliminarGasto.a
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
 main_bp.add_url_rule('/editar-suministros/<int:sum_id>', view_func=EditarSuministro.as_view('editar-suministros'))
+main_bp.add_url_rule('/editar-proveedores/<int:prov_id>', view_func=Editarproveedores.as_view('editar-proveedores'))

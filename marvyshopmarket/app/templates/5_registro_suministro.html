@@ -6,7 +6,7 @@
     <script> 
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/suministros') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 3500); 
         }
         redirigirDespuesDeTiempo()
@@ -17,7 +17,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/suministros') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 2000);   
         }
         redirigirDespuesDeTiempo()
@@ -86,7 +86,7 @@
                 <th>Total</th>
                 <th>Tienda ID</th>
 
-                <th  width="20">Editar/Eliminar</th></a>
+                <th  width="20">Editar</th></a>
             </tr>
         </thead>
 

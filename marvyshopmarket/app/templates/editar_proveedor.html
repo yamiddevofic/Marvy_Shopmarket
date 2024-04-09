@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Ajustes perfil {% endblock %}
+{% block content %}
+{% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.proveedores') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+{% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.proveedores') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+{% else %}
+<div class="mensaje">
+    <p class="mensaje-content">Hola {{mensaje}}</p>
+</div>
+{% endif %}
+<div class="logo" id="logo">
+    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
+</div>
+<div id="editar-proveedores">
+    <h2>Editar proveedores</h2>
+    <form action="/editar-proveedores/{{ proveedor.prov_Id }}" method="POST">
+        <label for="ID-PROVEEDORES">ID:</label>
+        <div>
+            <input type="number" id="ID-PROVEEDORES" name="ID-PROVEEDORES" placeholder="{{ proveedor.prov_Id }}">
+        </div>
+        <label for="Nombre-proveedores">Nombre:</label>
+        <div>
+            <input type="text" id="Nombre-proveedores" name="Nombre-proveedores" placeholder="{{ proveedor. prov_Nombre }}">
+        </div>
+        <label for="Ubicacion_proveedores">Ubicacion:</label>
+        <div>
+            <input type="text" id="Ubicacion_proveedores" name="Ubicacion_proveedores" placeholder="{{ proveedor.prov_Ubicacion }}">
+        </div>
+        <label for="Contacto_proveedores">Contacto:</label>
+        <div>
+            <input type="number" id="Contacto_proveedores" name="Contacto_proveedores" placeholder="{{ proveedor.prov_Contacto }}">
+        </div>
+        <label for="Producto_provedores">Producto:</label>
+        <div>
+            <input type="text" id="Producto_provedores" name="Producto_provedores" placeholder="{{ proveedor. prov_prod_nom }}">
+        </div>
+        
+        <input type="submit" value="Editar suministros" style="background-color: var(--btn-claro-continuar); cursor: pointer;">
+    </form>
+    
+    <a href="/proveedores" style="width: 76%;"><button>Atrás</button></a>
+</div>
+
+{% endblock %}
