@@ -953,28 +953,9 @@ class Resultado(Buscar,PaginaPrincipalView):
         else:
             return super().renderizar_principal_2(state=1,resultados=resultados)
 
-import pdfkit
-from weasyprint import HTML
-@main_bp.route('/generar_factura', methods=['GET', 'POST'])
-def generar_pdf():
-    # Datos dinámicos para reemplazar en la plantilla
-    data = {
-        'nombre_alumno': 'Juan Perez',
-        'curso': 'Python Básico'
-    }
-    
-    # Renderizar la plantilla HTML con los datos
-    rendered_html = render_template('7_factura.html', data=data)
-    
-    # Convertir el HTML a PDF
-    pdfkit.from_string(rendered_html, 'output.pdf')
-
-    # Devolver el PDF al cliente
-    return send_file('output.pdf', as_attachment=True)
 #====================================================================================================
         
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
-
 @LoginRequired.login_required
 def generar_informe():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -985,7 +966,6 @@ def generar_informe():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/ajustes-generales', methods=['GET', 'POST'])
-
 @LoginRequired.login_required
 def ajustes_generales():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
