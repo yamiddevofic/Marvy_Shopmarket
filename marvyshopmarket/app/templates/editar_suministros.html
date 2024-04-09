@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Ajustes perfil {% endblock %}
+{% block content %}
+{% if estado==1 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+        
+    </div>        
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.suministros') }}";
+        }, 2000);   
+        }
+        redirigirDespuesDeTiempo()
+    </script>
+{% elif estado==0 %}
+    <div class="mensaje" style="display: flex;">
+        <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+    </div>
+                
+    <script>
+        function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.suministros') }}";
+        }, 2000);   
+        }
+    redirigirDespuesDeTiempo()
+    </script>
+
+{% else %}
+<div class="mensaje">
+    <p class="mensaje-content">Hola {{mensaje}}</p>
+</div>
+{% endif %}
+<div class="logo" id="logo">
+    <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
+</div>
+<div id="editar-suministros">
+    <h2>Editar suministros</h2>
+    <form action="/editar-suministros/{{suministro.sum_Id}}" method="POST">
+        <label for="cantidad-suministro">Cantidad:</label>
+        <div>
+            <input type="number" id="cantidad-suministro" name="cantidad-suministro" placeholder="{{ suministro.sum_Cantidad }}">
+        </div>
+        <label for="fecha-suministro">Fecha:</label>
+        <div>
+            <input type="date" id="fecha-suministro" name="fecha-suministro" placeholder="{{ suministro.sum_Datetime }}">
+        </div>
+        <label for="metodo-pago-suministro">Método de pago:</label>
+        <div>
+            <input type="text" id="metodo-pago-suministro" name="metodo-pago-suministro" placeholder="{{ suministro.sum_Metodo_pago }}">
+        </div>
+        <label for="total-suministro">Total:</label>
+        <div>
+            <input type="number" id="total-suministro" name="total-suministro" placeholder="{{ suministro.sum_Total }}">
+        </div>
+        
+        <input type="submit" value="Editar suministros" style="background-color: var(--btn-claro-continuar); cursor: pointer;">
+    </form>
+    
+    <a href="/suministros" style="width: 76%;"><button>Atrás</button></a>
+</div>
+
+{% endblock %}

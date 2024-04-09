@@ -156,14 +156,17 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`productos` (
 -- Table `marvy_shopmarket`.`proveedores`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`proveedores` (
+ `id` BIGINT NOT NULL AUTO_INCREMENT ,
   `prov_Id` VARCHAR(50) NULL DEFAULT NULL,
   `prov_Nombre` VARCHAR(70) NULL DEFAULT NULL,
   `prov_Ubicacion` VARCHAR(100) NULL DEFAULT NULL,
   `prov_Contacto` VARCHAR(50) NULL DEFAULT NULL,
-  `id` BIGINT NOT NULL,
+   `prov_prod-nom` VARCHAR(50) NULL DEFAULT NULL,
+ 
   PRIMARY KEY (`id`));
-
-
+  
+DROP TABLE proveedores;
+DROP TABLE suministros_has_proveedores;
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros`
 -- -----------------------------------------------------
@@ -173,8 +176,8 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros` (
   `sum_Datetime` DATETIME NULL DEFAULT NULL,
   `sum_Metodo_pago` VARCHAR(45) NULL DEFAULT NULL,
   `sum_Total` FLOAT NULL DEFAULT NULL,
+  `sum_Prov_Nom` VARCHAR(65) NULL DEFAULT NULL,
   `tienda_Id` BIGINT NOT NULL,
-  `id` VARCHAR(15) NULL DEFAULT NULL,
   PRIMARY KEY (`sum_Id`, `tienda_Id`),
     FOREIGN KEY (`tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
@@ -190,6 +193,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros_has_productos` (
   `productos_Id` BIGINT NOT NULL,
   `productos_tendero_Id` BIGINT NOT NULL,
   `productos_tienda_Id` BIGINT NOT NULL,
+  `productos_prod_Nombre` VARCHAR(65) NOT NULL,
   PRIMARY KEY (`suministros_sum_Id`, `suministros_tienda_Id`, `productos_Id`, `productos_tendero_Id`, `productos_tienda_Id`),
     FOREIGN KEY (`suministros_sum_Id` , `suministros_tienda_Id`)
     REFERENCES `marvy_shopmarket`.`suministros` (`sum_Id` , `tienda_Id`)
@@ -199,25 +203,6 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros_has_productos` (
     REFERENCES `marvy_shopmarket`.`productos` (`Id` , `tendero_Id` , `tienda_Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-
-
-
--- -----------------------------------------------------
--- Table `marvy_shopmarket`.`suministros_has_proveedores`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros_has_proveedores` (
-  `Id` BIGINT NOT NULL,
-  `sum_Id` BIGINT NOT NULL,
-  `tienda_Id` BIGINT NOT NULL,
-  `prov_Id` BIGINT NOT NULL,
-  PRIMARY KEY (`Id`, `sum_Id`, `tienda_Id`, `prov_Id`),
-    FOREIGN KEY (`prov_Id`)
-    REFERENCES `marvy_shopmarket`.`proveedores` (`id`),
-    FOREIGN KEY (`sum_Id` , `tienda_Id`)
-    REFERENCES `marvy_shopmarket`.`suministros` (`sum_Id` , `tienda_Id`));
-
-
-
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`ventas`
 -- -----------------------------------------------------
@@ -260,3 +245,4 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`ventas_has_productos` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- Holi
