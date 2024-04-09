@@ -7,7 +7,7 @@ import json
 import socket
 from threading import Thread
 from functools import wraps
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, current_app
+from flask import Blueprint, render_template, request,send_file,redirect, url_for, jsonify, make_response,session, current_app
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
@@ -904,7 +904,25 @@ class Resultado(Buscar,PaginaPrincipalView):
             return super().renderizar_principal_2(state=1,resultados=resultados)
         else:
             return super().renderizar_principal_2(state=1,resultados=resultados)
-        
+
+import pdfkit
+from weasyprint import HTML
+@main_bp.route('/generar_factura', methods=['GET', 'POST'])
+def generar_pdf():
+    # Datos dinámicos para reemplazar en la plantilla
+    data = {
+        'nombre_alumno': 'Juan Perez',
+        'curso': 'Python Básico'
+    }
+    
+    # Renderizar la plantilla HTML con los datos
+    rendered_html = render_template('7_factura.html', data=data)
+    
+    # Convertir el HTML a PDF
+    pdfkit.from_string(rendered_html, 'output.pdf')
+
+    # Devolver el PDF al cliente
+    return send_file('output.pdf', as_attachment=True)
 #====================================================================================================
         
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
