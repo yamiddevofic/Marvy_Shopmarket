@@ -139,8 +139,7 @@ class Suministros(db.Model):
         self.sum_Total = total
         self.sum_Prov_Nom = proveedor
         self.tienda_Id = tienda
-
-
+        
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
 
