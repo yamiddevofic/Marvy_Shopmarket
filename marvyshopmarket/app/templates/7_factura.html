@@ -46,21 +46,21 @@
                 <h1>Factura de venta</h1>
                 <a><button style="padding: 2%;">confirmar</button></a>
                 <div class="formulario" style="width: 100%;">
-                    <form action="/ventas" method="post">
+                    <form action="/ventas/factura_ventas" method="post">
                         <table>
                             <thead>
                                     <tr>
                                         <td>
                                             <div><label for="producto_venta">Producto: </label></div>
-                                            <input type="text" id="producto_venta" clas="input_fventa" placeholder="nombre del producto">
+                                            <input type="text" id="producto_venta" name="producto_venta" class="input_fventa" placeholder="nombre del producto">
                                         </td>
                                         <td>
                                             <div><label>Cantidad: </label></div>
-                                            <input type="text" id="venta_cantidad" class="input_fventa"  placeholder="cantidad vendida">
+                                            <input type="text" id="venta_cantidad" name="venta_cantidad" class="input_fventa"  placeholder="cantidad vendida">
                                         </td>
                                         <td>
                                             <div><label>Método de pago: </label></div>
-                                            <input type="text" id="venta_metodo" class="input_fventa" placeholder="Método de pago">
+                                            <input type="text" id="venta_metodo" name="venta_metodo" class="input_fventa" placeholder="Método de pago">
                                         </td>
                                         <td>
                                             <button type="submit">Regitrar producto</button>

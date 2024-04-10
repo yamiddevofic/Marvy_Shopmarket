@@ -100,11 +100,13 @@ class SignUpView(MethodView):
 class FacturaVentas(AuthenticatedView, MethodView):
     @LoginRequired.login_required
     def get(self, estado="", mensaje=""):
+        print('entré a get en factura')
         if self.esta_autenticado():
             return self.renderizar_factura(estado, mensaje)
         else:
             return self.renderizar_login()
     def post(self):
+        print('entré a post en factura')
         try:
             tienda_id = session['tienda_Id']
             producto = request.form['producto_venta']
@@ -115,13 +117,21 @@ class FacturaVentas(AuthenticatedView, MethodView):
             if not cantidad or not metodo or not producto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
             
+            info_producto = Productos.query.filter_by(prod_Nombre=producto).all()
+           
+            for producto in info_producto:
+                print(producto.prod_Nombre," ",cantidad," ",producto.prod_TotalPrecio," ",str(float(producto.prod_TotalPrecio)*int(cantidad)))
+            return render_template('8_resultado.html')    
+        
         except IntegrityError as e:
             db.session.rollback()
             return {'state': False, 'message': f"Error de integridad referencial: {str(e)}"}
         except Exception as e:
             db.session.rollback()
-            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}    
-        
+            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
+            
+    def renderizar_factura(self,estado='', mensaje=''):
+        return render_template('7_factura.html', estado=estado, mensaje=mensaje)
 class VentaView(AuthenticatedView):
     def __init__(self, ventas=[]):
         self.ventas = ventas
@@ -134,7 +144,7 @@ class VentaView(AuthenticatedView):
             return self.renderizar_login()
         
     def post(self):
-        print("Entré a post")
+        print("Entré a post de ventas")
         try:
             if self.registrar_venta()['state']:
                 return self.get(estado=1, mensaje="Registro de venta exitoso")
@@ -616,7 +626,7 @@ class EditarProducto(ProductoView,AuthenticatedView):
     def get(self, producto_id):
         # Aquí puedes hacer lo que necesites con el ID del producto
         # Por ejemplo, cargar los detalles del producto con el ID proporcionado
-        product = Productos.query.filter_by(prod_Id=producto_id).first()
+        product = Productos.query.filter_by(Id=producto_id).first()
         img_codificada = base64.b64encode(product.prod_Img).decode('utf-8')
         return render_template('editar_prod.html', producto=product, imagen=img_codificada)
 
@@ -1131,4 +1141,4 @@ main_bp.add_url_rule('/editar-gasto/<int:gasto_id>', view_func=EditarGasto.as_vi
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
 main_bp.add_url_rule('/editar-suministros/<int:sum_id>', view_func=EditarSuministro.as_view('editar-suministros'))
-main_bp.add_url_rule('/factura_ventas', view_func=FacturaVentas.as_view('factura_ventas'))
+main_bp.add_url_rule('/ventas/factura_ventas', view_func=FacturaVentas.as_view('ventas/factura_ventas'))
