@@ -85,19 +85,18 @@
             </thead>
             <tbody>
                 <!-- HTML y Jinja -->
-             {% for venta in resultado %}
-                <tr id="registro_{{ venta.id }}">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ venta.id_producto }}</td>
-                    <td>{{ venta.nombre }}</td>
-                    <td>{{ venta.fecha }}</td>
-                    <td>{{ venta.cantidad_vendido }}</td>
-                    <td>{{ venta.precio }}</td>
-                    <td>{{ venta.total }}</td>
-                    <td>
-                        <a href="/editar-venta/{{ venta.id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
-                    </td>
-                </tr>
+                {% for venta, producto in zip(ventas, ventas_has_productos) %}
+                    <tr id="registro_{{ venta.venta_Id }}">
+                        <td>{{ producto.Id }}</td>
+                        <td>{{ venta.Nombre }}</td>
+                        <td>{{ venta.venta_Total }}</td>
+                        <td>{{ venta.venta_Cantidad }}</td>
+                        <td>{{ venta.total }}</td>
+                        <td>{{ venta.venta_Metodo }}</td>
+                        <td>
+                            <a href="/editar-venta/{{ venta.id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
+                        </td>
+                    </tr>
              {% endfor %}
             </tbody>
         </table>

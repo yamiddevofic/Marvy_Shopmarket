@@ -196,7 +196,7 @@ class Ventas(db.Model):
     venta_Cantidad = db.Column(db.Integer)
     venta_Metodo = db.Column(db.String(45))
     venta_Datetime = db.Column(db.DateTime)
-    venta_Pago = db.Column(db.Float)
+    venta_Total = db.Column(db.Float)
     tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
 
@@ -214,7 +214,7 @@ class Ventas(db.Model):
         self.venta_Cantidad = cantidad
         self.venta_Metodo = metodo
         self.venta_Datetime = datetime
-        self.venta_Pago = pago
+        self.venta_Total = pago
         self.tendero_Id = tendero_id
         self.tienda_Id = tienda_id
 class VentasHasProductos(db.Model):

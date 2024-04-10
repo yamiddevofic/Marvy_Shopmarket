@@ -99,16 +99,17 @@ class SignUpView(MethodView):
         return render_template('2_sign_up.html')
 class FacturaVentas(AuthenticatedView, MethodView):
     @LoginRequired.login_required
-    def get(self, estado="", mensaje=""):
+    def get(self,vp=[],ventas=[], estado="", mensaje=""):
         print('entré a get en factura')
         if self.esta_autenticado():
-            return self.renderizar_factura(estado, mensaje)
+            return self.renderizar_factura(vp,ventas,estado, mensaje)
         else:
             return self.renderizar_login()
     def post(self):
         print('entré a post en factura')
-        try:
-            tienda_id = session['tienda_Id']
+        try: 
+            tienda_id = int(session['tienda_Id'])
+            adm_id = int(session['adm_Id'])
             producto = request.form['producto_venta']
             cantidad = request.form.get('venta_cantidad')
             metodo = request.form.get('venta_metodo')
@@ -118,10 +119,28 @@ class FacturaVentas(AuthenticatedView, MethodView):
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
             
             info_producto = Productos.query.filter_by(prod_Nombre=producto).all()
-           
+
+            ventaf=[]
+                        
             for producto in info_producto:
+                new_venta = Ventas(cantidad, metodo, fecha,(float(producto.prod_TotalPrecio) * int(producto.prod_Cantidad)),adm_id,tienda_id)
+                
+                
                 print(producto.prod_Nombre," ",cantidad," ",producto.prod_TotalPrecio," ",str(float(producto.prod_TotalPrecio)*int(cantidad)))
-            return render_template('8_resultado.html')    
+
+            db.session.add(new_venta)
+            db.session.commit()
+            
+            print(ventaf)  
+            
+            id_venta = new_venta.venta_Id
+            
+            nueva_relacion = VentasHasProductos(id_venta,adm_id,tienda_id,producto.Id,adm_id,tienda_id)
+            
+            db.session.add(nueva_relacion)
+            db.session.commit()           
+             
+            return self.get(vp=nueva_relacion,ventas=ventaf,estado=1, mensaje="Registro de venta exitoso")    
         
         except IntegrityError as e:
             db.session.rollback()
@@ -130,8 +149,13 @@ class FacturaVentas(AuthenticatedView, MethodView):
             db.session.rollback()
             return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
             
-    def renderizar_factura(self,estado='', mensaje=''):
-        return render_template('7_factura.html', estado=estado, mensaje=mensaje)
+    def renderizar_factura(self,vp=[],ventas=[],estado='', mensaje=''):
+        ventas=db.session.query(Ventas).all()
+        vp = VentasHasProductos.query.all()
+        print(ventas)
+        print(vp)
+        return render_template('7_factura.html',ventas_has_productos=vp,ventas= ventas, estado=estado, mensaje=mensaje)
+    
 class VentaView(AuthenticatedView):
     def __init__(self, ventas=[]):
         self.ventas = ventas
