@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustentación ADSO</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+        #contenedor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            background: black;
+        }
+        #reloj {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        #dias, #horas, #minutos, #segundos {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="contenedor">
+        <div id="reloj">
+            <span id="dias">00</span>d :
+            <span id="horas">00</span>h :
+            <span id="minutos">00</span>m :
+            <span id="segundos">00</span>s
+        </div>
+    </div>
+    <script>
+        const fechaObjetivo = new Date("2024-04-12T07:30:00");
+        const actualizarReloj = () => {
+            const ahora = new Date();
+            const diferencia = fechaObjetivo - ahora;
+            const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+            document.getElementById("dias").textContent = dias.toString().padStart(2, "0");
+            document.getElementById("horas").textContent = horas.toString().padStart(2, "0");
+            document.getElementById("minutos").textContent = minutos.toString().padStart(2, "0");
+            document.getElementById("segundos").textContent = segundos.toString().padStart(2, "0");
+        };
+        setInterval(actualizarReloj, 1000);
+    </script>
+</body>
+</html>

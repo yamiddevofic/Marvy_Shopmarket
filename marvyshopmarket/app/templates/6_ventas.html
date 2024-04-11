@@ -44,98 +44,41 @@
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
 <div class="registro" id="registro-ventas" style="margin-top: -0.5%;">
-    <div class="title">
-        <h1 style="font-size: 2rem;">Registro de Venta</h1>
-    </div>
-    
-    <a href="/eliminar-todas-las-ventas" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i> Eliminar ventas</a>
+        
+        <div class="title" style="display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom: 2%;">
+            <div>
+                <form action="/home" method="GET">
+                    <button>Cancelar</button>
+                </form>
+            </div>
+            <h1 style="font-size: 2rem;">Registro de Venta</h1>
+            <div class="go-factura" style="width: 100%; margin-top: 2%;">
+                <a href="/ventas/factura_ventas"><input type="button" value="Nueva factura"></a>
+            </div>
+        </div>
 
-    <div class="formulario" style="width: 100%;">
-        <form style="font-size: 0.9rem;" method="post" action="/ventas" enctype="multipart/form-data" id="form-ventas">
-            <table style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td>
-                            <label>Id del del producto: </label>
-                            <div><input type="number" placeholder="Id producto" id="id-producto-venta" name="id-producto-venta" class="id-producto-venta"></div>
-                        </td>
-                        <td>
-                            <label>Nombre del producto: </label>
-                            <div><input placeholder="Nombre del producto" id="nombre-producto-venta" name="nombre-producto-venta"></div>
-                        </td>
-                        <td>
-                            <label>Cantidad: </label>
-                            <div><input type="number" placeholder="Cantidad del producto" name="cantidad-producto-vendido" id="cantidad-producto-vendido"></div>
-                        </td>
-                        <td>
-                            <label>Precio: </label>
-                            <div>$ <input type="number" placeholder="Precio del producto" id="precio-producto-venta" name="precio-producto-venta"></div>
-                        </td>
-                        <td>
-                            <label>Metodo de Pago: </label>
-                            <div><input type="text" placeholder="Metodo de pago" name="metodo-pago-vendido" id="metodo-pago-vendido"></div>
-                        </td>
-                        <td>
-                            <div class="botones-secundarios">
-                                <button type="submit" class="btn-submit" style="background: none; border: none; cursor: pointer;"><i class="fa-solid fa-floppy-disk" style="color: green; font-size: 1.3rem;"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- <div class="botones-secundario">
-                <button type="submit" class="btn-submit">Confirmar</button>
-            </div> -->
-        </form>
-    </div>
     <div style="grid-column: 1/-1">
         <table style="width: 100%;">
             <thead>
                 <tr>
-                    <th>Id venta</th>
-                    <th>Id producto</th>
-                    <th>Nombre</th>
-                    <th>Fecha y Hora Venta</th>
-                    <th>Cantidad Vendido</th>
-                    <th>Precio Unitario</th>
-                    <th>Total</th>
-                    <th  width="20">Editar/Eliminar</th>
+                    <th>Id factura</th>
+                    <th>Fecha y hora de factura</th>
+                    <th>Precio</th>
+                    <th>Método de pago</th>
+                    <th  width="20">Editar</th>
                     <!-- <th  width="80">Imagen</th> -->
                    
                 </tr>
     
             </thead>
             <tbody>
-                    <!-- HTML y Jinja -->
-            {% for venta in resultado %}
-                <tr id="registro_{{ venta.id }}">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ venta.id_producto }}</td>
-                    <td>{{ venta.nombre }}</td>
-                    <td>{{ venta.fecha }}</td>
-                    <td>{{ venta.cantidad_vendido }}</td>
-                    <td>{{ venta.precio }}</td>
-                    <td>{{ venta.total }}</td>
-                    <td>
-                        <a href="/editar-venta/{{ venta.id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="/eliminar-venta/{{ venta.id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-venta"><i class="fas fa-trash-alt"></i></a>
-                    </td>
-                </tr>
-            {% endfor %}
+        
+         
 
-                </tbody>
-            </table>
-            <div style="padding: 2%; background-color: none; display: flex; justify-content: center; align-items: center;">
-                <!-- <div style="cursor:pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="background-color: var(--btn-oscuro-continuar); color: var(--blanco); padding: 1%;">Producto más vendido: {{total_ventas}}</p></div>
-                <div style="cursor:pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;"><p style="background-color: var(--btn-claro-cancelar); color: var(--blanco); padding: 1%;">Producto menos vendido: {{total_ventas}}</p></div> -->
-                <!-- {% if resultado %}
-                    {% set ultimo_item = resultado[-1] %}
-                    <div style="cursor:pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;"><p style="background-color: var(--claro-secundario-2); color: var(--negro); padding: 1%;">Total de ventas: ${{ultimo_item.total_ventas}}</p></div>
-                {% endif %} -->
-            </div>
+            </tbody>
+        </table>
+        <div style="padding: 2%; background-color: none; display: flex; justify-content: center; align-items: center;">
+        </div>
     </div>
-    <form action="/home" method="GET">
-        <button>Cancelar</button>
-    </form>
 </div>
 {% endblock %}

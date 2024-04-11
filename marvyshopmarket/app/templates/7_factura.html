@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
+{% block content %}
+{% if estado==1 %}
+
+<div class="mensaje" style="display: flex;">
+    <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+    
+</div>        
+<script>
+    // const mensajes = document.getElementsByClassName('mensaje');
+
+    function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = '{{ url_for("main.ventas/factura_ventas") }}';
+        }, 2000);   
+    }
+
+    redirigirDespuesDeTiempo();
+</script>
+{% elif estado==0 %}
+<div class="mensaje" style="display: flex;">
+    <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+</div>
+            
+<script>
+    // const mensajes2 = document.getElementsByClassName('mensaje');
+
+    function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = '{{ url_for("main.ventas/factura_ventas") }}';
+        }, 2000);   
+    }
+
+    redirigirDespuesDeTiempo();
+</script>
+
+{% else %}
+<div class="mensaje">
+    <p class="mensaje-content">{{mensaje}}</p>
+</div>
+{% endif %}
+<div id="container_facturav" style="grid-column: 1/-1;grid-row: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; padding: 2%; justify-content: center;">
+            <div style="grid-column: 1/-1; display: grid; grid-template-columns: grid; grid-template-columns: 1fr 1fr 1fr;">
+                <a href="/ventas"><button style="padding: 2%;">cancelar</button></a>
+                <h1>Factura de venta</h1>
+                <form action="/ventas/factura_ventas/venta_registrada/{{ventas.venta_Id}}" method="post"><button style="padding: 2%;">confirmar</button></form>
+                <div class="formulario" style="width: 100%;">
+                    <form action="/ventas/factura_ventas" method="post">
+                        <table>
+                            <thead>
+                                    <tr>
+                                        <td>
+                                            <div><label for="producto_venta">Producto: </label></div>
+                                            <input type="text" id="producto_venta" name="producto_venta" class="input_fventa" placeholder="nombre del producto">
+                                        </td>
+                                        <td>
+                                            <div><label>Cantidad: </label></div>
+                                            <input type="text" id="venta_cantidad" name="venta_cantidad" class="input_fventa"  placeholder="cantidad vendida">
+                                        </td>
+                                        <td>
+                                            <div><label>Método de pago: </label></div>
+                                            <input type="text" id="venta_metodo" name="venta_metodo" class="input_fventa" placeholder="Método de pago">
+                                        </td>
+                                        <td>
+                                            <button type="submit">Regitrar producto</button>
+                                        </td>
+                                    </tr>
+                            </thead>
+                        </table>
+                    </form>
+                </div>
+            </div>       
+    <div class="body_factura" style="grid-row: 2; grid-column: 1/-1;">
+        <div>
+            <p style="padding:0.5%;">{{alert}}</p>
+        </div> 
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Nombre del producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad vendida</th>
+                <th>Método de pago</th>
+                <th>Editar/Eliminar</th>
+                <th>Precio Total</th>
+            </thead>
+            <tbody>
+                {% for venta, venta_producto, producto in ventas %}
+                    
+                    <tr id="registro_{{ venta.venta_Id }}"> 
+                        <td>{{ producto.Id }}</td>
+                        <td>{{ producto.prod_Nombre }}</td>
+                        <td>${{ "{:,.2f}".format(producto.prod_TotalPrecio)}}</td>
+                        <td>{{ venta.venta_Cantidad }}</td>
+                        <td>{{ venta.venta_Metodo }}</td>
+                        <td>
+                            <a href="/editar-venta/{{ venta.venta_Id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
+                            
+                            <a href="/eliminar-venta/{{ venta.venta_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-venta"><i class="fas fa-trash-alt"></i></a>
+                    
+                        </td>
+                        <td>${{  "{:,.2f}".format(venta.venta_Total) }}</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <td colspan="6"></td>
+                        <td colspan="7"><div style="display: flex; justify-content: center;margin-right: 2%;"><h2>Total Factura: <span style="color: rgb(25, 189, 25)">${{total}}</span></h2></div></td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

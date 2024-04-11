@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"id": 6, "nombre": "coco", "cantidad_vendido": 43, "cantidad_total": 0, "id_producto": 5, "fecha": "2024-04-10T20:51:35", "precio": 3000.0, "total": 129000, "total_ventas": 139000}
+=======
+{"id": 6, "nombre": "Arroz", "cantidad_vendido": 3, "cantidad_total": 23, "id_producto": 6, "fecha": "2024-04-11T05:29:45", "precio": 5175.0, "total": 15525, "total_ventas": 29025}
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98

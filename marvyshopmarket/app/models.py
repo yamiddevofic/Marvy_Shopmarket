@@ -35,20 +35,22 @@ class Caja(db.Model):
          self.caja_Egresos = egresos
          self.caja_Total = total
          self.tienda_Id = tienda
-
 class Factura(db.Model):
     __tablename__ = 'factura'
-    fac_Id = db.Column(db.BigInteger, primary_key=True)
+    fac_Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     fac_Datetime = db.Column(db.DateTime)
     fac_Tipo = db.Column(db.String(45))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
+    # Este documento asume que es un blob de datos, como un PDF
+    fac_Doc = db.Column(db.LargeBinary)
+    # Relación para acceder a las ventas desde la factura
+    ventas = db.relationship('Ventas', backref='factura', lazy=True)
 
-    def __init__(self, id, fecha, tipo, tienda):
-         self.fac_Id = id
-         self.fac_Datetime = fecha
-         self.fac_Tipo = tipo
-         self.tienda_Id = tienda
-
+    def __init__(self, fac_Datetime, fac_Tipo, tienda_Id, fac_Doc=None):
+        self.fac_Datetime = fac_Datetime
+        self.fac_Tipo = fac_Tipo
+        self.tienda_Id = tienda_Id
+        self.fac_Doc = fac_Doc
 class Gastos(db.Model):
     __tablename__ = 'gastos'
     gastos_Id = db.Column(db.BigInteger, primary_key=True)
@@ -82,21 +84,18 @@ class Informe(db.Model):
 class Productos(db.Model):
     __tablename__ = 'productos'
     Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    prod_Id= db.Column(db.BigInteger)
     prod_Nombre = db.Column(db.String(70))
     prod_Precio = db.Column(db.Float)
     prod_Ganancia= db.Column(db.Float)
     prod_TotalPrecio = db.Column(db.Float,db.Computed('(prod_Precio*(prod_Ganancia/100))+prod_Precio'))
     prod_Cantidad = db.Column(db.BigInteger)
-    prod_Categoria = db.Column(db.String(45))
     prod_Total = db.Column(db.Float,db.Computed('(prod_Precio * prod_Cantidad)'))
     prod_TotalGana = db.Column(db.Float,db.Computed('(prod_TotalPrecio * prod_Cantidad)'))
     prod_Img= db.Column(db.LargeBinary)
     tendero_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tendero_Id'))
     tienda_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tienda_Id'))
 
-    def __init__(self, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
-         self.prod_Id = producto_id
+    def __init__(self, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
          self.prod_Nombre = nombre
          self.prod_Precio = precio
          self.prod_Ganancia = ganancia
@@ -195,27 +194,21 @@ class Ventas(db.Model):
     venta_Cantidad = db.Column(db.Integer)
     venta_Metodo = db.Column(db.String(45))
     venta_Datetime = db.Column(db.DateTime)
-    venta_Pago = db.Column(db.Float)
+    venta_Total = db.Column(db.Float)
     tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
+    # Clave foránea que apunta a Factura
+    factura_id = db.Column(db.BigInteger, db.ForeignKey('factura.fac_Id'))
 
-    # Restricción de clave externa con cascada
-    ForeignKeyConstraint(
-        ['venta_Id', 'tendero_Id', 'tienda_Id'],
-        ['ventas.venta_Id', 'ventas.tienda_Id', 'ventas.tendero_Id'],
-        ondelete="CASCADE"
-    )
+    def __init__(self, venta_Cantidad, venta_Metodo, venta_Datetime, venta_Total, tendero_Id, tienda_Id,factura_id):
+        self.venta_Cantidad = venta_Cantidad
+        self.venta_Metodo = venta_Metodo
+        self.venta_Datetime = venta_Datetime
+        self.venta_Total = venta_Total
+        self.tendero_Id = tendero_Id
+        self.tienda_Id = tienda_Id
+        self.factura_id = factura_id
 
-    tendero = db.relationship("Tenderos", backref="ventas")
-    tienda = db.relationship("Tiendas", backref="ventas")
-
-    def __init__(self, cantidad, metodo, datetime, pago, tendero_id, tienda_id):
-        self.venta_Cantidad = cantidad
-        self.venta_Metodo = metodo
-        self.venta_Datetime = datetime
-        self.venta_Pago = pago
-        self.tendero_Id = tendero_id
-        self.tienda_Id = tienda_id
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'
     ventas_venta_Id = db.Column(db.BigInteger, db.ForeignKey('ventas.venta_Id'), primary_key=True)

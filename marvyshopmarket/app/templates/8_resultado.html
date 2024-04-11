@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Marvy Shopmarket | Registrar ventas {% endblock %}
+{% block content %}
+{% if estado==1 %}
+
+<div class="mensaje" style="display: flex;">
+    <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
+    
+</div>        
+<script>
+    // const mensajes = document.getElementsByClassName('mensaje');
+
+    function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = '{{ url_for("main.ventas") }}';
+        }, 2000);   
+    }
+
+    redirigirDespuesDeTiempo();
+</script>
+{% elif estado==0 %}
+<div class="mensaje" style="display: flex;">
+    <p class="mensaje-content" style="color: var(--btn-claro-cancelar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/error.png') }}" alt="comprobado" width=30%></p>
+</div>
+            
+<script>
+    // const mensajes2 = document.getElementsByClassName('mensaje');
+
+    function redirigirDespuesDeTiempo() {
+        setTimeout(function() {
+            window.location.href = '{{ url_for("main.ventas") }}';
+        }, 2000);   
+    }
+
+    redirigirDespuesDeTiempo();
+</script>
+
+{% else %}
+<div class="mensaje">
+    <p class="mensaje-content">{{mensaje}}</p>
+</div>
+{% endif %}
+
+{% endblock %}

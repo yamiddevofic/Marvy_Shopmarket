@@ -47,12 +47,17 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`administrador` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `administrador_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+    
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`caja`
 -- -----------------------------------------------------
@@ -66,11 +71,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`caja` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `caja_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`factura`
@@ -84,11 +93,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`factura` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `factura_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`gastos`
@@ -103,11 +116,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`gastos` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `gastos_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`informe`
@@ -122,11 +139,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`informe` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `informe_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`tenderos`
@@ -142,11 +163,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`tenderos` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `tenderos_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`productos`
@@ -169,22 +194,31 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`productos` (
   INDEX `tendero_Id` (`tendero_Id` ASC, `tienda_Id` ASC) VISIBLE,
   CONSTRAINT `productos_ibfk_1`
     FOREIGN KEY (`tendero_Id` , `tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tenderos` (`tendero_Id` , `tienda_Id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+    REFERENCES `marvy_shopmarket`.`tenderos` (`tendero_Id` , `tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`proveedores`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`proveedores` (
+<<<<<<< HEAD
   `id` BIGINT NOT NULL AUTO_INCREMENT,
+=======
+  `id` BIGINT NOT NULL AUTO_INCREMENT ,
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
   `prov_Id` VARCHAR(50) NULL DEFAULT NULL,
   `prov_Nombre` VARCHAR(70) NULL DEFAULT NULL,
   `prov_Ubicacion` VARCHAR(100) NULL DEFAULT NULL,
   `prov_Contacto` VARCHAR(50) NULL DEFAULT NULL,
+<<<<<<< HEAD
   `prov_prod_nom` VARCHAR(500) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -193,6 +227,12 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+=======
+  `prov_prod_nom` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+DROP TABLE proveedores;
+DROP TABLE suministros_has_proveedores;
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros`
 -- -----------------------------------------------------
@@ -208,11 +248,15 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros` (
   INDEX `tienda_Id` (`tienda_Id` ASC) VISIBLE,
   CONSTRAINT `suministros_ibfk_1`
     FOREIGN KEY (`tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 alter table suministros change column  `sum_Id` sum_Id bigint auto_increment;
+=======
+    REFERENCES `marvy_shopmarket`.`tiendas` (`tienda_Id`));
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros_has_productos`
@@ -230,6 +274,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros_has_productos` (
     REFERENCES `marvy_shopmarket`.`suministros` (`sum_Id` , `tienda_Id`),
   CONSTRAINT `suministros_has_productos_ibfk_2`
     FOREIGN KEY (`productos_Id` , `productos_tendero_Id` , `productos_tienda_Id`)
+<<<<<<< HEAD
     REFERENCES `marvy_shopmarket`.`productos` (`Id` , `tendero_Id` , `tienda_Id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -262,6 +307,12 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+=======
+    REFERENCES `marvy_shopmarket`.`productos` (`Id` , `tendero_Id` , `tienda_Id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`ventas`
 -- -----------------------------------------------------
@@ -281,10 +332,18 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`ventas` (
     FOREIGN KEY (`tendero_Id` , `tienda_Id`)
     REFERENCES `marvy_shopmarket`.`tenderos` (`tendero_Id` , `tienda_Id`))
 ENGINE = InnoDB
+<<<<<<< HEAD
 AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+=======
+DEFAULT CHARACTER SET = utf8mb4;
+DELETE FROM productos WHERE Id>1;
+DELETE FROM ventas_has_productos WHERE productos_Id>1;
+SELECT * FROM productos;
+SELECT * FROM ventas;
+>>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`ventas_has_productos`
