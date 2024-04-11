@@ -12,7 +12,7 @@
 
     function redirigirDespuesDeTiempo() {
         setTimeout(function() {
-            window.location.href = '{{ url_for("main.ventas") }}';
+            window.location.href = '{{ url_for("main.ventas/factura_ventas") }}';
         }, 2000);   
     }
 
@@ -28,7 +28,7 @@
 
     function redirigirDespuesDeTiempo() {
         setTimeout(function() {
-            window.location.href = '{{ url_for("main.ventas") }}';
+            window.location.href = '{{ url_for("main.ventas/factura_ventas") }}';
         }, 2000);   
     }
 
@@ -44,7 +44,7 @@
             <div style="grid-column: 1/-1; display: grid; grid-template-columns: grid; grid-template-columns: 1fr 1fr 1fr;">
                 <a href="/ventas"><button style="padding: 2%;">cancelar</button></a>
                 <h1>Factura de venta</h1>
-                <a><button style="padding: 2%;">confirmar</button></a>
+                <form action="/ventas/factura_ventas/venta_registrada/{{ventas.venta_Id}}" method="post"><button style="padding: 2%;">confirmar</button></form>
                 <div class="formulario" style="width: 100%;">
                     <form action="/ventas/factura_ventas" method="post">
                         <table>
@@ -70,34 +70,43 @@
                         </table>
                     </form>
                 </div>
-            </div>
-            
+            </div>       
     <div class="body_factura" style="grid-row: 2; grid-column: 1/-1;">
+        <div>
+            <p style="padding:0.5%;">{{alert}}</p>
+        </div> 
         <table>
             <thead>
                 <th>Id</th>
                 <th>Nombre del producto</th>
                 <th>Precio Unitario</th>
                 <th>Cantidad vendida</th>
-                <th>Precio Total</th>
                 <th>Método de pago</th>
-                <th>Editar</th>
+                <th>Editar/Eliminar</th>
+                <th>Precio Total</th>
             </thead>
             <tbody>
-                <!-- HTML y Jinja -->
-                {% for venta, producto in zip(ventas, ventas_has_productos) %}
-                    <tr id="registro_{{ venta.venta_Id }}">
+                {% for venta, venta_producto, producto in ventas %}
+                    
+                    <tr id="registro_{{ venta.venta_Id }}"> 
                         <td>{{ producto.Id }}</td>
-                        <td>{{ venta.Nombre }}</td>
-                        <td>{{ venta.venta_Total }}</td>
+                        <td>{{ producto.prod_Nombre }}</td>
+                        <td>${{ "{:,.2f}".format(producto.prod_TotalPrecio)}}</td>
                         <td>{{ venta.venta_Cantidad }}</td>
-                        <td>{{ venta.total }}</td>
                         <td>{{ venta.venta_Metodo }}</td>
                         <td>
-                            <a href="/editar-venta/{{ venta.id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="/editar-venta/{{ venta.venta_Id }}" style="color: var(--claro-principal);" class="editar-venta"><i class="fa-solid fa-pen-to-square"></i></a>
+                            
+                            <a href="/eliminar-venta/{{ venta.venta_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-venta"><i class="fas fa-trash-alt"></i></a>
+                    
                         </td>
+                        <td>${{  "{:,.2f}".format(venta.venta_Total) }}</td>
                     </tr>
-             {% endfor %}
+                {% endfor %}
+                    <tr>
+                        <td colspan="6"></td>
+                        <td colspan="7"><div style="display: flex; justify-content: center;margin-right: 2%;"><h2>Total Factura: <span style="color: rgb(25, 189, 25)">${{total}}</span></h2></div></td>
+                    </tr>
             </tbody>
         </table>
     </div>
