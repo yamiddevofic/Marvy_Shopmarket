@@ -426,7 +426,6 @@ class RegistroProveedorView(AuthenticatedView):
         else:
             print("Usuario no autenticado")
             return self.renderizar_login()
-
     def post(self):
         try:
             print("POST request recibido")
