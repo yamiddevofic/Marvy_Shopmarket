@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `marvy_shopmarket`.`suministros` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
+alter table suministros change column  `sum_Id` sum_Id bigint auto_increment;
 
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros_has_productos`
@@ -235,7 +235,15 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+ALTER TABLE suministros_has_productos
+DROP FOREIGN KEY suministros_has_productos_ibfk_1;
 
+ALTER TABLE suministros
+MODIFY COLUMN sum_Id bigint AUTO_INCREMENT;
+
+ALTER TABLE suministros_has_productos
+ADD CONSTRAINT fk_sum_Id
+FOREIGN KEY (`suministros_sum_Id`) REFERENCES suministros(`sum_Id`);
 -- -----------------------------------------------------
 -- Table `marvy_shopmarket`.`suministros_has_proveedores`
 -- -----------------------------------------------------

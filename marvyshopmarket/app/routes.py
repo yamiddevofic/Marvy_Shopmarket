@@ -344,28 +344,24 @@ class RegistroSuministroView(AuthenticatedView):
     def registrar_suministro(self):
         try:
             print("Intentando registrar suministro")
-            id = request.form.get('id-suministro')
             cantidad = request.form.get('cantidad-producto-suministro')
             fecha = request.form.get('fecha-producto-suministro')
             metodo_pago = request.form.get('metodo-pago-suministro')
             total = request.form.get('total-producto-suministro')
-            tienda = request.form.get('tiendaid_suministro')
+            tienda = session['tienda_Id']
             sumi_producto_nombre = request.form.get('producto-suministro')
 
-            if not id  or not cantidad or not fecha or not metodo_pago or not  total or not  tienda or not  sumi_producto_nombre :
+            if not cantidad or not fecha or not metodo_pago or not  total or not  tienda or not  sumi_producto_nombre :
                     return {'state': False, 'message': 'Por favor, complete todos los datos'}
-
-            suministro_existente = Suministros.query.filter_by(sum_Id = id).first()
-            if suministro_existente:
-                print("suministro ya existe")
-                return {'state': False, 'message': 'Ya existe un suministro'}
-            else:
-                print("Intentando registrar suministro...")
-                new_suministro =Suministros(id, cantidad, fecha,metodo_pago,total,tienda , sumi_producto_nombre )
-                db.session.add(new_suministro)
-                db.session.commit()
-                print("suministro registrado exitosamente")
-                return {'state': True, 'message': 'Registro exitoso'}
+            print("Intentando registrar suministro...")
+            new_suministro =Suministros( cantidad, fecha,metodo_pago,total,tienda , sumi_producto_nombre )
+            db.session.add(new_suministro)
+            db.session.commit()
+            print("suministro registrado exitosamente")
+            producto=Productos.query.filter_by(prod_Nombre=sumi_producto_nombre).first()
+            producto.prod_Cantidad += int (cantidad)
+            db.session.commit()
+            return {'state': True, 'message': 'Registro exitoso'}
         except Exception as e:
             print("Error al registrar suministro:", str(e))
             return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
@@ -404,7 +400,7 @@ class EditarSuministro(RegistroSuministroView, AuthenticatedView):
 
 
                 if nuevo_nombre:
-                    suministro.sum_Prod_Nom = nuevo_nombre
+                    suministro.sum_prod_Nom = nuevo_nombre
                 if nuevo_cantidad:
                     suministro.sum_Cantidad = nuevo_cantidad
                 if nuevo_fecha:
