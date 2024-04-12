@@ -1,4 +1,6 @@
+const container = document.getElementById('container')
 const containerProductos = document.getElementById('container-producto')
+const check = document.getElementById('dark')
 // Función para detectar el tamaño de la pantalla
 function detectScreenSize() {
     // Obtiene el ancho y alto de la pantalla
@@ -81,9 +83,50 @@ function detectScreenSize() {
     // }
 }
 
-// Llama a la función detectScreenSize cuando se carga la página y cuando se redimensiona la ventana
-window.onload = detectScreenSize;
-window.onresize = detectScreenSize;
+// Función para activar el modo oscuro
+function activarModoOscuro() {
+    document.body.classList.remove('dark-mode');
+}
+
+// Función para desactivar el modo oscuro
+function desactivarModoOscuro() {
+    document.body.classList.add('dark-mode');
+}
+
+// Función para guardar la preferencia del usuario en el almacenamiento local
+function guardarPreferenciaModoOscuro(darkValue) {
+    localStorage.setItem('modoOscuro', darkValue);
+}
+
+// Función para cargar la preferencia del usuario desde el almacenamiento local
+function cargarPreferenciaModoOscuro() {
+    const darkValue = localStorage.getItem('modoOscuro');
+    if (darkValue === '1') {
+        activarModoOscuro();
+        check.checked = true;
+    } else {
+        desactivarModoOscuro();
+        check.checked = false;
+    }
+}
+
+
+// Manejar el cambio en el checkbox
+check.addEventListener('change', function() {
+    const darkValue = this.checked ? '1' : '0';
+    if (this.checked) {
+        activarModoOscuro();
+    } else {
+        desactivarModoOscuro();
+    }
+    guardarPreferenciaModoOscuro(darkValue);
+});
+
+// Cargar la preferencia del usuario al cargar la página
+window.addEventListener('load', function() {
+    detectScreenSize();
+    cargarPreferenciaModoOscuro();
+});
 
 const menu = document.getElementById('menu-hamburguesa');
 const menuDesplegable = document.getElementById('menu-desplegable');

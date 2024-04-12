@@ -16,7 +16,15 @@
                 {% block content %}{% endblock %}
             </div>
     </div>
-    <footer style="grid-column: 1/-1; grid-row: -1; text-align: center; background: #027368; bottom: 0;"><p style=" padding: 2%; color: var(--blanco)">© Marvy Shopmarket</p></footer>
+    <footer>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <label class="switch">
+                <input type="checkbox" name="dark" id="dark" class="dark">
+                <span class="slider"></span>
+            </label>
+        </div> 
+        <p style=" padding: 2%; color: var(--blanco)">© Marvy Shopmarket</p>
+    </footer>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

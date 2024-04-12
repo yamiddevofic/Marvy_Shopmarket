@@ -36,7 +36,7 @@
 <div class="logo" id="logo">
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
-<div id="editar-suministros">
+<div id="editar-suministros" style="grid-column:2;grid-row: 2/3;">
     <h2>Editar suministros</h2>
     <form action="/editar-suministros/{{suministro.sum_Id}}" method="POST">
 

@@ -76,7 +76,7 @@
                     <th>Descripción</th>
                     <th>Tipo</th>
                     <th>Precio</th>
-                    <th>Editar/Eliminar</th>
+                    <th>Eliminar</th>
                 </thead>
                 <tbody>
                     {% for gasto, tienda in resultado %}
@@ -86,7 +86,6 @@
                             <td>{{ gasto.gastos_Tipo }}</td>
                             <td>{{ gasto.gastos_Precio }}</td>
                             <td>
-                                <a href="/editar-gasto/{{ gasto_gastos_Id }}" style="color: var(--claro-principal);" class="editar-gasto"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <a href="/eliminar-gasto/{{ gasto.gastos_Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-gasto"><i class="fas fa-trash-alt"></i></a>
 
                             </td>

@@ -120,13 +120,13 @@ class VentaView(AuthenticatedView):
     def registrar_venta(self):
         try:
             tienda_id = session['tienda_Id']
-            producto_id = int(request.form['id-producto-venta'])
+            producto = request.form['nombre-producto-venta']
             precio = request.form.get('precio-producto-venta')
             cantidad = request.form.get('cantidad-producto-vendido')
             metodo = request.form.get('metodo-pago-vendido')
             fecha = datetime.now()
 
-            if not precio or not cantidad or not metodo or not producto_id:
+            if not precio or not cantidad or not metodo or not producto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             adm_id = int(session['adm_Id'])
@@ -140,7 +140,7 @@ class VentaView(AuthenticatedView):
             venta_id = new_venta.venta_Id
 
             # Verificar si el producto existe antes de insertarlo en ventas_has_productos
-            producto_existente = Productos.query.filter_by(Id=producto_id).first()
+            producto_existente = Productos.query.filter_by(prod_Nombre=producto).first()
             if producto_existente:
 
                 # Crear una instancia de VentasHasProductos con el ID de la venta
@@ -148,7 +148,7 @@ class VentaView(AuthenticatedView):
                     ventas_venta_Id=venta_id,
                     ventas_tendero_Id=adm_id,
                     ventas_tienda_Id=tienda_id,
-                    productos_Id=producto_id,
+                    productos_Id=producto_existente.Id,
                     productos_tendero_Id=adm_id,
                     productos_tienda_Id=tienda_id
                 )
