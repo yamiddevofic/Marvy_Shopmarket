@@ -5,7 +5,6 @@
 
 <div class="mensaje" style="display: flex;">
     <p class="mensaje-content" style="color: var(--btn-claro-continuar);">{{mensaje}}<br><img src="{{ url_for('static', filename='images/comprobado.png') }}" alt="comprobado" width=30%></p>
-    
 </div>        
 <script>
     // const mensajes = document.getElementsByClassName('mensaje');
@@ -40,7 +39,7 @@
     <p class="mensaje-content">{{mensaje}}</p>
 </div>
 {% endif %}
-<div id="container_facturav" style="grid-column: 1/-1;grid-row: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; padding: 2%; justify-content: center;">
+<!---<div id="container_facturav" style="grid-column: 1/-1;grid-row: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; padding: 2%; justify-content: center;">
             <div style="grid-column: 1/-1; display: grid; grid-template-columns: grid; grid-template-columns: 1fr 1fr 1fr;">
                 <a href="/ventas"><button style="padding: 2%;">cancelar</button></a>
                 <h1>Factura de venta</h1>
@@ -110,5 +109,5 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>-->
 {% endblock %}

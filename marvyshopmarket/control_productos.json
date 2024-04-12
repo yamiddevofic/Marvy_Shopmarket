@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"color": "orange", "producto_color": 5, "producto_name": "coco", "existencias": 0}
-=======
-{"color": "green", "producto_color": 6, "producto_name": "Arroz", "existencias": 23}
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
+{"color": "green", "producto_color": 5, "producto_name": "coco", "existencias": 100}

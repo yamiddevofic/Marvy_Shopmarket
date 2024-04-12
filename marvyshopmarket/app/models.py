@@ -43,9 +43,7 @@ class Factura(db.Model):
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
     # Este documento asume que es un blob de datos, como un PDF
     fac_Doc = db.Column(db.LargeBinary)
-    # Relación para acceder a las ventas desde la factura
-    ventas = db.relationship('Ventas', backref='factura', lazy=True)
-
+    
     def __init__(self, fac_Datetime, fac_Tipo, tienda_Id, fac_Doc=None):
         self.fac_Datetime = fac_Datetime
         self.fac_Tipo = fac_Tipo
@@ -198,16 +196,15 @@ class Ventas(db.Model):
     tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
     # Clave foránea que apunta a Factura
-    factura_id = db.Column(db.BigInteger, db.ForeignKey('factura.fac_Id'))
 
-    def __init__(self, venta_Cantidad, venta_Metodo, venta_Datetime, venta_Total, tendero_Id, tienda_Id,factura_id):
+    def __init__(self, venta_Cantidad, venta_Metodo, venta_Datetime, venta_Total, tendero_Id, tienda_Id):
         self.venta_Cantidad = venta_Cantidad
         self.venta_Metodo = venta_Metodo
         self.venta_Datetime = venta_Datetime
         self.venta_Total = venta_Total
         self.tendero_Id = tendero_Id
         self.tienda_Id = tienda_Id
-        self.factura_id = factura_id
+
 
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'

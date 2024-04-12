@@ -7,11 +7,11 @@ import json
 import socket
 from threading import Thread
 from functools import wraps
-from flask import Blueprint, render_template, request,send_file,redirect, url_for, jsonify, make_response,session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, current_app
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
-from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos,Gastos, Suministros, Proveedores, Factura
+from .models import Productos, Administrador, Tenderos, Tiendas, Ventas, VentasHasProductos,Gastos, Suministros, Proveedores
 from . import bcrypt
 from .helpers import obtener_informacion_adm,obtener_informacion_tendero, obtener_informacion_tienda
 from app import db
@@ -97,225 +97,6 @@ class RegistroExitosoView(MethodView):
 class SignUpView(MethodView):
     def get(self):
         return render_template('2_sign_up.html')
-class FacturaVentas(AuthenticatedView, MethodView):
-    @LoginRequired.login_required
-    def get(self,vp=[],ventas=[], estado="", mensaje=""):
-        print('entré a get en factura',estado,mensaje)
-        if self.esta_autenticado():
-            print("Está autenticado")
-            return self.renderizar_factura(vp,ventas,estado, mensaje)
-        else:
-            return self.renderizar_login()
-    
-    def esta_autenticado(self):
-        return session.get('tienda_Id') is not None  
-    
-    def post(self):
-        print('entré a post en factura')
-        try: 
-            tienda_id = int(session['tienda_Id'])
-            adm_id = int(session['adm_Id'])
-            prod = request.form['producto_venta']
-            cantidad = request.form.get('venta_cantidad')
-            metodo = request.form.get('venta_metodo')
-            fecha = datetime.now()
-            
-            if not cantidad or not metodo or not prod:
-                return {'state': False, 'message': 'Por favor, complete todos los datos'}
-            
-            info_producto = Productos.query.filter_by(prod_Nombre=prod).all()
-
-            ventaf=[]
-                        
-            for producto in info_producto:
-                new_venta = Ventas(cantidad, metodo, fecha,(float(producto.prod_TotalPrecio) * float(cantidad)),adm_id,tienda_id,1)
-                producto = Productos.query.filter_by(Id=producto.Id).first()
-                producto.prod_Cantidad -= int(cantidad)
-                db.session.commit()    
-                print(producto.prod_Nombre," ",cantidad," ",producto.prod_TotalPrecio," ",str(float(producto.prod_TotalPrecio)*float(cantidad)))
-
-            db.session.add(new_venta)
-            db.session.commit()
-            
-            print(ventaf)  
-            
-            id_venta = new_venta.venta_Id
-            
-            nueva_relacion = VentasHasProductos(id_venta,adm_id,tienda_id,producto.Id,adm_id,tienda_id)
-
-            db.session.add(nueva_relacion)
-            db.session.commit()           
-            
-            nueva_factura = Factura(
-                fecha=fecha,
-                tipo="Estándar",  # Usamos un valor predeterminado para el tipo
-                tienda=tienda_id,
-                venta=id_venta
-                # doc no es necesario a menos que lo estés pasando específicamente
-            )
-
-            db.session.add(nueva_factura)
-            db.session.commit()
-
-            return self.get(vp=nueva_relacion,ventas=ventaf,estado=1, mensaje="Registro de venta exitoso")    
-        
-        except IntegrityError as e:
-            db.session.rollback()
-            return {'state': False, 'message': f"Error de integridad referencial: {str(e)}"}
-        except Exception as e:
-            db.session.rollback()
-            return self.get(vp=[],ventas=[],estado=0, mensaje="Error {e}")
-          
-    def renderizar_factura(self,vp,ventas,estado, mensaje):
-        print("Entré a renderizar")
-        # Realizar una consulta para obtener las ventas y sus productos asociados
-        query_result = db.session.query(Ventas, VentasHasProductos, Productos).\
-        join(VentasHasProductos, (Ventas.venta_Id == VentasHasProductos.ventas_venta_Id) & 
-             (Ventas.tendero_Id == VentasHasProductos.ventas_tendero_Id) & 
-             (Ventas.tienda_Id == VentasHasProductos.ventas_tienda_Id)).\
-        join(Productos, (VentasHasProductos.productos_Id == Productos.Id) & 
-             (VentasHasProductos.productos_tendero_Id == Productos.tendero_Id) & 
-             (VentasHasProductos.productos_tienda_Id == Productos.tienda_Id)).all()
-        total=0
-        if query_result:
-            for venta, venta_producto, producto in query_result:
-               total+=venta.venta_Cantidad*producto.prod_TotalPrecio
-            total= "{:,}".format((total))
-            return render_template('7_factura.html',total=total,ventas=query_result, estado=estado, mensaje=mensaje)
-        else:
-            productos= Productos.query.all()
-            print(productos)
-            if len(productos)>0:
-                return render_template('7_factura.html',total=0, ventas=[],estado="",mensaje="", alert='')
-            else:
-                return render_template('7_factura.html',total=0, ventas=[],estado="",mensaje="", alert="No hay productos en el inventario")
-class VentaRegistrada(AuthenticatedView,MethodView):
-    @LoginRequired.login_required
-    def get(self, estado="", mensaje=""):
-        print('entré a get en factura realizada')
-        if self.esta_autenticado():
-            return self.renderizar_factura(estado, mensaje)
-        else:
-            return self.renderizar_login()
-    def post(self):
-        print('entré a post en factura realizada')
-        try: 
-            tienda_id = int(session['tienda_Id'])
-            adm_id = int(session['adm_Id'])
-            prod = request.form['producto_venta']
-            cantidad = request.form.get('venta_cantidad')
-            metodo = request.form.get('venta_metodo')
-            fecha = datetime.now()
-            
-            if not cantidad or not metodo or not prod:
-                return {'state': False, 'message': 'Por favor, complete todos los datos'}
-            
-            info_producto = Productos.query.filter_by(prod_Nombre=prod).all()
-
-            ventaf=[]
-                        
-            for producto in info_producto:
-                new_venta = Ventas(cantidad, metodo, fecha,(float(producto.prod_TotalPrecio) * float(cantidad)),adm_id,tienda_id)
-                producto = Productos.query.filter_by(Id=producto.Id).first()
-                producto.prod_Cantidad -= int(cantidad)
-                db.session.commit()    
-                print(producto.prod_Nombre," ",cantidad," ",producto.prod_TotalPrecio," ",str(float(producto.prod_TotalPrecio)*float(cantidad)))
-
-            db.session.add(new_venta)
-            db.session.commit()
-            
-            print(ventaf)  
-            
-            id_venta = new_venta.venta_Id
-            
-            nueva_relacion = VentasHasProductos(id_venta,adm_id,tienda_id,producto.Id,adm_id,tienda_id)
-            
-            db.session.add(nueva_relacion)
-            db.session.commit()           
-            
-
-            return self.get(vp=nueva_relacion,ventas=ventaf,estado=1, mensaje="Registro de venta exitoso")    
-        
-        except IntegrityError as e:
-            db.session.rollback()
-            return {'state': False, 'message': f"Error de integridad referencial: {str(e)}"}
-        except Exception as e:
-            db.session.rollback()
-            return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
-    def esta_autenticado(self):
-        return session.get('tienda_Id') is not None        
-    def renderizar_factura(self,vp=[],ventas=[],estado='', mensaje=''):
-        # Realizar una consulta para obtener las ventas y sus productos asociados
-        query_result = db.session.query(Ventas, VentasHasProductos, Productos).\
-        join(VentasHasProductos, (Ventas.venta_Id == VentasHasProductos.ventas_venta_Id) & 
-             (Ventas.tendero_Id == VentasHasProductos.ventas_tendero_Id) & 
-             (Ventas.tienda_Id == VentasHasProductos.ventas_tienda_Id)).\
-        join(Productos, (VentasHasProductos.productos_Id == Productos.Id) & 
-             (VentasHasProductos.productos_tendero_Id == Productos.tendero_Id) & 
-             (VentasHasProductos.productos_tienda_Id == Productos.tienda_Id)).all()
-        total=0
-        if query_result:
-            for venta, venta_producto, producto in query_result:
-               total+=venta.venta_Cantidad*producto.prod_TotalPrecio
-            total= "{:,}".format((total))
-            return render_template('7_factura.html',total=total,ventas=query_result, estado=estado, mensaje=mensaje)
-
-
-
-class EliminarVenta(FacturaVentas, AuthenticatedView):
-    @LoginRequired.login_required
-    def get(self, venta_id):
-        
-        # Intenta encontrar la venta en la base de datos
-        venta = Ventas.query.filter_by(venta_Id=venta_id).first()
-        if venta:
-            try:
-                # Actualizar el total de ventas en el JSON
-                with open('datos_venta.json', 'r+') as archivo:
-                    data = json.load(archivo)
-                    
-                    # Calcular el total de la venta
-                    total_venta = 0
-                    # Obtener los productos asociados a la venta
-                    datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).filter(VentasHasProductos.ventas_venta_Id == venta_id).all()
-                    
-                    for relacion in datos_relacionados:
-                        # Multiplicar la cantidad vendida por el precio unitario de cada producto y sumar al total de la venta
-                        total_venta += (int(venta.venta_Cantidad) * int(relacion.Productos.prod_Precio))
-                        cantidad = relacion.Productos.prod_Cantidad
-                        print(f"Cantidad de productos: {cantidad}")
-
-                        relacion.Productos.prod_Cantidad+=venta.venta_Cantidad
-                        print(f"Cantidad despues de eliminar venta: {relacion.Productos.prod_Cantidad}")
-                        
-                    # Sumar el total de la venta eliminada del total de ventas
-                    data["total_ventas"] += total_venta
-                    archivo.seek(0)  # Mover el puntero al inicio del archivo
-                    json.dump(data, archivo)  # Escribir los datos actualizados
-                    archivo.truncate()  # Truncar el archivo para eliminar datos anteriores si es necesario
-
-                # Eliminar las entradas en la tabla ventas_has_productos relacionadas con la venta
-                VentasHasProductos.query.filter_by(ventas_venta_Id=venta_id).delete()
-
-                # Eliminar la venta misma
-                db.session.delete(venta)
-
-                # Realizar el commit manualmente
-                db.session.commit()
-
-                # Retornar una respuesta exitosa
-                return super().get(estado=1, mensaje="Venta eliminada exitosamente")
-            except Exception as e:
-                # Si ocurre algún error, hacer un rollback
-                db.session.rollback()
-                # Loguear el error para su posterior depuración
-                logging.error(f"Error al eliminar la venta: {e} ")
-                # Retornar un mensaje de error
-                return super().get(estado=0, mensaje=f"Error al eliminar la venta: {e}")
-        else:
-            # Si la venta no se encuentra, retornar un mensaje indicándolo
-            return super().get(estado=0, mensaje="No se encontró la venta")
-
 class VentaView(AuthenticatedView):
     def __init__(self, ventas=[]):
         self.ventas = ventas
@@ -328,7 +109,6 @@ class VentaView(AuthenticatedView):
             return self.renderizar_login()
 
     def post(self):
-        print("Entré a post de ventas")
         try:
             if self.registrar_venta()['state']:
                 return self.get(estado=1, mensaje="Registro de venta exitoso")
@@ -340,19 +120,17 @@ class VentaView(AuthenticatedView):
     def registrar_venta(self):
         try:
             tienda_id = session['tienda_Id']
-            producto = request.form['producto_venta']
-            cantidad = request.form.get('venta_cantidad')
-            metodo = request.form.get('venta_metodo')
+            producto_id = int(request.form['id-producto-venta'])
+            precio = request.form.get('precio-producto-venta')
+            cantidad = request.form.get('cantidad-producto-vendido')
+            metodo = request.form.get('metodo-pago-vendido')
             fecha = datetime.now()
-            
-            if not cantidad or not metodo or not producto:
+
+            if not precio or not cantidad or not metodo or not producto_id:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
-            
-            info_producto = Productos.query.filter_by(prod_Nombre=producto).all()
-            print(info_producto)
-        
+
             adm_id = int(session['adm_Id'])
-            
+
             new_venta = Ventas(cantidad, metodo, fecha, precio, adm_id, tienda_id)
 
             db.session.add(new_venta)
@@ -408,7 +186,7 @@ class VentaView(AuthenticatedView):
             total_ventas = 0
             for relacion1, relacion2 in zip(datos_relacionados, datos_relacionados_dos):
                 fecha_iso = relacion2.Ventas.venta_Datetime.isoformat()
-                total = (int(relacion2.Ventas.venta_Cantidad) * int(relacion1.Productos.prod_TotalPrecio))
+                total = (int(relacion2.Ventas.venta_Cantidad) * int(relacion1.Productos.prod_Precio))
                 total_ventas += total
                 obj = {
                     "id": relacion1.VentasHasProductos.ventas_venta_Id,
@@ -417,7 +195,7 @@ class VentaView(AuthenticatedView):
                     "cantidad_total": relacion1.Productos.prod_Cantidad,
                     "id_producto": relacion1.Productos.Id,
                     "fecha": fecha_iso,
-                    "precio": relacion1.Productos.prod_TotalPrecio,
+                    "precio": relacion1.Productos.prod_Precio,
                     "total": total,
                     "total_ventas": total_ventas
                 }
@@ -447,7 +225,6 @@ class VentaView(AuthenticatedView):
         except Exception as e:
             print("Error: " + str({e}))
             return render_template('6_ventas.html', estado=0, mensaje=str(e))
-<<<<<<< HEAD
 class EliminarVentas(AuthenticatedView, MethodView):
     def get(self):
         try:
@@ -466,11 +243,6 @@ class EliminarVentas(AuthenticatedView, MethodView):
             db.session.rollback()
             # Manejar cualquier error que ocurra durante la eliminación
             return f"Error al eliminar ventas: {str(e)}"
-=======
-        
-    def esta_autenticado(self):
-        return session.get('tienda_Id') is not None    
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 
 class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
     def __init__(self):
@@ -505,6 +277,7 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
             if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
                 with open('datos_venta.json', 'r') as archivo:
                     datos_venta = json.load(archivo)
+                    print(datos_venta)
                 total_ventas = datos_venta.get('total_ventas', {})
             else:
                 total_ventas = 0
@@ -544,13 +317,7 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
         return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
                                informacion_tendero=informacion_tendero, perfil=perfil, state=state,
                                productos=productos, total_ventas=total_ventas)
-<<<<<<< HEAD
 
-=======
-    def esta_autenticado(self):
-        return session.get('tienda_Id') is not None
-    
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 class RegistroSuministroView(AuthenticatedView):
     def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
@@ -787,6 +554,7 @@ class ProductoView(AuthenticatedView):
         return True
 
     def registrar_producto(self):
+        id = int(request.form['prod_Id'])
         nombre = request.form['prod_Nombre']
         precio = float(request.form['prod_Precio'])
         cantidad = float(request.form['prod_Cantidad'])
@@ -794,7 +562,6 @@ class ProductoView(AuthenticatedView):
         imagen = request.files['prod_Img']
         imagen_data = imagen.read()
         tienda_id = session['tienda_Id']
-<<<<<<< HEAD
 
         if id=='':
             id=0
@@ -805,19 +572,11 @@ class ProductoView(AuthenticatedView):
             return {'state': False, 'message': 'Por favor, ingrese valores no negativos para id, precio, cantidad y ganancia'}
         if not id or not nombre or not precio or not cantidad or not imagen:
             return {'state':False, 'message':'Por favor, complete todos los datos'}
-=======
-        
-        producto_existente = Productos.query.filter(and_(Productos.prod_Nombre == nombre, Productos.tienda_Id == tienda_id)).first()
-        if  precio < 0 or cantidad < 0 or ganancia < 0:
-            return {'state': False, 'message': 'Por favor, ingrese valores no negativos para id, precio, cantidad y ganancia'}
-        if not nombre or not precio or not cantidad or not imagen:
-            return {'state':False, 'message':'Por favor, complete todos los datos'}  
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
         elif producto_existente:
             return {'state':False, 'message':'Ya existe un producto con esa identificación'}
         else:
             adm_id = session['adm_Id']
-            new_product = Productos(nombre=nombre, precio=precio, ganancia=ganancia, cantidad=cantidad, imagen=imagen_data, tienda=tienda_id, tendero=adm_id)
+            new_product = Productos(producto_id=int(id), nombre=nombre, precio=precio, ganancia=ganancia, cantidad=cantidad, imagen=imagen_data, tienda=tienda_id, tendero=adm_id)
 
             db.session.add(new_product)
             db.session.commit()
@@ -897,7 +656,7 @@ class EditarProducto(ProductoView,AuthenticatedView):
     def get(self, producto_id):
         # Aquí puedes hacer lo que necesites con el ID del producto
         # Por ejemplo, cargar los detalles del producto con el ID proporcionado
-        product = Productos.query.filter_by(Id=producto_id).first()
+        product = Productos.query.filter_by(prod_Id=producto_id).first()
         img_codificada = base64.b64encode(product.prod_Img).decode('utf-8')
         return render_template('editar_prod.html', producto=product, imagen=img_codificada)
 
@@ -929,7 +688,6 @@ class EditarProducto(ProductoView,AuthenticatedView):
             return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
         else:
             return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
-<<<<<<< HEAD
 class EliminarProducto(ProductoView, AuthenticatedView):
     @LoginRequired.login_required
     def get(self, id):
@@ -961,9 +719,6 @@ class EliminarProducto(ProductoView, AuthenticatedView):
         else:
             # Si el producto no se encuentra, retorna un mensaje indicándolo
             return super().get(estado=0, mensaje="No se encontró el producto")
-=======
-# 
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 class EditarVenta(VentaView,AuthenticatedView):
     @LoginRequired.login_required
     def get(self, producto_id):
@@ -1001,7 +756,6 @@ class EditarVenta(VentaView,AuthenticatedView):
             return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
         else:
             return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
-<<<<<<< HEAD
 
 class EliminarVenta(VentaView, AuthenticatedView):
     @LoginRequired.login_required
@@ -1055,9 +809,6 @@ class EliminarVenta(VentaView, AuthenticatedView):
         else:
             # Si la venta no se encuentra, retornar un mensaje indicándolo
             return super().get(estado=0, mensaje="No se encontró la venta")
-=======
-        
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 class GastoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = session.get('tienda_Id')
@@ -1156,10 +907,7 @@ class EditarGasto(GastoView,AuthenticatedView):
             return super().get(estado=1,mensaje="Actualizaste un gasto exitosamente")
         else:
             return super().get(estado=1,mensaje="El gasto no se encontró en la base de datos")
-<<<<<<< HEAD
 
-=======
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 class EliminarGasto(GastoView, AuthenticatedView):
     @LoginRequired.login_required
     def get(self, gasto_id):
@@ -1208,11 +956,7 @@ class EliminarGasto(GastoView, AuthenticatedView):
         else:
             # Si la venta no se encuentra, retornar un mensaje indicándolo
             return super().get(estado=0, mensaje="No se encontró la venta")
-<<<<<<< HEAD
 
-=======
-                     
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
 class Buscar(PaginaPrincipalView):
     def get(self,state=1, resultados={}):
          print("Entré a get")
@@ -1222,25 +966,6 @@ class Buscar(PaginaPrincipalView):
         return super().renderizar_principal(state=state,productos=resultados)
 
 @main_bp.route('/datos')
-def obtener_datos():
-    tienda_id = session['tienda_Id']
-    resultado_json = []
-    resultado = db.session.query(Productos, Tiendas).join(Tiendas, Productos.tienda_Id == Tiendas.tienda_Id).all()
-    for producto, tienda in resultado:
-        producto_dict = {
-            "id": producto.Id,
-            "nombre": producto.prod_Nombre,
-            "cantidad": producto.prod_Cantidad,
-            "precio": producto.prod_Precio,
-            "imagen": base64.b64encode(producto.prod_Img).decode('utf-8'),
-            "tienda": {
-                "nombre": tienda.tienda_Nombre,
-                "ubicacion": tienda.tienda_Ubicacion
-            }
-        }
-        resultado_json.append(producto_dict)
-    return jsonify(resultado_json)
-
 def obtener_datos():
     tienda_id = session['tienda_Id']
     resultado_json = []
@@ -1277,6 +1002,7 @@ class Resultado(Buscar,PaginaPrincipalView):
 #====================================================================================================
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
+
 @LoginRequired.login_required
 def generar_informe():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -1287,6 +1013,7 @@ def generar_informe():
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
 
 @main_bp.route('/ajustes-generales', methods=['GET', 'POST'])
+
 @LoginRequired.login_required
 def ajustes_generales():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
@@ -1571,17 +1298,14 @@ main_bp.add_url_rule('/proveedores', view_func=RegistroProveedorView.as_view('pr
 main_bp.add_url_rule('/productos', view_func= ProductoView.as_view('productos'))
 main_bp.add_url_rule('/ventas', view_func= VentaView.as_view('ventas'))
 main_bp.add_url_rule('/editar-producto/<int:producto_id>', view_func=EditarProducto.as_view('editar-producto'))
+main_bp.add_url_rule('/eliminar-producto/<int:id>', view_func=EliminarProducto.as_view('eliminar-producto'))
 main_bp.add_url_rule('/editar-venta/<int:venta_id>', view_func=EditarVenta.as_view('editar-venta'))
-main_bp.add_url_rule('/eliminar-venta/<int:venta_id>', view_func=EliminarVenta.as_view('eliminar-venta'))
+main_bp.add_url_rule('/eliminar-venta/<int:id>', view_func=EliminarVenta.as_view('eliminar-venta'))
+main_bp.add_url_rule('/eliminar-todas-las-ventas', view_func=EliminarVentas.as_view('eliminar-todas-las-ventas'))
 main_bp.add_url_rule('/gastos', view_func=GastoView.as_view('gastos'))
 main_bp.add_url_rule('/editar-gasto/<int:gasto_id>', view_func=EditarGasto.as_view('editar-gasto'))
 main_bp.add_url_rule('/eliminar-gasto/<int:gasto_id>', view_func=EliminarGasto.as_view('eliminar-gasto'))
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
 main_bp.add_url_rule('/editar-suministros/<int:sum_id>', view_func=EditarSuministro.as_view('editar-suministros'))
-<<<<<<< HEAD
 main_bp.add_url_rule('/editar-proveedores/<int:prov_id>', view_func=Editarproveedores.as_view('editar-proveedores'))
-=======
-main_bp.add_url_rule('/ventas/factura_ventas', view_func=FacturaVentas.as_view('ventas/factura_ventas'))
-main_bp.add_url_rule('/ventas/factura_ventas/venta_registrada/<int:id>', view_func=VentaRegistrada.as_view('/ventas/factura_ventas/venta_registrada/<int:id>'))
->>>>>>> 7b9b78b5c7202d8f0bf8f0434c7df3b58fddfa98
