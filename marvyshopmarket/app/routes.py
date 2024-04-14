@@ -57,7 +57,7 @@ class LoginView(AuthenticatedView,MethodView):
             return self.renderizar_user_autenticado()
         else:
             return self.renderizar_login()
-  
+
     def esta_autenticado(self):
         return ('adm_Id' in session and 'tienda_Id' in session) or ('tendero_Id' in session and 'tienda_Id' in session)
 
@@ -66,7 +66,7 @@ class LoginView(AuthenticatedView,MethodView):
             return self.renderizar_admin()
         elif 'tendero_Id' in session and 'tienda_Id' in session:
             return self.renderizar_tendero()
-    
+
     def renderizar_login(self):
         return render_template('1_login.html')
 
@@ -79,14 +79,14 @@ class LoginView(AuthenticatedView,MethodView):
         informacion_adm = obtener_informacion_adm(adm_id)
         perfil = "administrador"
         return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,informacion_tendero=informacion_tendero, informacion_adm=informacion_adm,perfil=perfil)
-        
+
     def renderizar_tendero(self):
         tienda_id = session['tienda_Id']
         tendero_id = session['tendero_Id']
         informacion_tienda = obtener_informacion_tienda(tienda_id)
         informacion_tendero = obtener_informacion_tendero(tendero_id)
         perfil = "tendero"
-        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,informacion_tendero=informacion_tendero, perfil=perfil)     
+        return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,informacion_tendero=informacion_tendero, perfil=perfil)
 
 class RegistroExitosoView(MethodView):
     def get(self):
@@ -107,7 +107,7 @@ class VentaView(AuthenticatedView):
             return self.renderizar_venta(estado, mensaje)
         else:
             return self.renderizar_login()
-        
+
     def post(self):
         try:
             if self.registrar_venta()['state']:
@@ -120,13 +120,13 @@ class VentaView(AuthenticatedView):
     def registrar_venta(self):
         try:
             tienda_id = session['tienda_Id']
-            producto_id = int(request.form['id-producto-venta'])
+            producto = request.form['nombre-producto-venta']
             precio = request.form.get('precio-producto-venta')
             cantidad = request.form.get('cantidad-producto-vendido')
             metodo = request.form.get('metodo-pago-vendido')
             fecha = datetime.now()
 
-            if not precio or not cantidad or not metodo or not producto_id:
+            if not precio or not cantidad or not metodo or not producto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             adm_id = int(session['adm_Id'])
@@ -140,7 +140,7 @@ class VentaView(AuthenticatedView):
             venta_id = new_venta.venta_Id
 
             # Verificar si el producto existe antes de insertarlo en ventas_has_productos
-            producto_existente = Productos.query.filter_by(Id=producto_id).first()
+            producto_existente = Productos.query.filter_by(prod_Nombre=producto).first()
             if producto_existente:
 
                 # Crear una instancia de VentasHasProductos con el ID de la venta
@@ -148,7 +148,7 @@ class VentaView(AuthenticatedView):
                     ventas_venta_Id=venta_id,
                     ventas_tendero_Id=adm_id,
                     ventas_tienda_Id=tienda_id,
-                    productos_Id=producto_id,
+                    productos_Id=producto_existente.Id,
                     productos_tendero_Id=adm_id,
                     productos_tienda_Id=tienda_id
                 )
@@ -169,12 +169,12 @@ class VentaView(AuthenticatedView):
         except Exception as e:
             db.session.rollback()
             return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
-        
+
     def guardar_en_json(self, objeto, nombre_archivo):
         with open(nombre_archivo, 'w') as archivo:
             json.dump(objeto, archivo)
-        return True        
-    
+        return True
+
     def renderizar_venta(self, estado, mensaje):
         try:
             tienda_id = session['tienda_Id']
@@ -204,7 +204,7 @@ class VentaView(AuthenticatedView):
             if os.path.exists('datos_venta.json') and os.path.getsize('datos_venta.json') > 0:
                 with open('datos_venta.json', 'r') as archivo:
                     datos_venta = json.load(archivo)
-                
+
             else:
                 datos_venta = {}
 
@@ -231,11 +231,11 @@ class EliminarVentas(AuthenticatedView, MethodView):
             # Eliminar registros de ventas_has_productos
             db.session.query(VentasHasProductos).delete()
             db.session.commit()
-            
+
             # Eliminar registros de la tabla Ventas
             db.session.query(Ventas).delete()
             db.session.commit()
-            
+
             with open('datos_venta.json', 'w') as archivo:
                 pass
             return redirect(url_for('main.ventas'))
@@ -286,7 +286,7 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
         gastos = len(db.session.query(Gastos).all())
 
         print("Gastos: ",gastos)
-        
+
         if gastos>0:
             if os.path.exists('datos_gasto.json') and os.path.getsize('datos_gasto.json') > 0:
                 with open('datos_gasto.json', 'r') as archivo:
@@ -316,7 +316,7 @@ class PaginaPrincipalView(VentaView,AuthenticatedView, MethodView):
         return render_template('3_vista-principal.html', informacion_tienda=informacion_tienda,
                                informacion_tendero=informacion_tendero, perfil=perfil, state=state,
                                productos=productos, total_ventas=total_ventas)
-        
+
 class RegistroSuministroView(AuthenticatedView):
     def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
@@ -344,41 +344,36 @@ class RegistroSuministroView(AuthenticatedView):
     def registrar_suministro(self):
         try:
             print("Intentando registrar suministro")
-            id_registro = request.form['idregistro-suministro']
-            cantidad = request.form['cantidad-producto-suministro']
-            fecha = request.form['fecha-producto-suministro']
-            metodo_pago = request.form['metodo-pago-suministro']
-            total = request.form['total-producto-suministro']
-            tienda_id = request.form['tienda_id-producto-suministro']
-            
-            if not id_registro or not cantidad or not fecha or not metodo_pago or not total or not tienda_id:
-                return {'state': False, 'message': 'Por favor, complete todos los datos'}
+            cantidad = request.form.get('cantidad-producto-suministro')
+            fecha = request.form.get('fecha-producto-suministro')
+            metodo_pago = request.form.get('metodo-pago-suministro')
+            total = request.form.get('total-producto-suministro')
+            tienda = session['tienda_Id']
+            sumi_producto_nombre = request.form.get('producto-suministro')
 
-            suministro_existente = Suministros.query.filter_by(sum_Id=id_registro).first()
-            if suministro_existente:
-                return {'state': False, 'message': 'Ya existe un suministro con esa identificación'}
-            else:
-                nuevo_suministro = Suministros(sum_Id=id_registro, sum_Cantidad=cantidad, sum_Datetime=fecha, sum_Metodo_pago=metodo_pago, sum_Total=total, tienda_Id=tienda_id)
-                db.session.add(nuevo_suministro)
-                db.session.commit()
-                return {'state': True, 'message': 'Suministro registrado exitosamente'}
-
-        except KeyError as e:
-            print(f"Error en registrar_suministro: {str(e)}")
-            return {'state': False, 'message': f"Error en el formulario: {str(e)}"}
+            if not cantidad or not fecha or not metodo_pago or not  total or not  tienda or not  sumi_producto_nombre :
+                    return {'state': False, 'message': 'Por favor, complete todos los datos'}
+            print("Intentando registrar suministro...")
+            new_suministro =Suministros( cantidad, fecha,metodo_pago,total,tienda , sumi_producto_nombre )
+            db.session.add(new_suministro)
+            db.session.commit()
+            print("suministro registrado exitosamente")
+            producto=Productos.query.filter_by(prod_Nombre=sumi_producto_nombre).first()
+            producto.prod_Cantidad += int (cantidad)
+            db.session.commit()
+            return {'state': True, 'message': 'Registro exitoso'}
         except Exception as e:
-            print(f"Error en registrar_suministro: {str(e)}")
+            print("Error al registrar suministro:", str(e))
             return {'state': False, 'message': f"Ha ocurrido un error: {str(e)}"}
 
     def renderizar_suministro(self, estado, mensaje):
         try:
-            suministros_lista = Suministros.query.all()
-            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministros_lista)
+            suministro_lista = Suministros.query.all()
+            return render_template('5_registro_suministro.html', estado=estado, mensaje=mensaje, suministros=suministro_lista)
         except Exception as e:
-            print(f"Error al renderizar suministros: {str(e)}")
-            return render_template('5_registro_suministro.html', estado=0, mensaje=f"Ha ocurrido un error al obtener los suministros: {str(e)}", suministros=[])
-
-#editar suministro.. 
+            print(f"Error al renderizar suministro: {str(e)}")
+            return render_template('5_registro_suministro.html', estado=0, mensaje=f"Error: {str(e)}")
+#editar suministro..
 class EditarSuministro(RegistroSuministroView, AuthenticatedView):
     @LoginRequired.login_required
     def get(self, sum_id):
@@ -394,33 +389,36 @@ class EditarSuministro(RegistroSuministroView, AuthenticatedView):
     @LoginRequired.login_required
     def post(self, sum_id):
         try:
-            suministro = Suministros.query.get(sum_id)
-            
+            suministro = Suministros.query.filter_by(sum_Id=sum_id).first()
+
             if suministro:
-                nueva_cantidad = request.form.get('cantidad-suministro')
+                nuevo_nombre = request.form.get('nombre-suministro')
+                nuevo_cantidad = request.form.get('cantidad-suministro')
                 nuevo_fecha = request.form.get('fecha-suministro')
                 nuevo_metodo_pago = request.form.get('metodo-pago-suministro')
                 nuevo_total = request.form.get('total-suministro')
-                
-                if nueva_cantidad:
-                    suministro.sum_Cantidad = nueva_cantidad
+
+
+                if nuevo_nombre:
+                    suministro.sum_prod_Nom = nuevo_nombre
+                if nuevo_cantidad:
+                    suministro.sum_Cantidad = nuevo_cantidad
                 if nuevo_fecha:
                     suministro.sum_Datetime = nuevo_fecha
                 if nuevo_metodo_pago:
                     suministro.sum_Metodo_pago = nuevo_metodo_pago
                 if nuevo_total:
                     suministro.sum_Total = nuevo_total
-                
+
                 db.session.commit()
-                
+
                 return redirect(url_for('main.suministros', estado=1, mensaje="Actualizaste un suministro exitosamente"))
             else:
                 return render_template('editar_suministros.html',estado=0, mensaje="El suministro no se encontró en la base de datos")
         except Exception as e:
             return render_template('editar_suministros.html', estado=0, mensaje=f"Error al editar el suministro: {str(e)}")
 
-
-class RegistroProveedorView(MethodView):
+class RegistroProveedorView(AuthenticatedView):
     def get(self, estado='', mensaje=""):
         if self.esta_autenticado():
             print("Usuario autenticado")
@@ -428,7 +426,6 @@ class RegistroProveedorView(MethodView):
         else:
             print("Usuario no autenticado")
             return self.renderizar_login()
-
     def post(self):
         try:
             print("POST request recibido")
@@ -451,8 +448,9 @@ class RegistroProveedorView(MethodView):
             nombre = request.form.get('nombre-proveedor')
             ubicacion = request.form.get('ubicacion-proveedor')
             contacto = request.form.get('telefono-proveedor')
+            productos = request.form.get('proveedor_producto_nombre')
 
-            if not id or not nombre or not ubicacion or not contacto:
+            if not id or not nombre or not ubicacion or not contacto or not productos:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             proveedor_existente = Proveedores.query.filter_by(prov_Id=id).first()
@@ -461,7 +459,7 @@ class RegistroProveedorView(MethodView):
                 return {'state': False, 'message': 'Ya existe un proveedor con ese ID'}
             else:
                 print("Intentando registrar proveedor...")
-                new_proveedor = Proveedores(id, nombre, ubicacion, contacto)
+                new_proveedor = Proveedores(id, nombre, ubicacion, contacto,  productos )
                 db.session.add(new_proveedor)
                 db.session.commit()
                 print("Proveedor registrado exitosamente")
@@ -477,9 +475,56 @@ class RegistroProveedorView(MethodView):
         except Exception as e:
             print(f"Error al renderizar proveedores: {str(e)}")
             return render_template('19_registro_proveedores.html', estado=0, mensaje=f"Error: {str(e)}")
+# editar proveedor
+class Editarproveedores(RegistroProveedorView, AuthenticatedView):
+    @LoginRequired.login_required
+    def get(self, prov_id):
+        try:
+            if prov_id:
+                proveedor = Proveedores.query.filter_by(prov_Id=prov_id).first()
+                print(proveedor)
+                if proveedor:
+                    return render_template('editar_proveedor.html', proveedor=proveedor)
+                else:
+                    return render_template('editar_proveedor.html', mensaje="El proveedor no se encontró en la base de datos")
+            else:
+                return render_template('editar_proveedor.html', mensaje="No se proporcionó un ID de proveedor")
+        except Exception as e:
+            return render_template('editar_proveedor.html', mensaje=f"Error al cargar el proveedores: {str(e)}")
 
+    @LoginRequired.login_required
+    def post(self, prov_id=''):
+        try:
+            if prov_id :
+                proveedor = Proveedores.query.filter_by(prov_Id=prov_id).first()
+                print(proveedor)
+                if proveedor:
+                    nuevo_id = request.form.get('ID-PROVEEDORES')
+                    nuevo_nombre = request.form.get('Nombre-proveedores')
+                    nuevo_ubicacion = request.form.get('Ubicacion_proveedores')
+                    nuevo_contacto = request.form.get('Contacto_proveedores')
+                    nuevo_producto = request.form.get('Producto_provedores')
 
+                    if nuevo_id:
+                        proveedor.prov_Id = nuevo_id
+                    if nuevo_nombre:
+                        proveedor.prov_Nombre = nuevo_nombre
+                    if nuevo_ubicacion:
+                        proveedor.prov_Ubicacion = nuevo_ubicacion
+                    if nuevo_contacto:
+                        proveedor.prov_Contacto = nuevo_contacto
+                    if nuevo_producto:
+                        proveedor.prov_prod_nom = nuevo_producto
 
+                    db.session.commit()
+
+                    return redirect(url_for('main.proveedores', estado=1, mensaje="Actualizaste un proveedor exitosamente",proveedor=proveedor))
+                else:
+                    return render_template('editar_proveedor.html', mensaje="El proveedor no se encontró en la base de datos",proveedor=proveedor)
+            else:
+                return render_template('editar_proveedor.html', estado=0, mensaje="No se proporcionó un ID de proveedor",proveedor=proveedor)
+        except Exception as e:
+            return render_template('editar_proveedor.html', estado=0, mensaje=f"Error al editar el proveedor: {str(e)}")
 class ProductoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = tienda_id
@@ -496,17 +541,17 @@ class ProductoView(AuthenticatedView):
     def post(self):
         try:
             if self.registrar_producto()['state']:
-                return self.get(estado=1, mensaje="Registro exitoso") 
+                return self.get(estado=1, mensaje="Registro exitoso")
             else:
                 return self.get(estado=0, mensaje=self.registrar_producto()['message'])
         except Exception as e:
             return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
-        
+
     def guardar_en_json(self, objeto, nombre_archivo):
         with open(nombre_archivo, 'w') as archivo:
             json.dump(objeto, archivo)
-        return True 
-    
+        return True
+
     def registrar_producto(self):
         id = int(request.form['prod_Id'])
         nombre = request.form['prod_Nombre']
@@ -516,18 +561,18 @@ class ProductoView(AuthenticatedView):
         imagen = request.files['prod_Img']
         imagen_data = imagen.read()
         tienda_id = session['tienda_Id']
-        
+
         if id=='':
             id=0
         nombre_min = nombre.lower()
-        
+
         producto_existente = Productos.query.filter(and_(Productos.prod_Id == int(id), Productos.tienda_Id == tienda_id)).first()
         if id<0 or precio < 0 or cantidad < 0 or ganancia < 0:
             return {'state': False, 'message': 'Por favor, ingrese valores no negativos para id, precio, cantidad y ganancia'}
         if not id or not nombre or not precio or not cantidad or not imagen:
-            return {'state':False, 'message':'Por favor, complete todos los datos'}  
+            return {'state':False, 'message':'Por favor, complete todos los datos'}
         elif producto_existente:
-            return {'state':False, 'message':'Ya existe un producto con esa identificación'} 
+            return {'state':False, 'message':'Ya existe un producto con esa identificación'}
         else:
             adm_id = session['adm_Id']
             new_product = Productos(producto_id=int(id), nombre=nombre, precio=precio, ganancia=ganancia, cantidad=cantidad, imagen=imagen_data, tienda=tienda_id, tendero=adm_id)
@@ -543,7 +588,7 @@ class ProductoView(AuthenticatedView):
         tienda_info = []
         ganancias = []
         colores = []
-        
+
         for producto, tienda in resultado:
             if producto.tienda_Id == tienda_id:
                 if producto.prod_Img:
@@ -567,7 +612,7 @@ class ProductoView(AuthenticatedView):
                     gana = 0
                 else:
                     gana = "{:,}".format(int(totalgana-totalbruto))
-                
+
                 if producto.prod_Cantidad <= 7:
                      obj = {
                         "color": "orange",
@@ -577,7 +622,7 @@ class ProductoView(AuthenticatedView):
                      }
                      colores.append(obj)
                      self.guardar_en_json(obj,'control_productos.json')
-                     
+
                 if producto.prod_Cantidad <= 7:
                      obj = {
                         "color": "orange",
@@ -587,7 +632,7 @@ class ProductoView(AuthenticatedView):
                      }
                      colores.append(obj)
                      self.guardar_en_json(obj,'control_productos.json')
-                     
+
                 if producto.prod_Cantidad > 7:
                      obj = {
                         "color": "green",
@@ -597,12 +642,12 @@ class ProductoView(AuthenticatedView):
                      }
                      colores.append(obj)
                      self.guardar_en_json(obj,'control_productos.json')
-                     
+
                 productos_codificados.append((producto, img_codificada))
                 ganancias.append(gana)
                 tienda_info.append(tienda)
         print(colores)
-        
+
         return render_template('11_historial_prod.html', resultado=productos_codificados, tienda_info=tienda_info, ganancias=ganancias, mensaje=mensaje, estado=estado,colores = colores)
 
 class EditarProducto(ProductoView,AuthenticatedView):
@@ -618,14 +663,14 @@ class EditarProducto(ProductoView,AuthenticatedView):
     def post(self, producto_id):
         # Buscar el producto en la base de datos
         producto = Productos.query.filter_by(Id=producto_id).first()
-        
+
         if producto:
             # Obtener los datos del formulario HTML
             nuevo_nombre = request.form.get('nombre-prod')
             nuevo_precio = request.form.get('precio-prod')
             nueva_cantidad = request.form.get('cantidad-prod')
             nueva_ganancia = request.form.get('ganancia-prod')
-            
+
             # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
             if nuevo_nombre:
                 producto.prod_Nombre = nuevo_nombre
@@ -635,10 +680,10 @@ class EditarProducto(ProductoView,AuthenticatedView):
                 producto.prod_Cantidad = nueva_cantidad
             if nueva_ganancia:
                 producto.prod_Ganancia = nueva_ganancia
-            
+
             # Guardar los cambios en la base de datos
             db.session.commit()
-            
+
             return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
         else:
             return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
@@ -648,7 +693,7 @@ class EliminarProducto(ProductoView, AuthenticatedView):
         # Intenta encontrar el producto en la base de datos
         producto = Productos.query.filter_by(Id=id).first()
         ventas_productos = VentasHasProductos.query.filter_by(productos_Id=id).all()
-        
+
         if producto:
             try:
                 # Elimina las entradas en la tabla ventas_has_productos relacionadas con el producto
@@ -686,14 +731,14 @@ class EditarVenta(VentaView,AuthenticatedView):
     def post(self, producto_id):
         # Buscar el producto en la base de datos
         producto = Productos.query.filter_by(Id=producto_id).first()
-        
+
         if producto:
             # Obtener los datos del formulario HTML
             nuevo_nombre = request.form.get('nombre-prod')
             nuevo_precio = request.form.get('precio-prod')
             nueva_cantidad = request.form.get('cantidad-prod')
             nueva_ganancia = request.form.get('ganancia-prod')
-            
+
             # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
             if nuevo_nombre:
                 producto.prod_Nombre = nuevo_nombre
@@ -703,18 +748,18 @@ class EditarVenta(VentaView,AuthenticatedView):
                 producto.prod_Cantidad = nueva_cantidad
             if nueva_ganancia:
                 producto.prod_Ganancia = nueva_ganancia
-            
+
             # Guardar los cambios en la base de datos
             db.session.commit()
-            
+
             return super().get(estado=1,mensaje="Actualizaste un producto exitosamente")
         else:
             return super().get(estado=1,mensaje="El producto no se encontró en la base de datos")
-        
+
 class EliminarVenta(VentaView, AuthenticatedView):
     @LoginRequired.login_required
     def get(self, id):
-        
+
         # Intenta encontrar la venta en la base de datos
         venta = Ventas.query.filter_by(venta_Id=id).first()
         if venta:
@@ -722,12 +767,12 @@ class EliminarVenta(VentaView, AuthenticatedView):
                 # Actualizar el total de ventas en el JSON
                 with open('datos_venta.json', 'r+') as archivo:
                     data = json.load(archivo)
-                    
+
                     # Calcular el total de la venta
                     total_venta = 0
                     # Obtener los productos asociados a la venta
                     datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).filter(VentasHasProductos.ventas_venta_Id == id).all()
-                    
+
                     for relacion in datos_relacionados:
                         # Multiplicar la cantidad vendida por el precio unitario de cada producto y sumar al total de la venta
                         total_venta += (int(venta.venta_Cantidad) * int(relacion.Productos.prod_Precio))
@@ -735,7 +780,7 @@ class EliminarVenta(VentaView, AuthenticatedView):
                         print(f"Cantidad de productos: {cantidad}")
                         relacion.Productos.prod_Cantidad+=venta.venta_Cantidad
                         print(f"Cantidad despues de eliminar venta: {relacion.Productos.prod_Cantidad}")
-                        
+
                     # Sumar el total de la venta eliminada del total de ventas
                     data["total_ventas"] += total_venta
                     archivo.seek(0)  # Mover el puntero al inicio del archivo
@@ -766,7 +811,7 @@ class EliminarVenta(VentaView, AuthenticatedView):
 class GastoView(AuthenticatedView):
     def __init__(self, tienda_id=None):
         self.tienda_id = session.get('tienda_Id')
-    
+
     @LoginRequired.login_required
     def get(self, estado="", mensaje=""):
         if self.esta_autenticado():
@@ -776,8 +821,8 @@ class GastoView(AuthenticatedView):
 
     def guardar_en_json(self, objeto, nombre_archivo):
         with open(nombre_archivo, 'w') as archivo:
-            json.dump(objeto, archivo)   
-        return True           
+            json.dump(objeto, archivo)
+        return True
 
     def post(self):
         try:
@@ -789,14 +834,14 @@ class GastoView(AuthenticatedView):
 
             if not id or not precio or not descripcion or not tipo or not tienda_id:
                 return self.get(estado=0, mensaje='Por favor, complete todos los datos')
-            
+
             obj = {
                     "id": id,
                     "nombre": descripcion,
                     "tipo": tipo,
                     "precio": precio
                 }
-            
+
             self.guardar_en_json(obj,'datos_gasto.json')
 
             # Crear instancia del gasto y guardarlo en la base de datos
@@ -807,8 +852,8 @@ class GastoView(AuthenticatedView):
             return self.get(estado=1, mensaje="Registro de gasto exitoso")
         except Exception as e:
             db.session.rollback()
-            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")       
-    
+            return self.get(estado=0, mensaje=f"Ha ocurrido un error: {str(e)}")
+
     def renderizar_gasto(self, estado, mensaje):
         tienda_id = self.tienda_id
         resultado = db.session.query(Gastos, Tiendas).join(Tiendas, Gastos.tienda_Id == Tiendas.tienda_Id).all()
@@ -820,10 +865,10 @@ class GastoView(AuthenticatedView):
                 if gasto.gastos_Precio:
                     precio = gasto.gastos_Precio
                     gasto.gastos_Precio = "{:,}".format(int(gasto.gastos_Precio))
-                
+
                 tienda_info.append(tienda)
                 gastos.append((gasto, tienda))  # Aquí añadimos una tupla de (gasto, tienda)
-        
+
         return render_template('20_gastos.html', resultado=gastos, tienda_info=tienda_info, mensaje=mensaje)
 class EditarGasto(GastoView,AuthenticatedView):
     @LoginRequired.login_required
@@ -837,14 +882,14 @@ class EditarGasto(GastoView,AuthenticatedView):
     def post(self, producto_id):
         # Buscar el producto en la base de datos
         producto = Productos.query.filter_by(Id=producto_id).first()
-        
+
         if producto:
             # Obtener los datos del formulario HTML
             nuevo_nombre = request.form.get('nombre-prod')
             nuevo_precio = request.form.get('precio-prod')
             nueva_cantidad = request.form.get('cantidad-prod')
             nueva_ganancia = request.form.get('ganancia-prod')
-            
+
             # Verificar si se proporcionaron nuevos datos y actualizar solo esos campos
             if nuevo_nombre:
                 producto.prod_Nombre = nuevo_nombre
@@ -854,14 +899,14 @@ class EditarGasto(GastoView,AuthenticatedView):
                 producto.prod_Cantidad = nueva_cantidad
             if nueva_ganancia:
                 producto.prod_Ganancia = nueva_ganancia
-            
+
             # Guardar los cambios en la base de datos
             db.session.commit()
-            
+
             return super().get(estado=1,mensaje="Actualizaste un gasto exitosamente")
         else:
             return super().get(estado=1,mensaje="El gasto no se encontró en la base de datos")
-        
+
 class EliminarGasto(GastoView, AuthenticatedView):
     @LoginRequired.login_required
     def get(self, gasto_id):
@@ -872,12 +917,12 @@ class EliminarGasto(GastoView, AuthenticatedView):
                 # # Actualizar el total de ventas en el JSON
                 # with open('datos_gasto.json', 'r+') as archivo:
                 #     data = json.load(archivo)
-                    
+
                 #     # Calcular el total de la venta
                 #     total_venta = 0
                 #     # Obtener los productos asociados a la venta
                 #     datos_relacionados = db.session.query(VentasHasProductos, Productos).join(Productos).filter(VentasHasProductos.ventas_venta_Id == id).all()
-                    
+
                 #     for relacion in datos_relacionados:
                 #         # Multiplicar la cantidad vendida por el precio unitario de cada producto y sumar al total de la venta
                 #         total_venta += (int(venta.venta_Cantidad) * int(relacion.Productos.prod_Precio))
@@ -885,7 +930,7 @@ class EliminarGasto(GastoView, AuthenticatedView):
                 #         print(f"Cantidad de productos: {cantidad}")
                 #         relacion.Productos.prod_Cantidad+=venta.venta_Cantidad
                 #         print(f"Cantidad despues de eliminar venta: {relacion.Productos.prod_Cantidad}")
-                        
+
                 #     # Sumar el total de la venta eliminada del total de ventas
                 #     data["total_ventas"] += total_venta
                 #     archivo.seek(0)  # Mover el puntero al inicio del archivo
@@ -910,7 +955,7 @@ class EliminarGasto(GastoView, AuthenticatedView):
         else:
             # Si la venta no se encuentra, retornar un mensaje indicándolo
             return super().get(estado=0, mensaje="No se encontró la venta")
-                
+
 class Buscar(PaginaPrincipalView):
     def get(self,state=1, resultados={}):
          print("Entré a get")
@@ -953,6 +998,7 @@ class Resultado(Buscar,PaginaPrincipalView):
         else:
             return super().renderizar_principal_2(state=1,resultados=resultados)
 
+<<<<<<< HEAD
 import pdfkit
 from weasyprint import HTML
 @main_bp.route('/generar_factura', methods=['GET', 'POST'])
@@ -971,14 +1017,16 @@ def generar_pdf():
 
     # Devolver el PDF al cliente
     return send_file('output.pdf', as_attachment=True)
+=======
+>>>>>>> bd4b209c23c65bc228f1148f83390c59e8ea51a1
 #====================================================================================================
-        
+
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
 
 @LoginRequired.login_required
 def generar_informe():
     if ('adm_Id' in session and 'tienda_Id'in session) or ('tendero_Id' in session and 'tienda_Id' in session):
-        return render_template('9_generar-informe.html')    
+        return render_template('9_generar-informe.html')
     else:
         mensaje="Debes iniciar sesión primero"
         estado=0
@@ -994,7 +1042,7 @@ def ajustes_generales():
         mensaje="Debes iniciar sesión primero"
         estado=0
         return render_template('1_login.html', mensaje=mensaje, estado=estado)
-    
+
 @main_bp.route('/ajustes-cuenta', methods=['GET', 'POST'])
 
 @LoginRequired.login_required
@@ -1124,7 +1172,7 @@ def nuevo_producto():
             db.session.commit()
         return render_template('4_registro_producto.html', mensaje=mensaje, estado=estado)
 
-        
+
 @main_bp.route('/nuevo_usuario', methods=['POST'])
 def nuevo_usuario():
     if request.method == 'POST':
@@ -1257,7 +1305,7 @@ def verificar_usuario():
             return render_template('1_login.html', estado=estado, mensaje=mensaje)
     else:
         return redirect(url_for('main.home'))
-    
+
 
 # Se registran las rutas con las clases correspondientes
 main_bp.add_url_rule('/', view_func=IndexView.as_view('index'))
@@ -1280,3 +1328,4 @@ main_bp.add_url_rule('/eliminar-gasto/<int:gasto_id>', view_func=EliminarGasto.a
 main_bp.add_url_rule('/buscar', view_func=Buscar.as_view('buscar'))
 main_bp.add_url_rule('/resultado', view_func=Resultado.as_view('resultado'))
 main_bp.add_url_rule('/editar-suministros/<int:sum_id>', view_func=EditarSuministro.as_view('editar-suministros'))
+main_bp.add_url_rule('/editar-proveedores/<int:prov_id>', view_func=Editarproveedores.as_view('editar-proveedores'))

@@ -123,24 +123,22 @@ class Proveedores(db.Model):
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
-    sum_Id = db.Column(db.BigInteger, primary_key=True)
+    sum_Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
     sum_Metodo_pago = db.Column(db.String(100))  # Cambio aquí
     sum_Total = db.Column(db.Float)  # Cambio aquí
-    sum_Prov_Nom = db.Column(db.String(65))
+    sum_prod_Nom = db.Column(db.String(65))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, cantidad, fecha, metodo_pago, total, proveedor, tienda):
-        self.sum_Id = id
+    def __init__(self, cantidad, fecha, metodo_pago, total, tienda, sumi_producto_nombre ):
         self.sum_Cantidad = cantidad
         self.sum_Datetime = fecha
         self.sum_Metodo_pago = metodo_pago
         self.sum_Total = total
-        self.sum_Prov_Nom = proveedor
         self.tienda_Id = tienda
-
-
+        self.sum_prod_Nom = sumi_producto_nombre
+        
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
 
@@ -149,13 +147,11 @@ class SuministrosHasProductos(db.Model):
     productos_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
-    productos_prod_Nombre = db.Column(db.String(65))
     
-    def __init__(self, suministro, tienda, producto,nombre_producto,tendero, productos_tienda):
+    def __init__(self, suministro, tienda, producto,tendero, productos_tienda):
         self.suministros_sum_Id = suministro
         self.suministros_tienda_Id = tienda
         self.productos_Id = producto
-        self.productos_prod_Nombre = nombre_producto
         self.productos_tendero_Id = tendero
         self.productos_tienda_Id = productos_tienda
 

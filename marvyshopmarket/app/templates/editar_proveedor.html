@@ -9,7 +9,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
         setTimeout(function() {
-            window.location.href = "{{ url_for('main.suministros') }}";
+            window.location.href = "{{ url_for('main.proveedores') }}";
         }, 2000);   
         }
         redirigirDespuesDeTiempo()
@@ -22,7 +22,7 @@
     <script>
         function redirigirDespuesDeTiempo() {
         setTimeout(function() {
-            window.location.href = "{{ url_for('main.suministros') }}";
+            window.location.href = "{{ url_for('main.proveedores') }}";
         }, 2000);   
         }
     redirigirDespuesDeTiempo()
@@ -36,35 +36,34 @@
 <div class="logo" id="logo">
     <div><img src="{{ url_for('static', filename='images/logo_marvy.png') }}" class="imagen" alt="icono tienda"></div>
 </div>
-<div id="editar-suministros" style="grid-column:2;grid-row: 2/3;">
-    <h2>Editar suministros</h2>
-    <form action="/editar-suministros/{{suministro.sum_Id}}" method="POST">
-
-        <label for="nombre-suministro">Nombre Producto:</label>
+<div id="editar-proveedores" style="grid-column:2;grid-row: 2/3;">
+    <h2>Editar proveedores</h2>
+    <form action="/editar-proveedores/{{ proveedor.prov_Id }}" method="POST">
+        <label for="ID-PROVEEDORES">ID:</label>
         <div>
-            <input type="text" id="nombre-suministro" name="nombre-suministro" placeholder="{{ suministro.sum_prod_Nom }}">
+            <input type="number" id="ID-PROVEEDORES" name="ID-PROVEEDORES" placeholder="{{ proveedor.prov_Id }}">
         </div>
-        <label for="cantidad-suministro">Cantidad:</label>
+        <label for="Nombre-proveedores">Nombre:</label>
         <div>
-            <input type="number" id="cantidad-suministro" name="cantidad-suministro" placeholder="{{ suministro.sum_Cantidad }}">
+            <input type="text" id="Nombre-proveedores" name="Nombre-proveedores" placeholder="{{ proveedor. prov_Nombre }}">
         </div>
-        <label for="fecha-suministro">Fecha:</label>
+        <label for="Ubicacion_proveedores">Ubicacion:</label>
         <div>
-            <input type="date" id="fecha-suministro" name="fecha-suministro" placeholder="{{ suministro.sum_Datetime }}">
+            <input type="text" id="Ubicacion_proveedores" name="Ubicacion_proveedores" placeholder="{{ proveedor.prov_Ubicacion }}">
         </div>
-        <label for="metodo-pago-suministro">Método de pago:</label>
+        <label for="Contacto_proveedores">Contacto:</label>
         <div>
-            <input type="text" id="metodo-pago-suministro" name="metodo-pago-suministro" placeholder="{{ suministro.sum_Metodo_pago }}">
+            <input type="number" id="Contacto_proveedores" name="Contacto_proveedores" placeholder="{{ proveedor.prov_Contacto }}">
         </div>
-        <label for="total-suministro">Total:</label>
+        <label for="Producto_provedores">Producto:</label>
         <div>
-            <input type="number" id="total-suministro" name="total-suministro" placeholder="{{ suministro.sum_Total }}">
+            <input type="text" id="Producto_provedores" name="Producto_provedores" placeholder="{{ proveedor. prov_prod_nom }}">
         </div>
         
         <input type="submit" value="Editar suministros" style="background-color: var(--btn-claro-continuar); cursor: pointer;">
     </form>
     
-    <a href="/suministros" style="width: 76%;"><button>Atrás</button></a>
+    <a href="/proveedores" style="width: 76%;"><button>Atrás</button></a>
 </div>
 
 {% endblock %}

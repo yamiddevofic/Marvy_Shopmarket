@@ -263,7 +263,7 @@
                     <th>Total</th>
                     <th>Gana</th>
                     <!-- <th  width="80">Imagen</th> -->
-                    <th  width="20">Editar/Eliminar</th></a>
+                    <th  width="20">Editar</th></a>
                 </tr>
 
             </thead>
@@ -298,8 +298,7 @@
                             <!-- <td width="250"><img src="data:image/png;base64,{{ imagen_codificada }}" class="imagen-producto" alt="{{ producto.prod_Nombre }}" id="imagen_producto"></td> -->
                             <td>
                                 <a href="/editar-producto/{{ producto.prod_Id }}" style="color: var(--claro-principal);" class="editar-producto"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="/eliminar-producto/{{ producto.Id }}" style="color: var(--btn-claro-cancelar)" class="eliminar-producto"><i class="fas fa-trash-alt"></i></a>
-                            </td>
+                           </td>
                         </tr>
                     {% endfor %}
             </tbody>

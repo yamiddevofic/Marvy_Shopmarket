@@ -6,7 +6,7 @@
     <script> 
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/suministros') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 3500); 
         }
         redirigirDespuesDeTiempo()
@@ -17,13 +17,12 @@
     <script>
         function redirigirDespuesDeTiempo() {
             setTimeout(function() {
-                window.location.href = "{{ url_for('/suministros') }}";
+                window.location.href = "{{ url_for('main.suministros') }}";
             }, 2000);   
         }
         redirigirDespuesDeTiempo()
     </script>
 {% else %}
-<p id="mensaje"></p>
 <div class="title">
     <h1>Registro de Suministro</h1>
 </div>
@@ -33,14 +32,7 @@
         <table>
             <tbody>
                 <tr>
-                    <td>
-                        <label>Id factura: </label>
-                        <div><input placeholder="#" id="id-suministro" name="idregistro-suministro"></div>
-                    </td>
-                    <td>
-                        <label>Id: </label>
-                        <div><input placeholder="Id producto" id="id-producto-suministro" class="id-producto-suministro" name="id-producto-suministro"></div>
-                    </td>
+                    
                     <td>
                         <label>Cantidad: </label>
                         <div><input type="number" placeholder="Cantidad" name="cantidad-producto-suministro" id="cantidad-producto-suministro"></div>
@@ -54,12 +46,12 @@
                         <div><input type="text" placeholder="Metodo de pago" id="metodo-pago-suministro" name="metodo-pago-suministro"></div>
                     </td>
                     <td>
-                        <label>Total: </label>
+                        <label> Precio: </label>
                         <div><input type="number" placeholder="Total" name="total-producto-suministro" id="total-producto-suministro"></div>
                     </td>
                     <td>
-                        <label>Tienda id: </label>
-                        <div> <input type="number" placeholder="Tienda id" name="tienda_id-producto-suministro" id="tienda_id-producto-suministro"> </div> 
+                        <label>Nombre producto: </label>
+                        <div><input type="text" placeholder="producto" id="producto-suministro" name="producto-suministro"></div>
                     </td>
 
                     <td>
@@ -79,14 +71,15 @@
     <table>
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Id producto</th>
                 <th>Cantidad</th>
                 <th>Fecha</th>
                 <th>Método de pago</th>
-                <th>Total</th>
-                <th>Tienda ID</th>
+                <th>precio</th>
+                <th>tienda id</th>
+                <th>Nombre producto</th>
 
-                <th  width="20">Editar/Eliminar</th></a>
+                <th  width="20">Editar</th></a>
             </tr>
         </thead>
 
@@ -99,9 +92,10 @@
                 <td>{{ suministro.sum_Metodo_pago }}</td>
                 <td>{{ suministro.sum_Total }}</td>
                 <td>{{ suministro.tienda_Id }}</td>
+                <td>{{ suministro.sum_prod_Nom }}</td>
 
                 <td>
-                    <a href="/editar-suministros/{{suministro.sum_Id }}" style="color: var(--claro-principal); cursor: pointer" class="editar-suministros"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="/editar-suministros/{{ suministro.sum_Id }}" style="color: var(--claro-principal); cursor: pointer" class="editar-suministros"><i class="fa-solid fa-pen-to-square"></i></a> 
                 </td>
             </tr>
                 

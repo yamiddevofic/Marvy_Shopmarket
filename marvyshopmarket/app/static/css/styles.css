@@ -101,6 +101,7 @@ a{
     background-color: #525252; /* Fondo oscuro */
     color: var(--claro-secundario-2); /* Texto blanco */
 }
+
 .imagen{
     width: 30%;
 }
@@ -255,6 +256,16 @@ td:last-child, th:last-child {
 }
 #container-home footer p{
     padding: 2%;
+}
+footer{
+    grid-column: 1/-1; 
+    grid-row: -1; 
+    text-align: center; 
+    background: #027368; 
+    bottom: 0;
+}
+.dark-mode footer{
+    background: var(--oscuro-secundario-1)
 }
 .menu{
     grid-column: 1;
@@ -558,14 +569,17 @@ td:last-child, th:last-child {
     flex-direction: column;
     font-size: 1.5rem;
 }
-header{
-    height: 15%;
-}
-header div:nth-child(2), header h3{
+
+#header_home{
     width: 100%;
+    grid-column: 1/-1;
+    grid-row: 1;
+    top:0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between; background: #027368; position: fixed;
+}
+.dark-mode #header_home{
+    background: var(--oscuro-secundario-1)
 }
 .header_signUp{
     grid-column: 2;
@@ -978,6 +992,57 @@ img{
         width: 90%;
     }
 } */
+
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    --background: #0b090f;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--background);
+    transition: .5s;
+    border-radius: 30px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.4em;
+    width: 1.4em;
+    border-radius: 50%;
+    left: 10%;
+    bottom: 15%;
+    box-shadow: inset 8px -4px 0px 0px #fff000;
+    background: var(--background);
+    transition: .5s;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--claro-principal);
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(100%);
+    box-shadow: inset 15px -4px 0px 15px #fff000;
+  }
 
 form input{
     width: 60%;
