@@ -1,4 +1,4 @@
-<h1>Contribuiters:</h1>
+<h1>Contributors:</h1>
 
 - @yamid-dev<br>
 - @jhordxfredy
