@@ -12,6 +12,8 @@ Marvy Shopmarket es una aplicación web diseñada para ayudar a las tiendas de b
 - **Informes**: Generación de informes detallados sobre ventas, gastos y ganancias.
 - **Facturas**: Generación de facturas detalladas sobre ventas.
 - **Interfaz adaptable**: Soporte para modo claro y oscuro, mejorando la experiencia de usuario.
+- **Copia de seguridad**: Almacenamiento tanto en local como en la nube.
+- **Configuración**: Ajustes generales (almacenamiento, apariencia), ajustar cuenta, opción de eliminar cuenta.
 
 
 ## Tecnologías utilizadas 💻
