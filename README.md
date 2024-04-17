@@ -45,7 +45,7 @@ Las contribuciones son siempre bienvenidas. Para contribuir al proyecto, por fav
 5. Abre una pull request.
 
 ## Licencia 📄
-Este proyecto está bajo la Licencia [MIT]([url-de-la-licencia](https://github.com/yamid-dev/Marvy_Shopmarket/blob/main/licencia.md)).
+Este proyecto está bajo la Licencia [MIT](https://github.com/yamid-dev/Marvy_Shopmarket/blob/main/licencia.md).
 
 ## Contacto 📧
 Para más información, puedes contactarme a través de [yhrodriguez1@hotmail.com](mailto:yhrodriguez1@hotmail.com).
