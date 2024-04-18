@@ -998,27 +998,6 @@ class Resultado(Buscar,PaginaPrincipalView):
         else:
             return super().renderizar_principal_2(state=1,resultados=resultados)
 
-<<<<<<< HEAD
-import pdfkit
-from weasyprint import HTML
-@main_bp.route('/generar_factura', methods=['GET', 'POST'])
-def generar_pdf():
-    # Datos dinámicos para reemplazar en la plantilla
-    data = {
-        'nombre_alumno': 'Juan Perez',
-        'curso': 'Python Básico'
-    }
-    
-    # Renderizar la plantilla HTML con los datos
-    rendered_html = render_template('7_factura.html', data=data)
-    
-    # Convertir el HTML a PDF
-    pdfkit.from_string(rendered_html, 'output.pdf')
-
-    # Devolver el PDF al cliente
-    return send_file('output.pdf', as_attachment=True)
-=======
->>>>>>> bd4b209c23c65bc228f1148f83390c59e8ea51a1
 #====================================================================================================
 
 @main_bp.route('/generar-informe', methods=['GET', 'POST'])
