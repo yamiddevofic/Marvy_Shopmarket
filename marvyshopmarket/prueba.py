@@ -1,40 +1,22 @@
-import urllib.parse
-import urllib.request
-import json
+import time
 
-# URL de la API de Google Drive para obtener la lista de archivos
-url = "https://www.googleapis.com/drive/v3/files"
+# Función o sección del código que deseas medir
+def mi_seccion_de_codigo():
+    # Utilizamos la fórmula de la suma aritmética para calcular la suma de los números del 1 al 1000000
+    suma = (1 + 1298391028390128474816234) * 1298391028390128474816234 // 2
+    print("La suma es:", suma)
 
-# Parámetros de consulta para la solicitud
-params = {
-    'pageSize': 10,  # número máximo de archivos a recuperar
-    'fields': 'nextPageToken, files(id, name)',  # campos a incluir en la respuesta
-    'q': "'root' in parents and trashed=false",  # consulta para obtener los archivos en la raíz y que no estén en la papelera
-}
+# Tomamos el tiempo antes de ejecutar la sección de código
+inicio = time.perf_counter()
 
-# Token de autenticación (reemplaza 'TU_TOKEN' con tu token de acceso)
-access_token = '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'
+# Ejecutamos la sección de código
+mi_seccion_de_codigo()
 
-# Codifica los parámetros de la consulta
-query_string = urllib.parse.urlencode(params)
+# Tomamos el tiempo después de ejecutar la sección de código
+fin = time.perf_counter()
 
-# URL completa con parámetros de consulta
-full_url = f"{url}?{query_string}"
+# Calculamos el tiempo transcurrido
+tiempo_transcurrido = fin - inicio
 
-# Cabecera de autorización con el token de acceso
-headers = {
-    'Authorization': f'Bearer {access_token}'
-}
-
-# Realiza la solicitud GET a la API de Google Drive
-req = urllib.request.Request(full_url, headers=headers)
-with urllib.request.urlopen(req) as response:
-    # Lee y decodifica la respuesta JSON
-    data = response.read().decode('utf-8')
-    files_data = json.loads(data)
-    files = files_data.get('files', [])
-
-    # Imprime los nombres de los archivos
-    print("Files in your Google Drive:")
-    for file in files:
-        print('Name: {}, ID: {}'.format(file['name'], file['id']))
+# Mostramos el tiempo transcurrido en la consola
+print("Tiempo transcurrido:", tiempo_transcurrido, "segundos")

@@ -126,7 +126,7 @@ class VentaView(AuthenticatedView):
             metodo = request.form.get('metodo-pago-vendido')
             fecha = datetime.now()
 
-            if not precio or not cantidad or not metodo or not producto:
+            if not cantidad or not metodo or not producto:
                 return {'state': False, 'message': 'Por favor, complete todos los datos'}
 
             adm_id = int(session['adm_Id'])
