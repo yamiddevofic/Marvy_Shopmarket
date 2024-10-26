@@ -1,13 +1,64 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/marvyshopmarket.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
+    
+    <!-- SEO Básico pero efectivo -->
+    <title>MarvyShop Market | Sistema de Gestión de Negocios</title>
+    <meta name="description" content="Sistema integral para la gestión de tu negocio. Control de inventario, ventas y proveedores en una sola plataforma." />
+    <meta name="keywords" content="gestión de negocios, inventario, ventas, control de stock" />
+    
+    <!-- Open Graph básico -->
+    <meta property="og:title" content="MarvyShop Market | Tu Aliado en Gestión" />
+    <meta property="og:description" content="Sistema integral para la gestión de tu negocio. ¡Comienza ahora!" />
+    <meta property="og:image" content="/marvyshopmarket.png" />
+    
+    <!-- Preconexiones críticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Mobile -->
+    <meta name="theme-color" content="#0F766E" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Analytics básico -->
+    <script>
+        if (window.location.search) {
+            sessionStorage.setItem('referral', window.location.search);
+        }
+    </script>
+
+    <!-- Fonts (asegúrate de que realmente necesitas estas fuentes) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos críticos inline para mejor rendimiento inicial */
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        #root {
+            min-height: 100vh;
+        }
+        .noscript-message {
+            padding: 20px;
+            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+    </style>
+</head>
+<body>
     <div id="root"></div>
+    <noscript>
+        <div class="noscript-message">
+            <h1>MarvyShop Market</h1>
+            <p>Para usar esta aplicación, necesitas activar JavaScript.</p>
+        </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
-  </body>
+</body>
 </html>
