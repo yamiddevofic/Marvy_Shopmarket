@@ -1,6 +1,0 @@
-Flask
-SQLAlchemy
-Flask-SQLAlchemy
-mysqlclient
-bcrypt
-gunicorn

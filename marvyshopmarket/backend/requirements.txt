@@ -1,0 +1,9 @@
+Flask
+SQLAlchemy
+Flask-SQLAlchemy
+mysql-connector-python
+bcrypt
+gunicorn
+flask_bcrypt
+MySQLdb
+python-dotenv
