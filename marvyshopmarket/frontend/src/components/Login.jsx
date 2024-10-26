@@ -1,7 +1,7 @@
 // Login.js
 import React, { useState } from 'react';
 import { Eye, EyeOff, ShoppingCart } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -182,9 +182,14 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             ¿No tienes una cuenta?{' '}
-            <button className="font-medium text-green-600 hover:text-green-500">
-              Regístrate aquí
-            </button>
+            <Link 
+            to="/registrarse" 
+            className="text-[#27cd60] hover:text-[#2fe96f] font-medium transition-colors"
+            >
+                <button className="font-medium text-green-600 hover:text-green-500">
+                Regístrate aquí
+                </button>
+            </Link>
           </p>
         </div>
       </div>
