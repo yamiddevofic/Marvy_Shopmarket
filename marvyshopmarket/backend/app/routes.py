@@ -15,7 +15,6 @@ class VerificarUsuarioAPI(MethodView):
         response_json = json.dumps(response_data, ensure_ascii=False)  # Esto evita el escape Unicode
         return Response(response_json, content_type='application/json; charset=utf-8', status=200)
 
-
     def post(self):
         data = request.get_json()
         userid = data.get('userid')
@@ -31,11 +30,17 @@ class VerificarUsuarioAPI(MethodView):
             if administrador and bcrypt.check_password_hash(administrador.adm_Password, password):
                 session['tienda_Id'] = administrador.tienda_Id
                 session['adm_Id'] = administrador.adm_Id
-                return jsonify({'message': 'Autenticación exitosa'}), 200
+                return jsonify({
+                    'message': 'Autenticación exitosa',
+                    'name': administrador.adm_Nombre  # Incluir el nombre del administrador
+                }), 200
             elif tendero and bcrypt.check_password_hash(tendero.tendero_Password, password):
                 session['tienda_Id'] = tendero.tienda_Id
                 session['tendero_Id'] = tendero.tendero_Id
-                return jsonify({'message': 'Autenticación exitosa'}), 200
+                return jsonify({
+                    'message': 'Autenticación exitosa',
+                    'name': tendero.tendero_Nombre  # Incluir el nombre del tendero
+                }), 200
             else:
                 return jsonify({'message': 'Usuario no encontrado o contraseña incorrecta'}), 401
         except Exception as e:

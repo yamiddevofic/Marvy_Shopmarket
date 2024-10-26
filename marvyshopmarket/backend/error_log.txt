@@ -232,3 +232,783 @@ WHERE administrador.`adm_Id` = %s
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 
 --------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------
+Error: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+MySQLdb.OperationalError: (2006, 'Server has gone away')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes.py", line 27, in post
+    administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2743, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2842, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2262, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2144, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/cursors.py", line 330, in _query
+    db.query(q)
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/connections.py", line 255, in query
+    _mysql.connection.query(self, query)
+sqlalchemy.exc.OperationalError: (MySQLdb.OperationalError) (2006, 'Server has gone away')
+[SQL: SELECT administrador.`adm_Id` AS `administrador_adm_Id`, administrador.`adm_Nombre` AS `administrador_adm_Nombre`, administrador.`adm_Correo` AS `administrador_adm_Correo`, administrador.`adm_Celular` AS `administrador_adm_Celular`, administrador.`adm_Password` AS `administrador_adm_Password`, administrador.`tienda_Id` AS `administrador_tienda_Id` 
+FROM administrador 
+WHERE administrador.`adm_Id` = %s 
+ LIMIT %s]
+[parameters: (1005060791, 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+--------------------------------------------------

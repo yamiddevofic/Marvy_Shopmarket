@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
     // Validación básica
     if (!cedula || !password) {
       setError('Por favor completa todos los campos');
@@ -52,13 +52,16 @@ const Login = () => {
         }
         throw new Error(errorData.message || 'Error al iniciar sesión');
       }
-      
+  
       const data = await response.json();
       console.log('Login exitoso:', data);
   
-      // Guardar el token en localStorage si está disponible
+      // Guardar el token y nombre en localStorage si están disponibles
       if (data.token) {
         localStorage.setItem('authToken', data.token);
+      }
+      if (data.name) {
+        localStorage.setItem('userName', data.name); // Guardar el nombre del usuario
       }
   
       // Redirigir al componente Home después del login exitoso
@@ -70,6 +73,7 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-green-50 flex flex-col items-center justify-center p-4">
