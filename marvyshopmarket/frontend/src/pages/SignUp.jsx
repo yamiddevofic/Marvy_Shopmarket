@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     // Admin data
     adm_Id: '',
@@ -17,9 +22,48 @@ const SignUp = () => {
     tienda_Img: null
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setLoading(true);
+    setError('');
+
+    try {
+      // Crear un objeto con todos los datos excepto la imagen
+      const jsonData = { ...formData };
+      
+      // Si hay una imagen, convertirla a base64
+      if (formData.tienda_Img) {
+        const base64Image = await convertImageToBase64(formData.tienda_Img);
+        jsonData.tienda_Img = base64Image;
+      }
+
+      const response = await axios.post('/api/registrar-admin-tienda', jsonData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        navigate('/');
+      }
+    } catch (error) {
+      setError(
+        error.response?.data?.message || 
+        'Error al registrar. Por favor, intente nuevamente.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para convertir imagen a base64
+  const convertImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   const handleChange = (e) => {
@@ -35,13 +79,20 @@ const SignUp = () => {
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-4xl">
         {/* Logo and Header */}
         <div className="flex flex-col items-center mb-8">
-          <img 
-            src="/marvyshopmarket.png" 
-            alt="Marvy Shopmarket Logo" 
-            className="h-16 mb-4"
-          />
+          <Link to="/">
+            <img 
+              src="/marvyshopmarket.png" 
+              alt="Marvy Shopmarket Logo" 
+              className="h-16 mb-4 hover:opacity-90 transition-opacity"
+            />
+          </Link>
           <h1 className="text-2xl font-bold text-[#009a44]">Registro de Tienda y Administrador</h1>
           <p className="text-gray-600 mt-2">Complete la información requerida</p>
+          {error && (
+            <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -235,12 +286,32 @@ const SignUp = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-[#27cd60] text-white py-3 px-4 rounded-lg hover:bg-[#2fe96f] transition-colors duration-200 font-medium text-lg shadow-lg shadow-[#27cd60]/20"
-          >
-            Completar Registro
-          </button>
+          <div className="space-y-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-[#27cd60] text-white py-3 px-4 rounded-lg hover:bg-[#2fe96f] transition-colors duration-200 font-medium text-lg shadow-lg shadow-[#27cd60]/20 
+                ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {loading ? 'Registrando...' : 'Completar Registro'}
+            </button>
+
+            <Link 
+              to="/login" 
+              className="block text-center text-[#009a44] hover:text-[#27cd60] transition-colors duration-200"
+            >
+              ¿Ya tienes una cuenta? Inicia sesión
+            </Link>
+
+            <Link to="/" className="block">
+              <button
+                type="button"
+                className="w-full mt-4 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium text-lg"
+              >
+                Volver al inicio
+              </button>
+            </Link>
+          </div>
         </form>
       </div>
     </div>

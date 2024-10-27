@@ -1,10 +1,11 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 import OptionCard from './OptionCard';
 import { Receipt, Truck, PackageSearch, Users } from "lucide-react";
 
 const OptionsGrid = () => {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <OptionCard
         icon={Receipt}
         title="Ventas"
@@ -25,6 +26,13 @@ const OptionsGrid = () => {
         title="Proveedores"
         description="Administrar proveedores"
       />
+      <Link to='/tenderos'>
+        <OptionCard
+          icon={Users}
+          title="Tenderos"
+          description="Registrar tenderos"
+        />
+      </Link>
     </div>
   );
 };

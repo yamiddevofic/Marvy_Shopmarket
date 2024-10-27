@@ -1,14 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import LargeBinary, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
-
-db = SQLAlchemy()
+from app import db
 
 class Administrador(db.Model):
     __tablename__ = 'administrador'
     adm_Id = db.Column(db.BigInteger, primary_key=True)
     adm_Nombre = db.Column(db.String(70))
-    adm_Correo = db.Column(db.String(12))
+    adm_Correo = db.Column(db.String(100))
     adm_Celular = db.Column(db.String(100))
     adm_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
