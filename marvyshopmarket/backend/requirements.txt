@@ -7,3 +7,4 @@ gunicorn
 flask_bcrypt
 MySQLdb
 python-dotenv
+flask-cors

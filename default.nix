@@ -11,6 +11,8 @@ pkgs.mkShell {
     pkgs.python3Packages.python-dotenv
     pkgs.python3Packages.gunicorn
     pkgs.python3Packages.flask-migrate
+    pkgs.python3Packages.flask-cors
+
     # Otros paquetes adicionales si es necesario
   ];
 }

@@ -1,1 +1,639 @@
 
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 95, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 147, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en consulta: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 614, in get_json
+    rv = self.json_module.loads(data)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/json/provider.py", line 188, in loads
+    return json.loads(s, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 107, in post
+    data = request.get_json()
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 623, in get_json
+    rv = self.on_json_loading_failed(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/wrappers.py", line 130, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 648, in on_json_loading_failed
+    raise BadRequest(f"Failed to decode JSON object: {e}")
+werkzeug.exceptions.BadRequest: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+
+--------------------------------------------------
+Error en consulta: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 614, in get_json
+    rv = self.json_module.loads(data)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/json/provider.py", line 188, in loads
+    return json.loads(s, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 107, in post
+    data = request.get_json()
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 623, in get_json
+    rv = self.on_json_loading_failed(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/wrappers.py", line 130, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 648, in on_json_loading_failed
+    raise BadRequest(f"Failed to decode JSON object: {e}")
+werkzeug.exceptions.BadRequest: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+
+--------------------------------------------------
+Error en consulta: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 614, in get_json
+    rv = self.json_module.loads(data)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/json/provider.py", line 188, in loads
+    return json.loads(s, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/mh6gqjf1w1i6ln1a61psnz0gzdmwrspl-python3-3.11.8/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 107, in post
+    data = request.get_json()
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 623, in get_json
+    rv = self.on_json_loading_failed(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fjygdfhzvkb4xshzg7gyhhijw3dkvd4r-python3.11-flask-2.3.3/lib/python3.11/site-packages/flask/wrappers.py", line 130, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/fynkq7a54bx6n3vpv00da84ma9yhf8vb-python3.11-werkzeug-2.3.8/lib/python3.11/site-packages/werkzeug/wrappers/request.py", line 648, in on_json_loading_failed
+    raise BadRequest(f"Failed to decode JSON object: {e}")
+werkzeug.exceptions.BadRequest: 400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)
+
+--------------------------------------------------
+Error en consulta: 'Tiendas' object has no attribute 'tienda_Img'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 96, in get
+    return self._get_info(adm_id, tienda_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 148, in _get_info
+    if tienda.tienda_Img:
+       ^^^^^^^^^^^^^^^^^
+AttributeError: 'Tiendas' object has no attribute 'tienda_Img'
+
+--------------------------------------------------
+Error en registro: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+TypeError: string argument without an encoding
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 73, in post
+    db.session.flush()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 897, in flush
+    return self._proxied.flush(objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4179, in flush
+    self._flush(objects)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4314, in _flush
+    with util.safe_reraise():
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4275, in _flush
+    flush_context.execute()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1043, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1816, in _execute_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+sqlalchemy.exc.StatementError: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+
+--------------------------------------------------
+Error en registro: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+TypeError: string argument without an encoding
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 73, in post
+    db.session.flush()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 897, in flush
+    return self._proxied.flush(objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4179, in flush
+    self._flush(objects)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4314, in _flush
+    with util.safe_reraise():
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4275, in _flush
+    flush_context.execute()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1043, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1816, in _execute_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+sqlalchemy.exc.StatementError: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+
+--------------------------------------------------
+Error en registro: __init__() got an unexpected keyword argument 'tienda_Id'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 63, in post
+    new_tienda = Tiendas(
+                 ^^^^^^^^
+TypeError: __init__() got an unexpected keyword argument 'tienda_Id'
+
+--------------------------------------------------
+Error en registro: __init__() got an unexpected keyword argument 'tienda_Id'
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 80, in post
+    new_tienda = Tiendas(
+                 ^^^^^^^^
+TypeError: __init__() got an unexpected keyword argument 'tienda_Id'
+
+--------------------------------------------------
+Error en registro: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+Traceback (most recent call last):
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+TypeError: string argument without an encoding
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Marvy_Shopmarket/marvyshopmarket/backend/app/routes/admin_routes.py", line 90, in post
+    db.session.flush()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 897, in flush
+    return self._proxied.flush(objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4179, in flush
+    self._flush(objects)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4314, in _flush
+    with util.safe_reraise():
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4275, in _flush
+    flush_context.execute()
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1043, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1816, in _execute_context
+    self._handle_dbapi_exception(
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1810, in _execute_context
+    context = constructor(
+              ^^^^^^^^^^^^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1454, in _init_compiled
+    l_param: List[Any] = [
+                         ^
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 1455, in <listcomp>
+    flattened_processors[key](compiled_params[key])
+  File "/nix/store/qw1r272mw6n0zpvvdal0cdgbjx022ng5-python3.11-SQLAlchemy-2.0.21/lib/python3.11/site-packages/sqlalchemy/sql/sqltypes.py", line 933, in process
+    return DBAPIBinary(value)
+           ^^^^^^^^^^^^^^^^^^
+  File "/nix/store/b0msp7yhs4a3azni08q858v42chaam9k-python3.11-mysqlclient-2.2.0/lib/python3.11/site-packages/MySQLdb/__init__.py", line 114, in Binary
+    return bytes(x)
+           ^^^^^^^^
+sqlalchemy.exc.StatementError: (builtins.TypeError) string argument without an encoding
+[SQL: INSERT INTO tiendas (`tienda_Id`, `tienda_Nombre`, `tienda_Correo`, `tienda_Celular`, `tienda_Ubicacion`, `tienda_IMG`) VALUES (%s, %s, %s, %s, %s, %s)]
+[parameters: [{'tienda_Correo': 'tarotfate@gmail.com', 'tienda_Id': 7916050100, 'tienda_Ubicacion': 'Chitagá', 'tienda_IMG': '/uploads/tienda_7916050100.jpg', 'tienda_Celular': '3133229435', 'tienda_Nombre': 'Yamid Tarot'}]]
+
+--------------------------------------------------

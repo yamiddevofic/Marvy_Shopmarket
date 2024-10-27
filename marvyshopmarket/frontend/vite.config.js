@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://127.0.0.1:3333',  // Redirige las solicitudes de API a Flask
+      '/upload': 'http://127.0.0.1:3333'
     },
   },
   css: {

@@ -178,7 +178,7 @@ class Tiendas(db.Model):
     tienda_Correo = db.Column(db.String(100))
     tienda_Celular = db.Column(db.String(12))
     tienda_Ubicacion = db.Column(db.String(100))
-    tienda_IMG = db.Column(db.LargeBinary)
+    tienda_IMG = db.Column(db.String(255))
 
     def __init__(self, id, nombre, correo, celular, ubicacion, imagen):
          self.tienda_Id = id

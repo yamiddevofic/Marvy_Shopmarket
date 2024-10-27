@@ -6,10 +6,12 @@ from flask_migrate import Migrate
 import logging
 from sqlalchemy.exc import OperationalError
 import time
+from flask_cors import CORS
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -17,6 +19,8 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, supports_credentials=True)
+    CORS(app, resources={r"/uploads/*": {"origins": "*"}})
     app.config.from_object(get_config())
 
     # Agregar pool_pre_ping y pool_recycle a la configuración
