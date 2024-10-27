@@ -27,6 +27,11 @@ main_bp.add_url_rule('/api/consultar-info',
                      view_func=ConsultarInfoAPI.as_view('consultar_info_api'),
                      methods=['GET', 'POST'])
 
-# Registrar las rutas
 imagenes_view = ImagenesAPI.as_view('imagenes_api')
 main_bp.add_url_rule('/uploads/<path:filename>', view_func=imagenes_view, methods=['GET'])
+
+cerrar_sesion_api = CerrarSesionAPI.as_view('cerrar_sesion_api')
+main_bp.add_url_rule('/api/cerrar-sesion', view_func= cerrar_sesion_api, methods=['POST'])
+
+ruta_protegida_api = RutaProtegidaAPI.as_view('ruta_protegida_api')
+main_bp.add_url_rule('/api/ruta-protegida', view_func=ruta_protegida_api, methods=['GET'])

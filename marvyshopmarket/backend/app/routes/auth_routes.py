@@ -46,3 +46,22 @@ class VerificarUsuarioAPI(MethodView):
                 error_file.write(traceback.format_exc())
                 error_file.write("\n" + "-"*50 + "\n")
             return jsonify({'message': 'Error, vuelve a intentarlo'}), 500
+
+class CerrarSesionAPI(MethodView):
+    def post(self):
+        try:
+            # Limpiar todas las variables de sesión
+            session.clear()
+            return jsonify({'message': 'Cierre de sesión exitoso'}), 200
+        except Exception as e:
+            with open('error_log.txt', 'a', encoding='utf-8') as error_file:
+                error_file.write(f"Error: {str(e)}\n")
+                error_file.write(traceback.format_exc())
+                error_file.write("\n" + "-"*50 + "\n")
+            return jsonify({'message': 'Error al cerrar sesión, vuelve a intentarlo'}), 500
+
+class RutaProtegidaAPI(MethodView):
+    def get(self):
+        if not session.get('logged_in'):
+            return redirect(url_for('verificarusuarioapi_get'))
+        return jsonify({'message': 'Acceso permitido a la ruta protegida'}), 200
