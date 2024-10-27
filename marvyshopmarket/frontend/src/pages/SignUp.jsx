@@ -295,22 +295,12 @@ const SignUp = () => {
             >
               {loading ? 'Registrando...' : 'Completar Registro'}
             </button>
-
-            <Link 
-              to="/login" 
-              className="block text-center text-[#009a44] hover:text-[#27cd60] transition-colors duration-200"
-            >
-              ¿Ya tienes una cuenta? Inicia sesión
-            </Link>
-
-            <Link to="/" className="block">
-              <button
-                type="button"
-                className="w-full mt-4 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium text-lg"
-              >
-                Volver al inicio
-              </button>
-            </Link>
+            
+            
+            <p className='block text-center'>¿Ya tienes una cuenta? <Link 
+              to="/" 
+              className=" text-[#009a44] hover:text-[#27cd60] transition-colors duration-200"
+            >Inicia sesión</Link></p>            
           </div>
         </form>
       </div>
