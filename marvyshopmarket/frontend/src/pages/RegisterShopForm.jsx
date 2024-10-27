@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import ToggleDark from '../components/Toggle/ToggleTheme';
+import { useLocation } from 'react-router-dom';
+
+const LoadingSkeleton = () => (
+  <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
+);
 
 const RegisterShopForm = () => {
   const [formData, setFormData] = useState({

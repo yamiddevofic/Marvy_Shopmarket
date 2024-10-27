@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import StatsGrid from '../components/Stats/StatsGrid';
 import OptionsGrid from '../components/Options/OptionsGrid';
 import QuickActionButton from '../components/Button/QuickActionButton';
-import ProfileSection from '../components/Profile/ProfileSection';
+import ProfileSection from './ProfileSection';
 
 const Home = () => {
+  const navigate = useNavigate();
   const userName = localStorage.getItem('userName') || 'Administrador';
   const [adminInfo, setAdminInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Redireccionar si el usuario no está autenticado
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('loggedIn');
+    if (!isLoggedIn) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
@@ -36,7 +46,7 @@ const Home = () => {
         if (data?.datos) {
           console.log('Datos de la tienda:', data.datos.tienda);
           console.log('¿Tiene imagen?:', Boolean(data.datos.tienda.imagen));
-          
+
           setAdminInfo(data.datos);
         } else {
           console.error('Estructura de datos inesperada:', data);
@@ -56,7 +66,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800">
         <Header userName={userName} />
         <main className="container mx-auto px-4 py-6">
           <div className="animate-pulse space-y-4">
@@ -72,50 +82,15 @@ const Home = () => {
   const imageUrl = adminInfo?.tienda?.imagen ? `/uploads/${adminInfo.tienda.imagen}` : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200">
       <Header
         userName={userName}
         adminInfo={adminInfo}
       />
 
       <main className="container mx-auto px-4 py-6 lg:px-8">
-        <ProfileSection 
-          userName={userName}
-          adminInfo={adminInfo}
-          error={error}
-          imageUrl={imageUrl} // Pasar la URL de la imagen al componente
-        />
-
-        {/* Sección de estadísticas */}
-        <div className="space-y-8">
-          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Estadísticas Generales
-              </h2>
-              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                Ver todo
-              </button>
-            </div>
-            <StatsGrid />
-          </section>
-
-          {/* Sección de opciones */}
-          <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Opciones Disponibles
-              </h2>
-              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                Ver más
-              </button>
-            </div>
-            <OptionsGrid />
-          </section>
-        </div>
-
         {/* Sección de acciones rápidas */}
-        <div className="mt-8 bg-emerald-50 dark:bg-gray-700/50 rounded-2xl p-6">
+        <div className="mt-8 bg-white dark:bg-[#12212D] rounded-2xl p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">
               Acciones Rápidas
@@ -130,6 +105,34 @@ const Home = () => {
             <QuickActionButton text="Ver Ventas" />
             <QuickActionButton text="Configuración" />
           </div>
+        </div>
+
+        {/* Sección de estadísticas */}
+        <div className="space-y-8">
+          <section className="bg-white dark:bg-[#12212D] rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Estadísticas Generales
+              </h2>
+              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
+                Ver todo
+              </button>
+            </div>
+            <StatsGrid />
+          </section>
+
+          {/* Sección de opciones */}
+          <section className="bg-white dark:bg-[#12212D] rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Opciones Disponibles
+              </h2>
+              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
+                Ver más
+              </button>
+            </div>
+            <OptionsGrid />
+          </section>
         </div>
       </main>
     </div>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, ShoppingCart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import ToggleDark from '../components/Toggle/ToggleTheme'
+import ToggleDark from '../components/Toggle/ToggleTheme';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -11,6 +11,14 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
+
+  // Redirección automática si ya está autenticado
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('loggedIn');
+    if (isLoggedIn) {
+      navigate('/home');
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,13 +61,13 @@ const Login = () => {
   
       const data = await response.json();
       
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-      }
+      // Guardar la sesión del usuario en localStorage
       if (data.name) {
         localStorage.setItem('userName', data.name);
       }
+      localStorage.setItem('loggedIn', true);
   
+      // Navegar a la página de inicio (dashboard)
       navigate('/home');
   
     } catch (err) {

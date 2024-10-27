@@ -1,9 +1,15 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
 import OptionCard from './OptionCard';
 import { Receipt, Truck, PackageSearch, Users } from "lucide-react";
+import { Link, useNavigate } from 'react-router-dom';
 
 const OptionsGrid = () => {
+  const navigate = useNavigate();
+  
+  const handleProfileClick = () => {
+    navigate('/tenderos');
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <OptionCard
@@ -26,13 +32,12 @@ const OptionsGrid = () => {
         title="Proveedores"
         description="Administrar proveedores"
       />
-      <Link to='/tenderos'>
-        <OptionCard
-          icon={Users}
-          title="Tenderos"
-          description="Registrar tenderos"
-        />
-      </Link>
+      <OptionCard
+        onClick={handleProfileClick}
+        icon={Users}
+        title="Tenderos"
+        description="Registrar tenderos"
+      />
     </div>
   );
 };
