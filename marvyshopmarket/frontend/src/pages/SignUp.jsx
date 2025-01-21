@@ -284,19 +284,20 @@ const SignUp = () => {
             </div>
           </div>
 
-          <div className="mt-8 space-y-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-3 px-4 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                'Completar Registro'
-              )}
-            </button>
-            
+          <div className="mt-8 space-y-4 flex flex-col justify-center align-center">
+            <div className="flex items-center justify-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full lg:w-[50%] flex justify-center py-3 px-4 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  'Completar Registro'
+                )}
+              </button>
+            </div>
             <p className="text-center text-white dark:text-gray-300">
               ¿Ya tienes una cuenta?{' '}
               <Link 
