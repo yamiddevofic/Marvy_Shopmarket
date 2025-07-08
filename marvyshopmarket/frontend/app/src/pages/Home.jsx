@@ -26,7 +26,7 @@ const Home = () => {
       try {
         console.log('Iniciando petición...');
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/consultar-info`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/consultar-info`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

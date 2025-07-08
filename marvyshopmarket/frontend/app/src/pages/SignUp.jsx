@@ -39,7 +39,7 @@ const SignUp = () => {
         jsonData.tienda_Img = base64Image;
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/registrar-admin-tienda`, jsonData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/registrar-admin-tienda`, jsonData, {
         headers: {
           'Content-Type': 'application/json',
         },

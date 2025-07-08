@@ -38,7 +38,7 @@ const Login = () => {
       setIsLoading(true);
       setError('');
   
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/verificar-usuario`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/verificar-usuario`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
