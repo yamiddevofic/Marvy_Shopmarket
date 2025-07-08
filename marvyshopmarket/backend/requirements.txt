@@ -5,6 +5,7 @@ mysql-connector-python
 bcrypt
 gunicorn
 flask_bcrypt
-MySQLdb
+mysqlclient
 python-dotenv
 flask-cors
+flask_migrate

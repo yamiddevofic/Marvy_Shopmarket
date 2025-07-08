@@ -1,0 +1,39 @@
+# docker-compose.yml  – stack dev con hot-reload completo
+# Coloca este archivo en:  marvyshopmarket/docker-compose.yml
+# Estructura:
+#   marvyshopmarket/
+#   ├─ backend/   (Dockerfile de Flask)
+#   └─ frontend/  (Dockerfile de Vite)
+
+services:
+  # ─────────────────────────  BACKEND ──────────────────────────
+  backend:
+    build: ./backend                      # contexto = carpeta backend
+    container_name: marvyshop-backend
+    env_file: ./backend/.env              # SECRET_KEY, SQLALCHEMY_DATABASE_URI…
+    command: gunicorn -w 4 -b 0.0.0.0:5000 "app:create_app()"
+    volumes:
+      - ./backend/app:/app/app            # hot-reload código Python
+      - ./backend/uploads:/app/uploads
+    ports:
+      - 5000:5000                         # localhost:5000 → contenedor:5000
+    restart: on-failure
+
+  # ─────────────────────────  FRONTEND ─────────────────────────
+  frontend:
+    build: ./frontend
+    container_name: marvyshop-frontend
+    command: npm run dev -- --host        # servidor Vite HMR
+    environment:
+      # Base URL que usará React en llamadas fetch/axios
+      - VITE_API_URL=http://backend:5000
+      # Forzamos polling para hot-reload fiable en Docker Desktop
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=300
+    volumes:
+      - ./frontend/app:/app               # monta código Vite/React
+      - /app/node_modules                 # mantiene deps del contenedor
+    ports:
+      - 5173:5173
+    depends_on:
+      - backend

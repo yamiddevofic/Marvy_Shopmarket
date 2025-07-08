@@ -1,9 +1,8 @@
-# config.py
 import os
 from dotenv import load_dotenv
 
-# Cargar las variables desde el archivo .env
-load_dotenv()
+load_dotenv()                         # igual que en config.py
+print("URI =", os.getenv("SQLALCHEMY_DATABASE_URI"))
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')

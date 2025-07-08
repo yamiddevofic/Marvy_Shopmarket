@@ -1,0 +1,21 @@
+# Carpetas de Python
+**/__pycache__
+**/*.py[cod]
+**/*.pyo
+backend/venv
+# .dockerignore  (en la raíz de tu proyecto)
+.env
+
+# Node/Vite (frontend)
+**/node_modules
+frontend/app/dist
+
+# Archivos de IDE / VCS
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# Archivos de tests y docs grandes opcionales
+*.log
+uploads
