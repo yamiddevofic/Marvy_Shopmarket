@@ -26,7 +26,7 @@ services:
     command: npm run dev -- --host        # servidor Vite HMR
     environment:
       # Base URL que usará React en llamadas fetch/axios
-      - VITE_API_URL=http://backend:5000
+      VITE_API_URL=https://marvy-shopmarket.onrender.com
       # Forzamos polling para hot-reload fiable en Docker Desktop
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=300

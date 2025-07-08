@@ -17,7 +17,7 @@ const Header = ({ userName, adminInfo }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('/api/cerrar-sesion');
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/cerrar-sesion`);
       if (response.status === 200) {
         // Eliminar la información de sesión almacenada en localStorage
         localStorage.removeItem('loggedIn');

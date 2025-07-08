@@ -47,7 +47,7 @@ const RegisterShopForm = () => {
     };
 
     try {
-      const response = await fetch('/api/registrar-tendero', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/registrar-tendero`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
