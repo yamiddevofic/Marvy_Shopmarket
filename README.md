@@ -6,14 +6,14 @@
 
 ## Índice
 
-1. [Descripción](#descripción-del-proyecto-📝)
-2. [Demo & capturas](#capturas-de-pantalla-📸)
-3. [Arquitectura](#arquitectura-🔧)
-4. [Guía rápida (Docker Compose)](#guía-rápida-🚀)
-5. [Instalación manual](#instalación-clásica-🛠️)
-6. [Scripts útiles](#scripts-útiles-💡)
-7. [Contribuciones](#contribuciones-👥)
-8. [Licencia y contacto](#licencia-📄)
+1. [Descripción](#descripción-del-proyecto-)
+2. [Demo & capturas](#capturas-de-pantalla-)
+3. [Arquitectura](#arquitectura-)
+4. [Guía rápida (Docker Compose)](#guía-rápida-)
+5. [Instalación manual](#instalación-clásica-)
+6. [Scripts útiles](#scripts-útiles-)
+7. [Contribuciones](#contribuciones-)
+8. [Licencia y contacto](#licencia-)
 
 ---
 
