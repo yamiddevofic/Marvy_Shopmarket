@@ -61,13 +61,14 @@ class RegistrarAdminTiendaAPI(MethodView):
 
             # Crear registro de la tienda
             new_tienda = Tiendas(
-                id=tienda_id,  # Ajuste aquí para utilizar el nombre correcto del campo
+                id=tienda_id,
                 nombre=data['tienda_Nombre'],
                 correo=data['tienda_Correo'],
                 celular=data.get('tienda_Celular'),
                 ubicacion=data.get('tienda_Ubicacion'),
-                imagen=image_url  # Guardar la URL de la imagen como una cadena de texto
+                imagen=image_url          # ⬅️ __init__ recibe “imagen” y lo guarda en tienda_IMG
             )
+
 
             db.session.add(new_tienda)
             db.session.flush()
@@ -171,9 +172,8 @@ class ConsultarInfoAPI(MethodView):
             }
 
             # Manejar la imagen
-            if hasattr(tienda, 'imagen') and tienda.imagen:
-                # La imagen ya está guardada como nombre de archivo
-                respuesta['datos']['tienda']['imagen'] = tienda.imagen
+            if tienda.tienda_IMG:
+                respuesta['datos']['tienda']['imagen'] = tienda.tienda_IMG
             else:
                 respuesta['datos']['tienda']['imagen'] = None
 

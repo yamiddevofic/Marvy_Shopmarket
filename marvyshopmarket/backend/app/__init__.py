@@ -29,6 +29,8 @@ def create_app() -> Flask:
 
     origins = [
         "http://localhost:5173",
+        "http://localhost:5000",
+        "https://marvyshopmarket.com",
         "https://marvy-shopmarket.onrender.com"
     ]
     CORS(app, origins=origins, supports_credentials=True,
