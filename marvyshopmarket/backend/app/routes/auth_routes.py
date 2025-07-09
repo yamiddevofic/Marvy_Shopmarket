@@ -1,6 +1,6 @@
 import json
 import traceback
-from flask import request, jsonify, session, Response
+from flask import request, jsonify, session, Response, redirect, url_for
 from flask.views import MethodView
 from .. import bcrypt, db
 from ..models import Administrador, Tenderos
@@ -26,6 +26,7 @@ class VerificarUsuarioAPI(MethodView):
             if administrador and bcrypt.check_password_hash(administrador.adm_Password, password):
                 session['tienda_Id'] = administrador.tienda_Id
                 session['adm_Id'] = administrador.adm_Id
+                session['logged_in'] = True
                 return jsonify({
                     'message': 'Autenticación exitosa',
                     'name': administrador.adm_Nombre
@@ -33,6 +34,7 @@ class VerificarUsuarioAPI(MethodView):
             elif tendero and bcrypt.check_password_hash(tendero.tendero_Password, password):
                 session['tienda_Id'] = tendero.tienda_Id
                 session['tendero_Id'] = tendero.tendero_Id
+                session['logged_in'] = True
                 return jsonify({
                     'message': 'Autenticación exitosa',
                     'name': tendero.tendero_Nombre
@@ -63,5 +65,5 @@ class CerrarSesionAPI(MethodView):
 class RutaProtegidaAPI(MethodView):
     def get(self):
         if not session.get('logged_in'):
-            return redirect(url_for('verificarusuarioapi_get'))
+            return redirect(url_for('main.verificar_usuario_api'))
         return jsonify({'message': 'Acceso permitido a la ruta protegida'}), 200
