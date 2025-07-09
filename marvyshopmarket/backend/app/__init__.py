@@ -10,6 +10,13 @@ import os
 
 from .config import get_config
 
+# ───────── CONFIGURAR COOKIE DE SESIÓN ─────────
+app.config.update(
+    SESSION_COOKIE_SAMESITE="None",   # permite enviarla entre dominios
+    SESSION_COOKIE_SECURE=True        # exige HTTPS (Render ya lo usa)
+)
+
+
 # ──────────────────  Logger  ──────────────────
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -36,11 +43,8 @@ def create_app() -> Flask:
     CORS(
         app,
         origins=origins,
-        supports_credentials=True,
-        resources={
-            r"/api/*": {"origins": origins},
-            r"/upload/*": {"origins": origins},
-        },
+        supports_credentials=True,            #  ← imprescindible
+        resources={r"/api/*": {"origins": origins}}
     )
 
     # Extensiones
