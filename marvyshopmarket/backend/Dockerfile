@@ -1,17 +1,22 @@
 FROM python:3.13
 
-# Dependencias nativas → solo las que necesitas
+# ── dependencias nativas ─────────────────────────
 RUN apt-get update && apt-get install -y \
     build-essential default-libmysqlclient-dev gcc pkg-config python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /
-COPY requirements.txt .
+# ── carpeta de trabajo (raíz del proyecto dentro de la imagen) ──
+WORKDIR /app
 
-RUN pip install -r requirements.txt
+# ── requirements ──
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia SOLO el código, gracias al .dockerignore será muy liviano
+# ── código de tu aplicación ──
 COPY app ./app
 COPY migrations ./migrations
 
-CMD ["gunicorn", "app:create_app()", "--bind", "0.0.0.0:5000"]
+# ── comando de arranque ──
+#  - $PORT lo inyecta Render automáticamente.
+#  - usamos `sh -c` para que bash expanda la variable en la forma exec JSON.
+CMD ["sh", "-c", "exec gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} 'app:create_app()'"]
