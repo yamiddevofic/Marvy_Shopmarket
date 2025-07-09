@@ -17,14 +17,11 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(get_config())
 
-    # pool & cookie settings
+    is_prod = os.getenv("FLASK_ENV") == "production"
+
     app.config.update(
-        SQLALCHEMY_ENGINE_OPTIONS={
-            'pool_pre_ping': True,
-            'pool_recycle': int(os.getenv('POOL_RECYCLE', 280))
-        },
-        SESSION_COOKIE_SAMESITE="None",
-        SESSION_COOKIE_SECURE=True
+        SESSION_COOKIE_SAMESITE="None" if is_prod else "Lax",
+        SESSION_COOKIE_SECURE=is_prod,
     )
 
     origins = [
