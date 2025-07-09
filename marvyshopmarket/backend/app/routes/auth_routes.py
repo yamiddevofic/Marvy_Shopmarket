@@ -1,6 +1,6 @@
 import json
 import traceback
-from flask import request, jsonify, session, Response
+from flask import request, jsonify, session, Response, redirect, url_for
 from flask.views import MethodView
 from .. import bcrypt, db
 from ..models import Administrador, Tenderos
