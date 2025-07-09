@@ -1,56 +1,75 @@
+# app/__init__.py
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from .config import get_config
 from flask_migrate import Migrate
-import logging
-from sqlalchemy.exc import OperationalError
-import time
 from flask_cors import CORS
+from sqlalchemy.exc import OperationalError
+import logging
+import os
 
-# Configurar logging
+from .config import get_config
+
+# ──────────────────  Logger  ──────────────────
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
-
+# ──────────────────  Extensiones  ──────────────────
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 migrate = Migrate()
 
-def create_app():
+# ──────────────────  App factory  ──────────────────
+def create_app() -> Flask:
     app = Flask(__name__)
-    CORS(app, supports_credentials=True)
-    CORS(app, resources={r"/uploads/*": {"origins": "*"}})
     app.config.from_object(get_config())
 
-    # Agregar pool_pre_ping y pool_recycle a la configuración
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'pool_pre_ping': True,
-        'pool_recycle': 280
-    }
+    # Pool (override si llega por env)
+    app.config.setdefault("SQLALCHEMY_ENGINE_OPTIONS", {})
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"].update(
+        pool_pre_ping=True,
+        pool_recycle=int(os.getenv("POOL_RECYCLE", 280)),
+    )
 
-    # Inicializar extensiones
+    # CORS
+    origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    CORS(
+        app,
+        origins=origins,
+        supports_credentials=True,
+        resources={
+            r"/api/*": {"origins": origins},
+            r"/upload/*": {"origins": origins},
+        },
+    )
+
+    # Extensiones
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
 
-    with app.app_context():
-        try:
-            db.create_all()
-            logger.info("Tablas de la base de datos verificadas/creadas exitosamente")
-        except Exception as e:
-            logger.error(f"Error al inicializar la base de datos: {str(e)}")
-            raise
-
+    # Blueprints
     from .routes import main_bp
     app.register_blueprint(main_bp)
 
+    # DB check (solo dev)
+    if app.config.get("DEBUG"):
+        with app.app_context():
+            try:
+                db.create_all()  # usa flask db upgrade en prod
+                log.info("Tablas verificadas/creadas.")
+            except Exception as e:
+                log.error("DB init error: %s", e)
+                raise
+
+    # Manejo global de errores DB
     @app.errorhandler(OperationalError)
-    def handle_db_error(error):
-        logger.error(f"Error de base de datos: {str(error)}")
-        return {"message": "Error de conexión con la base de datos, por favor intente más tarde"}, 500
+    def handle_db_error(err):
+        log.error("DB error: %s", err)
+        return {"message": "Error de base de datos. Intenta más tarde."}, 500
 
     return app
 
-def get_db():
+
+def get_db() -> SQLAlchemy:
     return db
