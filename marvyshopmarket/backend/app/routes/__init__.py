@@ -12,20 +12,20 @@ from .tendero_routes import *
 
 # Registrar todas las vistas
 main_bp.add_url_rule('/api/verificar-usuario', 
-                     view_func=VerificarUsuarioAPI.as_view('verificar_usuario_api'), 
-                     methods=['GET', 'POST'])
+view_func=VerificarUsuarioAPI.as_view('verificar_usuario_api'), 
+methods=['GET', 'POST'])
 
 main_bp.add_url_rule('/api/registrar-admin-tienda', 
-                     view_func=RegistrarAdminTiendaAPI.as_view('registrar_admin_tienda_api'), 
-                     methods=['POST'])
+view_func=RegistrarAdminTiendaAPI.as_view('registrar_admin_tienda_api'), 
+methods=['POST'])
 
 main_bp.add_url_rule('/api/registrar-tendero', 
-                     view_func=RegistrarTenderoAPI.as_view('registrar_tendero_api'), 
-                     methods=['POST'])
+view_func=RegistrarTenderoAPI.as_view('registrar_tendero_api'), 
+methods=['POST'])
 
 main_bp.add_url_rule('/api/consultar-info', 
-                     view_func=ConsultarInfoAPI.as_view('consultar_info_api'),
-                     methods=['GET', 'POST'])
+view_func=ConsultarInfoAPI.as_view('consultar_info_api'),
+methods=['GET', 'POST'])
 
 imagenes_view = ImagenesAPI.as_view('imagenes_api')
 main_bp.add_url_rule('/uploads/<path:filename>', view_func=imagenes_view, methods=['GET'])

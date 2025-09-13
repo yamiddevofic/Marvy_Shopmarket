@@ -4,70 +4,64 @@ import Header from '../components/Header/Header';
 import StatsGrid from '../components/Stats/StatsGrid';
 import OptionsGrid from '../components/Options/OptionsGrid';
 import QuickActionButton from '../components/Button/QuickActionButton';
-import ProfileSection from './ProfileSection';
+import Cookies from 'js-cookie';
 
 const Home = () => {
   const navigate = useNavigate();
-  const userName = localStorage.getItem('userName') || 'Administrador';
   const [adminInfo, setAdminInfo] = useState(null);
+  const [storeInfo, setStoreInfo] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Redireccionar si el usuario no está autenticado
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    if (!isLoggedIn) {
-      navigate('/');
-    }
-  }, [navigate]);
+  const isLoggedIn = Cookies.get('loggedIn');
 
   useEffect(() => {
-    const fetchAdminInfo = async () => {
+    const checkAuth = async () => {
       try {
-        console.log('Iniciando petición...');
-
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/consultar-info`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/consultar-info`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           credentials: 'include',
         });
-
-        console.log('Estado de la respuesta:', response.status);
-
-        if (!response.ok) {
-          throw new Error(`Error en la petición: ${response.status}`);
+  
+        console.log('Estado de la respuesta:', res.status);
+  
+        if (!res.ok) {
+          console.log('No autenticado');
+          navigate('/', { replace: true });
+          return;
         }
-
-        const data = await response.json();
-        console.log('Datos recibidos:', data);
-
-        if (data?.datos) {
-          console.log('Datos de la tienda:', data.datos.tienda);
-          console.log('¿Tiene imagen?:', Boolean(data.datos.tienda.imagen));
-
-          setAdminInfo(data.datos);
-        } else {
-          console.error('Estructura de datos inesperada:', data);
-          throw new Error('La respuesta no tiene el formato esperado');
+  
+        const data = await res.json();
+        setAdminInfo(data.datos.administrador);       // ✅ Guardar la info
+        setStoreInfo(data.datos.tienda);              // ✅ Mantener objeto de tienda completo
+        setUserName(data.datos.administrador?.nombre || null); // ✅ Guardar nombre de usuario
+        // Persistir en localStorage para accesos directos/recargas en /perfil
+        try {
+          localStorage.setItem('adminInfo', JSON.stringify(data.datos.administrador || null));
+          localStorage.setItem('storeInfo', JSON.stringify(data.datos.tienda || null));
+          if (data.datos.administrador?.nombre) {
+            localStorage.setItem('userName', data.datos.administrador.nombre);
+          } else {
+            localStorage.removeItem('userName');
+          }
+        } catch (e) {
+          console.warn('No se pudo escribir en localStorage:', e);
         }
-
+        setLoading(false);        // ✅ Quitar el loading
       } catch (err) {
-        console.error('Error detallado:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.log('Error al verificar autenticación', err);
+        navigate('/', { replace: true });
       }
-    };
 
-    fetchAdminInfo();
-  }, []);
+    };
+    checkAuth();
+  }, [navigate, isLoggedIn]);
+  
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800">
-        <Header userName={userName} />
+        <Header userName={userName} adminInfo={adminInfo} storeInfo={storeInfo}/>
         <main className="container mx-auto px-4 py-6">
           <div className="animate-pulse space-y-4">
             <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
@@ -77,16 +71,14 @@ const Home = () => {
       </div>
     );
   }
-
-  // Construir la URL de la imagen
-  const imageUrl = adminInfo?.tienda?.imagen ? `/uploads/${adminInfo.tienda.imagen}` : null;
+  console.log("Nombre del usuario:", userName);
+  console.log("Información del administrador:", adminInfo);
+  console.log("Información de la tienda:", storeInfo);
+  const imageUrl = storeInfo?.imagen ? `/uploads/${storeInfo.imagen}` : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200">
-      <Header
-        userName={userName}
-        adminInfo={adminInfo}
-      />
+      <Header userName={userName} adminInfo={adminInfo} storeInfo={storeInfo}/>
 
       <main className="container mx-auto px-4 py-6 lg:px-8">
         {/* Sección de acciones rápidas */}

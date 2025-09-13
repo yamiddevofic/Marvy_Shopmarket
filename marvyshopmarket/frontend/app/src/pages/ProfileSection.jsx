@@ -10,23 +10,43 @@ const LoadingSkeleton = () => (
 );
 
 
-const ProfileSection = ({ userName, error }) => {
+const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial }) => {
   const [imageError, setImageError] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const { adminInfo } = location.state || {};
+  const { adminInfo: stateAdminInfo, storeInfo: stateStoreInfo, userName: stateUserName, initial: stateInitial } = location.state || {};
+
+  // Utilidades para validar datos seguros
+  const safeObj = (obj) => (obj && typeof obj === 'object' && Object.keys(obj).length > 0 ? obj : null);
+  const safeStr = (str) => (typeof str === 'string' && str.trim().length > 0 ? str : null);
+
+  // Prefiere location.state (si navegas desde Home), luego props (App.jsx), sino null
+  const [adminInfo, setAdminInfo] = useState(safeObj(stateAdminInfo) || safeObj(propAdminInfo) || null);
+  const [storeInfo, setStoreInfo] = useState(safeObj(stateStoreInfo) || safeObj(propStoreInfo) || null);
+  const [userName, setUserName] = useState(safeStr(stateUserName) || safeStr(propUserName) || null);
+  const [initial, setInitial] = useState(
+    safeStr(stateInitial) || 
+    safeStr(propInitial) || 
+    (userName ? userName.charAt(0).toUpperCase() : '?')
+  );
+  // Mantener sincronizado si cambian props o location.state
+  useEffect(() => {
+    setAdminInfo((prev) => safeObj(stateAdminInfo) || safeObj(propAdminInfo) || prev || null);
+    setStoreInfo((prev) => safeObj(stateStoreInfo) || safeObj(propStoreInfo) || prev || null);
+    setUserName((prev) => safeStr(stateUserName) || safeStr(propUserName) || prev || null);
+  }, [stateAdminInfo, stateStoreInfo, stateUserName, propAdminInfo, propStoreInfo, propUserName]);
 
   useEffect(() => {
-    if (adminInfo?.tienda?.imagen) {
-      setImageUrl(`${window.location.origin}/uploads/${adminInfo.tienda.imagen}`);
+    if (storeInfo?.imagen) {
+      setImageUrl(`${window.location.origin}${storeInfo.imagen}`);
       setImageError(false);
     } else {
       setImageUrl(null);
     }
     // Simulamos un tiempo de carga mínimo para mostrar los estados de loading
     setTimeout(() => setIsLoading(false), 500);
-  }, [adminInfo?.tienda?.imagen]);
+  }, [storeInfo?.imagen]);
 
   const ProfileImage = () => {
     if (isLoading) {
@@ -39,7 +59,7 @@ const ProfileSection = ({ userName, error }) => {
       return (
         <div className="relative group">
           <div className="w-32 h-32 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
-            <User className="w-16 h-16 text-white" />
+            <p className="text-4xl font-bold text-white">{initial || '??'}</p>
           </div>
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
             <div className="w-32 h-32 rounded-full bg-black/50 flex items-center justify-center">
@@ -49,16 +69,18 @@ const ProfileSection = ({ userName, error }) => {
         </div>
       );
     }
-
+    console.log("imageUrl en ProfileSection:", imageUrl);
+    console.log("storeInfo en ProfileSection:", storeInfo);
+    console.log("initial en ProfileSection:", initial);
     return (
       <div className="relative group">
         <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-950 shadow-lg transition-transform duration-200 ease-in-out transform group-hover:scale-105">
-          <img
+          {imageUrl ? <img
             src={imageUrl}
-            alt={`Logo de ${adminInfo?.tienda?.nombre || 'la tienda'}`}
+            alt={`Logo de ${storeInfo?.nombre || 'la tienda'}`}
             className="w-full h-full object-cover"
             onError={() => setImageError(true)}
-          />
+          /> : initial}
         </div>
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
           <div className="w-32 h-32 rounded-full bg-black/50 flex items-center justify-center">
@@ -90,7 +112,7 @@ const ProfileSection = ({ userName, error }) => {
 
   return (
     <div className="w-full m-0 p-0 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200 pb-5  ">
-      <Header userName={adminInfo?.administrador?.nombre || "Administrador"} adminInfo={adminInfo}/>
+      <Header userName={userName|| "Administrador"} adminInfo={adminInfo} storeInfo={storeInfo}/>
       <ToggleTheme/>
 
       <div className="w-full flex flex-col justify-center items-center p-5 md:p-0">
@@ -111,11 +133,11 @@ const ProfileSection = ({ userName, error }) => {
             ) : (
               <div className="text-center mb-8">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {adminInfo?.tienda?.nombre || 'Tu tienda'}
+                  {storeInfo?.nombre || 'Tu tienda'}
                 </h1>
                 <div className="flex items-center justify-center mt-2 text-gray-600 dark:text-gray-400">
                   <MapPin className="w-4 h-4 mr-1" />
-                  <span>{adminInfo?.tienda?.ubicacion || 'Ubicación no disponible'}</span>
+                  <span>{storeInfo?.ubicacion || 'Ubicación no disponible'}</span>
                 </div>
               </div>
             )}
@@ -124,25 +146,25 @@ const ProfileSection = ({ userName, error }) => {
               <InfoCard
                 icon={<User className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
                 title="Administrador"
-                value={adminInfo?.administrador?.nombre}
+                value={adminInfo?.nombre}
                 isLoading={isLoading}
               />
               <InfoCard
                 icon={<Mail className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
                 title="Correo electrónico"
-                value={adminInfo?.administrador?.correo}
+                value={adminInfo?.correo}
                 isLoading={isLoading}
               />
               <InfoCard
                 icon={<Phone className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
                 title="Teléfono"
-                value={adminInfo?.administrador?.celular}
+                value={adminInfo?.celular}
                 isLoading={isLoading}
               />
               <InfoCard
                 icon={<Store className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
                 title="ID Tienda"
-                value={adminInfo?.tienda?.id}
+                value={storeInfo?.id}
                 isLoading={isLoading}
               />
             </div>

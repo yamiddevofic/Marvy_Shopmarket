@@ -15,21 +15,27 @@ migrate = Migrate()
 
 def create_app() -> Flask:
     app = Flask(__name__)
+    app.secret_key = os.getenv("SECRET_KEY")
     app.config.from_object(get_config())
 
     is_prod = os.getenv("FLASK_ENV") == "production"
 
+    # Cookies de sesión: en producción, Secure y SameSite=None para permitir credenciales cross-site sobre HTTPS.
+    # En desarrollo, permitir HTTP (no Secure) y SameSite=Lax (mismo sitio: localhost:puerto distinto sigue siendo same-site).
     app.config.update(
-        SESSION_COOKIE_SAMESITE="None" if is_prod else "Lax",
-        SESSION_COOKIE_SECURE=is_prod,
+        SESSION_COOKIE_SAMESITE="None",
+        SESSION_COOKIE_SECURE=True,
     )
 
     origins = [
+        "http://localhost:5174",
+        "http://172.20.0.3:5173",
         "http://localhost:5173",
         "http://localhost:5000",
         "https://marvyshopmarket.com",
         "https://marvy-shopmarket.onrender.com"
     ]
+
     CORS(app, origins=origins, supports_credentials=True,
          resources={r"/api/*": {"origins": origins},
                     r"/upload/*": {"origins": origins}})

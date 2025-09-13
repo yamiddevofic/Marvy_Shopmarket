@@ -24,13 +24,13 @@ services:
     container_name: marvyshop-frontend
     command: npm run dev -- --host
     environment:
-      VITE_API_URL: https://marvy-shopmarket.onrender.com/api   # 👈 mapping, no guiones
+      VITE_API_URL: http://localhost:5000/api   # 👈 mapping, no guiones
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "300"
     volumes:
       - ./frontend/app:/app
       - /app/node_modules         # volumen anónimo para conservar dependencias
     ports:
-      - "5173:5173"
+      - "5174:5174"
     depends_on:
       - backend

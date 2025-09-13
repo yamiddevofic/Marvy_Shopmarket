@@ -1,13 +1,14 @@
 // ProtectedRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = localStorage.getItem('loggedIn');
+  const isLoggedIn = Cookies.get('loggedIn');
 
-  if (!isLoggedIn) {
+  if (isLoggedIn !== 'true') {
     // Si no está autenticado, redirigir al inicio de sesión
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   // Si está autenticado, mostrar la ruta solicitada

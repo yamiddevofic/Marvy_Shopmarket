@@ -28,7 +28,24 @@ const App = () => {
           path="/perfil"
           element={
             <ProtectedRoute>
-              <ProfileSection />
+              {(() => {
+                const storedAdmin = localStorage.getItem('adminInfo');
+                const storedStore = localStorage.getItem('storeInfo');
+                const storedUser = localStorage.getItem('userName');
+                const storedAdmInitial = localStorage.getItem('admInitial');
+                const adminInfo = storedAdmin ? JSON.parse(storedAdmin) : null;
+                const storeInfo = storedStore ? JSON.parse(storedStore) : null;
+                const userName = storedUser || null;
+                const initial = storedAdmInitial || null;
+                return (
+                  <ProfileSection
+                    adminInfo={adminInfo}
+                    storeInfo={storeInfo}
+                    userName={userName}
+                    initial={initial}
+                  />
+                );
+              })()}
             </ProtectedRoute>
           }
         />

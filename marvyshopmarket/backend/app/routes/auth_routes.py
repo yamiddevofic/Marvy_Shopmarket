@@ -43,11 +43,10 @@ class VerificarUsuarioAPI(MethodView):
                 return jsonify({'message': 'Usuario no encontrado o contraseña incorrecta'}), 401
 
         except Exception as e:
-            with open('error_log.txt', 'a', encoding='utf-8') as error_file:
-                error_file.write(f"Error: {str(e)}\n")
-                error_file.write(traceback.format_exc())
-                error_file.write("\n" + "-"*50 + "\n")
-            return jsonify({'message': 'Error, vuelve a intentarlo'}), 500
+            # Log the full traceback for debugging
+            print(traceback.format_exc())
+            return jsonify({'message': f'Error interno del servidor: {str(e)}', 'trace': traceback.format_exc()}), 500
+
 
 class CerrarSesionAPI(MethodView):
     def post(self):

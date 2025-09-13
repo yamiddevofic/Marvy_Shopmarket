@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, ShoppingCart } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ToggleDark from '../components/Toggle/ToggleTheme';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -11,14 +12,15 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Redirección automática si ya está autenticado
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    if (isLoggedIn) {
-      navigate('/home');
+    const isLoggedIn = Cookies.get('loggedIn'); // Lee la cookie
+    if (isLoggedIn === 'true' && location.pathname !== '/home') { // Las cookies se guardan como strings
+      navigate('/home', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,35 +42,30 @@ const Login = () => {
   
       const response = await fetch(`${import.meta.env.VITE_API_URL}/verificar-usuario`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userid: cedula,
-          password,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userid: cedula, password }),
+        credentials: 'include',  // MUY importante
       });
-  
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch (err) {
-          errorData = { message: 'Error al iniciar sesión' };
-        }
-        throw new Error(errorData.message || 'Error al iniciar sesión');
-      }
-  
-      const data = await response.json();
       
-      // Guardar la sesión del usuario en localStorage
-      if (data.name) {
-        localStorage.setItem('userName', data.name);
+      if (!response.ok) {
+        throw new Error("Error al iniciar sesión");
       }
-      localStorage.setItem('loggedIn', true);
-  
-      // Navegar a la página de inicio (dashboard)
-      navigate('/home');
+      
+      const data = await response.json();
+      console.log("Usuario autenticado:", data.name);
+      // Establecer cookie para que ProtectedRoute permita el acceso
+      // Nota: Debe ser exactamente 'true' porque ProtectedRoute compara strings
+      Cookies.set('loggedIn', 'true', { sameSite: 'Lax' });
+
+      // Opcional: guardar info básica si la usas en otras vistas
+      try {
+        localStorage.setItem('authInfo', JSON.stringify(data));
+      } catch (e) {
+        console.warn('No se pudo guardar authInfo en localStorage', e);
+      }
+
+      navigate('/home', { replace: true });
+      
   
     } catch (err) {
       setError(err.message || 'Error al conectar con el servidor');

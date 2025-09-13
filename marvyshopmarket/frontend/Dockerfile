@@ -14,7 +14,7 @@ RUN npm install
 COPY app/. .
 
 # 5️⃣ Puerto por defecto del servidor Vite
-EXPOSE 5173
+EXPOSE 5174
 
 # 6️⃣ Arrancamos Vite con HMR accesible desde el host
 CMD ["npm", "run", "dev", "--", "--host"]
