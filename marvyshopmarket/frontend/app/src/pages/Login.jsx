@@ -3,6 +3,7 @@ import { Eye, EyeOff, ShoppingCart } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ToggleDark from '../components/Toggle/ToggleTheme';
 import Cookies from 'js-cookie';
+import { useAppContext } from '../context/AppContext';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -10,9 +11,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { setAdminInfo, setSelectedOption } = useAppContext();
+  setAdminInfo('default');
+  setSelectedOption('login');
   
+
   const navigate = useNavigate();
   const location = useLocation();
+  const { adminInfo } = useAppContext();
+  const { selectedOption } = useAppContext();
 
   // Redirección automática si ya está autenticado
   useEffect(() => {
@@ -60,6 +67,7 @@ const Login = () => {
       // Opcional: guardar info básica si la usas en otras vistas
       try {
         localStorage.setItem('authInfo', JSON.stringify(data));
+        setAdminInfo(data);
       } catch (e) {
         console.warn('No se pudo guardar authInfo en localStorage', e);
       }
@@ -73,6 +81,9 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  console.log('setAdminInfo en Login:', adminInfo);
+  console.log('selectedOption en Login:', selectedOption);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-green-600 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4 transition-colors duration-200">

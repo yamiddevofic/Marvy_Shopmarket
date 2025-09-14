@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from .. import bcrypt, db
 from ..models import Administrador, Tiendas
 
-UPLOAD_FOLDER = 'uploads/'  # Carpeta donde se guardarán las imágenes
+UPLOAD_FOLDER = '../../../frontend/app/src/assets/uploads/'  # Carpeta donde se guardarán las imágenes
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Método auxiliar para verificar si la extensión del archivo es permitida

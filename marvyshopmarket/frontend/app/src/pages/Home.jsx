@@ -5,6 +5,8 @@ import StatsGrid from '../components/Stats/StatsGrid';
 import OptionsGrid from '../components/Options/OptionsGrid';
 import QuickActionButton from '../components/Button/QuickActionButton';
 import Cookies from 'js-cookie';
+import Layout from '../Layout/Layout';
+import { useAppContext } from '../context/AppContext';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,7 +15,17 @@ const Home = () => {
   const [userName, setUserName] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { selectedOption, setSelectedOption } = useAppContext();
   const isLoggedIn = Cookies.get('loggedIn');
+
+  setSelectedOption('home');
+  console.log('selectedOption estado en Home: ', selectedOption)
+
+  const handleSelectOption = (option) => {
+    setSelectedOption(option);
+    console.log('Option selected:', selectedOption);
+    navigate(`/${option}`);
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,6 +47,7 @@ const Home = () => {
         setAdminInfo(data.datos.administrador);       // ✅ Guardar la info
         setStoreInfo(data.datos.tienda);              // ✅ Mantener objeto de tienda completo
         setUserName(data.datos.administrador?.nombre || null); // ✅ Guardar nombre de usuario
+        
         // Persistir en localStorage para accesos directos/recargas en /perfil
         try {
           localStorage.setItem('adminInfo', JSON.stringify(data.datos.administrador || null));
@@ -61,7 +74,6 @@ const Home = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800">
-        <Header userName={userName} adminInfo={adminInfo} storeInfo={storeInfo}/>
         <main className="container mx-auto px-4 py-6">
           <div className="animate-pulse space-y-4">
             <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
@@ -71,14 +83,17 @@ const Home = () => {
       </div>
     );
   }
-  console.log("Nombre del usuario:", userName);
-  console.log("Información del administrador:", adminInfo);
-  console.log("Información de la tienda:", storeInfo);
+  console.log("Nombre del usuario en Home:", userName);
+  console.log("Información del administrador en Home:", adminInfo);
+  console.log("Información de la tienda en Home:", storeInfo);
   const imageUrl = storeInfo?.imagen ? `/uploads/${storeInfo.imagen}` : null;
+  console.log("selectedOption estado en Home: ", selectedOption)
+
+  
 
   return (
+    <Layout adminInfo={adminInfo} storeInfo={storeInfo} userName={userName} selectedOption={selectedOption}>
     <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200">
-      <Header userName={userName} adminInfo={adminInfo} storeInfo={storeInfo}/>
 
       <main className="container mx-auto px-4 py-6 lg:px-8">
         {/* Sección de acciones rápidas */}
@@ -92,10 +107,10 @@ const Home = () => {
             </button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickActionButton text="Nuevo Producto" />
-            <QuickActionButton text="Generar Reporte" />
-            <QuickActionButton text="Ver Ventas" />
-            <QuickActionButton text="Configuración" />
+            <QuickActionButton text="Nuevo Producto" onClick={() => handleSelectOption('agregar-producto')} />
+            <QuickActionButton text="Generar Reporte" onClick={() => handleSelectOption('reporte')} />
+            <QuickActionButton text="Ver Ventas" onClick={() => handleSelectOption('ventas')} />
+            <QuickActionButton text="Configuración" onClick={() => handleSelectOption('configuracion')} />
           </div>
         </div>
 
@@ -123,11 +138,12 @@ const Home = () => {
                 Ver más
               </button>
             </div>
-            <OptionsGrid />
+            <OptionsGrid selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
           </section>
         </div>
       </main>
     </div>
+    </Layout>
   );
 };
 

@@ -5,16 +5,21 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const Header = ({ userName, adminInfo, storeInfo }) => {
+const Header = ({ userName, adminInfo, storeInfo, selectedOption }) => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // Safe fallbacks for display when userName is not yet available
   const displayName = userName || 'Usuario';
   const initial = (displayName?.charAt?.(0) || '?').toUpperCase();
+  
 
   const handleProfileClick = () => {
-    navigate('/perfil', { state: { storeInfo, adminInfo , userName, initial } });
+    localStorage.setItem('storeInfo', JSON.stringify(storeInfo));
+    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+    localStorage.setItem('userName', userName);
+    localStorage.setItem('admInitial', initial);
+    localStorage.setItem('selectedOption', selectedOption);
+    navigate('/perfil');
     setIsMobileMenuOpen(false);
     setIsDropdownOpen(false);
   };
@@ -46,12 +51,14 @@ const Header = ({ userName, adminInfo, storeInfo }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
   console.log("adminInfo en Header:", adminInfo);
   console.log("storeInfo en Header:", storeInfo);
   console.log("userName en Header:", userName);
+  console.log("selectedOption en Header:", selectedOption);
 
   return (
-    <header className="border-b w-100 mb-5 dark:bg-black border-gray-200 dark:border-gray-700">
+    <header className="border-b w-100 dark:bg-black border-gray-200 dark:border-gray-700">
       {/* Main Header */}
       <div className="relative bg-white dark:bg-gray-800 transition-colors duration-200">
         <div className="flex h-16 items-center justify-between px-4 lg:px-6">
@@ -120,7 +127,7 @@ const Header = ({ userName, adminInfo, storeInfo }) => {
                     </div>
                     <div className="border-t border-gray-200 dark:border-gray-700"></div>
                     <button
-                      onClick={handleProfileClick}
+                      onClick={() => {handleProfileClick()}}
                       className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       Perfil
@@ -214,12 +221,18 @@ const Header = ({ userName, adminInfo, storeInfo }) => {
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>
             <li>
-              <NavLink to="/perfil" className={({ isActive }) =>
-                  `transition-colors ${
-                    isActive
-                      ? 'font-medium text-gray-900 dark:text-white'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                  }`} onClick={handleProfileClick}>{storeInfo?.nombre || 'Tu tienda'}</NavLink>
+              <NavLink 
+              to={`/${selectedOption}`}
+              className={({ isActive }) =>
+                `transition-colors ${
+                  isActive
+                    ? 'font-medium text-gray-900 dark:text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`
+              }
+              >
+                {selectedOption === 'login' || selectedOption === 'registrarse' || selectedOption === 'home' ? '' : selectedOption}
+              </NavLink>
             </li>
           </ol>
         </nav>

@@ -4,38 +4,44 @@ import { useLocation } from 'react-router-dom';
 import ToggleTheme from '../components/Toggle/ToggleTheme';
 import Header from '../components/Header/Header';
 import InfoCard from '../components/Card/InfoCard';
+import Layout from '../Layout/Layout';
+import { useAppContext } from '../context/AppContext';
 
 const LoadingSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
 );
 
 
-const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial }) => {
+const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial}) => {
   const [imageError, setImageError] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const { adminInfo: stateAdminInfo, storeInfo: stateStoreInfo, userName: stateUserName, initial: stateInitial } = location.state || {};
+  const [ adminInfo, setAdminInfo ] = useState(null);
+  const { selectedOption, setSelectedOption } = useAppContext();
+
+  setSelectedOption('perfil');
+  console.log('selectedOption estado en ProfileSection: ', selectedOption)
+  console.log('adminInfo estado en ProfileSection: ', adminInfo)
 
   // Utilidades para validar datos seguros
   const safeObj = (obj) => (obj && typeof obj === 'object' && Object.keys(obj).length > 0 ? obj : null);
   const safeStr = (str) => (typeof str === 'string' && str.trim().length > 0 ? str : null);
 
   // Prefiere location.state (si navegas desde Home), luego props (App.jsx), sino null
-  const [adminInfo, setAdminInfo] = useState(safeObj(stateAdminInfo) || safeObj(propAdminInfo) || null);
-  const [storeInfo, setStoreInfo] = useState(safeObj(stateStoreInfo) || safeObj(propStoreInfo) || null);
-  const [userName, setUserName] = useState(safeStr(stateUserName) || safeStr(propUserName) || null);
+  const [storeInfo, setStoreInfo] = useState(safeObj(propStoreInfo) || null);
+  const [userName, setUserName] = useState(safeStr(propUserName) || null);
   const [initial, setInitial] = useState(
-    safeStr(stateInitial) || 
     safeStr(propInitial) || 
     (userName ? userName.charAt(0).toUpperCase() : '?')
   );
+
   // Mantener sincronizado si cambian props o location.state
   useEffect(() => {
-    setAdminInfo((prev) => safeObj(stateAdminInfo) || safeObj(propAdminInfo) || prev || null);
-    setStoreInfo((prev) => safeObj(stateStoreInfo) || safeObj(propStoreInfo) || prev || null);
-    setUserName((prev) => safeStr(stateUserName) || safeStr(propUserName) || prev || null);
-  }, [stateAdminInfo, stateStoreInfo, stateUserName, propAdminInfo, propStoreInfo, propUserName]);
+    setAdminInfo((prev) => safeObj(propAdminInfo) || prev || null);
+    setStoreInfo((prev) => safeObj(propStoreInfo) || prev || null);
+    setUserName((prev) => safeStr(propUserName) || prev || null);
+  }, [propAdminInfo, propStoreInfo, propUserName]);
 
   useEffect(() => {
     if (storeInfo?.imagen) {
@@ -111,8 +117,8 @@ const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInf
   }
 
   return (
-    <div className="w-full m-0 p-0 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200 pb-5  ">
-      <Header userName={userName|| "Administrador"} adminInfo={adminInfo} storeInfo={storeInfo}/>
+    <Layout adminInfo={adminInfo} storeInfo={storeInfo} userName={userName} selectedOption={selectedOption}>  
+    <div className="w-full m-0 pt-3 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200 pb-5  ">
       <ToggleTheme/>
 
       <div className="w-full flex flex-col justify-center items-center p-5 md:p-0">
@@ -180,6 +186,7 @@ const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInf
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 
