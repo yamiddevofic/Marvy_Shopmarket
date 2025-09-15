@@ -10,20 +10,30 @@ import { useAppContext } from '../context/AppContext';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [adminInfo, setAdminInfo] = useState(null);
-  const [storeInfo, setStoreInfo] = useState(null);
-  const [userName, setUserName] = useState(null);
+  const { adminInfo, setAdminInfo, selectedOption, setSelectedOption, setStoreInfo, setUserName, storeInfo, userName, selectedIcon, setSelectedIcon } = useAppContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { selectedOption, setSelectedOption } = useAppContext();
   const isLoggedIn = Cookies.get('loggedIn');
 
-  setSelectedOption('home');
-  console.log('selectedOption estado en Home: ', selectedOption)
+  useEffect(() => {
+    setSelectedOption('home');
+    
+    // Depuración - puedes comentar o eliminar estos logs después de verificar
+    console.log('=== Debug Home Component ===');
+    console.log('selectedOption en Home:', selectedOption);
+    console.log('adminInfo en Home:', adminInfo);
+    console.log('storeInfo en Home:', storeInfo);
+    console.log('userName en Home:', userName);
+    console.log('selectedIcon en Home:', selectedIcon);
+  }, []); // El array vacío asegura que solo se ejecute una vez al montar el componente
 
-  const handleSelectOption = (option) => {
+  const handleSelectOption = (option, iconName) => {
     setSelectedOption(option);
-    console.log('Option selected:', selectedOption);
+    setSelectedIcon(iconName);
+    localStorage.setItem('selectedOption', option);
+    localStorage.setItem('selectedIcon', iconName);
+    console.log('Option selected:', option);
+    console.log('Icon selected:', iconName);
     navigate(`/${option}`);
   };
 
@@ -45,18 +55,15 @@ const Home = () => {
   
         const data = await res.json();
         setAdminInfo(data.datos.administrador);       // ✅ Guardar la info
-        setStoreInfo(data.datos.tienda);              // ✅ Mantener objeto de tienda completo
+        setStoreInfo(data.datos.tienda);            // ✅ Mantener objeto de tienda completo
         setUserName(data.datos.administrador?.nombre || null); // ✅ Guardar nombre de usuario
         
         // Persistir en localStorage para accesos directos/recargas en /perfil
         try {
           localStorage.setItem('adminInfo', JSON.stringify(data.datos.administrador || null));
           localStorage.setItem('storeInfo', JSON.stringify(data.datos.tienda || null));
-          if (data.datos.administrador?.nombre) {
-            localStorage.setItem('userName', data.datos.administrador.nombre);
-          } else {
-            localStorage.removeItem('userName');
-          }
+          localStorage.setItem('userName', data.datos.administrador.nombre);
+          localStorage.setItem('selectedOption', 'home');
         } catch (e) {
           console.warn('No se pudo escribir en localStorage:', e);
         }
@@ -83,12 +90,12 @@ const Home = () => {
       </div>
     );
   }
+  
   console.log("Nombre del usuario en Home:", userName);
   console.log("Información del administrador en Home:", adminInfo);
   console.log("Información de la tienda en Home:", storeInfo);
-  const imageUrl = storeInfo?.imagen ? `/uploads/${storeInfo.imagen}` : null;
   console.log("selectedOption estado en Home: ", selectedOption)
-
+  console.log("selectedIcon estado en Home: ", selectedIcon)
   
 
   return (
@@ -107,10 +114,10 @@ const Home = () => {
             </button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickActionButton text="Nuevo Producto" onClick={() => handleSelectOption('agregar-producto')} />
-            <QuickActionButton text="Generar Reporte" onClick={() => handleSelectOption('reporte')} />
-            <QuickActionButton text="Ver Ventas" onClick={() => handleSelectOption('ventas')} />
-            <QuickActionButton text="Configuración" onClick={() => handleSelectOption('configuracion')} />
+            <QuickActionButton text="Nuevo Producto" onClick={() => handleSelectOption('productos', 'Box')} />
+            <QuickActionButton text="Generar Reporte" onClick={() => handleSelectOption('reportes', 'ScrollText')} />
+            <QuickActionButton text="Ver Ventas" onClick={() => handleSelectOption('ventas', 'Receipt')} />
+            <QuickActionButton text="Configuración" onClick={() => handleSelectOption('configuracion', 'Bolt')} />
           </div>
         </div>
 
@@ -138,7 +145,7 @@ const Home = () => {
                 Ver más
               </button>
             </div>
-            <OptionsGrid selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
+            <OptionsGrid  selectedOption={selectedOption} setSelectedOption={setSelectedOption} setSelectedIcon={setSelectedIcon} selectedIcon={selectedIcon}/>
           </section>
         </div>
       </main>

@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 
-const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
+const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
     
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
@@ -48,18 +48,18 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form 
-            title="Registro de Producto"
+            title="Registro de Tenderos"
             selectedIcon={selectedIcon}
             formData={{
-                productoId: "",
-                productoNombre: "",
-                productoPrecio: "",
-                productoStock: "",
-                productoImagen: "",
+                tenderoId: "",
+                tenderoNombre: "",
+                tenderoCorreo: "",
+                tenderoCelular: "",
+                tenderoPassword: "",
                 tiendaId: "",
             }} />
         </Layout>
     );
 };
 
-export default NewProduct;
+export default RegisterShopkeeper;

@@ -11,15 +11,11 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setAdminInfo, setSelectedOption } = useAppContext();
-  setAdminInfo('default');
-  setSelectedOption('login');
+  const { setAdminInfo, setSelectedOption, adminInfo, selectedOption } = useAppContext();
   
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { adminInfo } = useAppContext();
-  const { selectedOption } = useAppContext();
 
   // Redirección automática si ya está autenticado
   useEffect(() => {
@@ -28,6 +24,12 @@ const Login = () => {
       navigate('/home', { replace: true });
     }
   }, [navigate, location.pathname]);
+  useEffect(() => {
+    setAdminInfo('default');
+    setSelectedOption('login');
+    console.log('setAdminInfo en Login:', adminInfo);
+    console.log('selectedOption en Login:', selectedOption);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,8 +84,6 @@ const Login = () => {
     }
   };
 
-  console.log('setAdminInfo en Login:', adminInfo);
-  console.log('selectedOption en Login:', selectedOption);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-green-600 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4 transition-colors duration-200">

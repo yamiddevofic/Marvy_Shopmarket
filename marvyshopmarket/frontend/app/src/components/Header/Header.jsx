@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
 import ToggleDark from '../Toggle/ToggleTheme';
-import { User, ChevronDown, Menu, X } from 'lucide-react';
+import { User, ChevronDown, Menu, X, Receipt, Truck, PackageSearch, Users } from 'lucide-react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const Header = ({ userName, adminInfo, storeInfo, selectedOption }) => {
+const Header = ({ userName, adminInfo, storeInfo, selectedOption, selectedIcon }) => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const displayName = userName || 'Usuario';
   const initial = (displayName?.charAt?.(0) || '?').toUpperCase();
   
-
   const handleProfileClick = () => {
-    localStorage.setItem('storeInfo', JSON.stringify(storeInfo));
-    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-    localStorage.setItem('userName', userName);
-    localStorage.setItem('admInitial', initial);
-    localStorage.setItem('selectedOption', selectedOption);
     navigate('/perfil');
     setIsMobileMenuOpen(false);
     setIsDropdownOpen(false);
@@ -56,6 +50,7 @@ const Header = ({ userName, adminInfo, storeInfo, selectedOption }) => {
   console.log("storeInfo en Header:", storeInfo);
   console.log("userName en Header:", userName);
   console.log("selectedOption en Header:", selectedOption);
+  console.log("selectedIcon en Header:", selectedIcon);
 
   return (
     <header className="border-b w-100 dark:bg-black border-gray-200 dark:border-gray-700">
@@ -90,8 +85,8 @@ const Header = ({ userName, adminInfo, storeInfo, selectedOption }) => {
               </div>
 
               {/* Título desktop */}
-              <h2 className="hidden md:block text-lg font-semibold text-gray-900 dark:text-white">
-                Dashboard Administrativo
+              <h2 className="hidden md:block text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                {selectedOption === 'home' ? 'Dashboard Administrativo' : selectedOption=="configuracion" ?'Configuración':selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1) }  | {storeInfo?.nombre || 'Tu tienda'}
               </h2>
             </div>
           </div>
@@ -216,7 +211,7 @@ const Header = ({ userName, adminInfo, storeInfo, selectedOption }) => {
                   }`
                 }
               >
-                Dashboard
+                dashboard
               </NavLink>
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>

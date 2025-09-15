@@ -42,7 +42,6 @@ const ToggleTheme = ({ className }) => {
         "hover:scale-110 focus:outline-none focus:ring-2",
         "focus:ring-emerald-400 focus:ring-offset-2",
         "bg-white dark:bg-emerald-800 shadow-lg",
-        isAnimating && "animate-spin",
         className
       )}
       aria-label={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}

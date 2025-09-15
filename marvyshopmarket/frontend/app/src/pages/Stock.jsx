@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 
-const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
+const Stock = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
     
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
@@ -13,8 +13,8 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     const { selectedOption, setSelectedOption } = useAppContext();
     const [error, setError] = useState(null);
 
-    console.log('selectedOption estado en NewProduct: ', selectedOption)
-    console.log('adminInfo estado en NewProduct: ', adminInfo)
+    console.log('selectedOption estado en Stock: ', selectedOption)
+    console.log('adminInfo estado en Stock: ', adminInfo)
 
     // Utilidades para validar datos seguros
     const safeObj = (obj) => (obj && typeof obj === 'object' && Object.keys(obj).length > 0 ? obj : null);
@@ -39,16 +39,16 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
         setSelectedIcon((prev) => propSelectedIcon || prev || null);
       }, [propAdminInfo, propStoreInfo, propUserName]);
     
-    console.log('selectedOption estado en NewProduct: ', selectedOption)
-    console.log('adminInfo estado en NewProduct: ', adminInfo)
-    console.log('storeInfo estado en NewProduct: ', storeInfo)
-    console.log('userName estado en NewProduct: ', userName)
-    console.log('initial estado en NewProduct: ', initial)
-    console.log('error estado en NewProduct: ', error)
+    console.log('selectedOption estado en Stock: ', selectedOption)
+    console.log('adminInfo estado en Stock: ', adminInfo)
+    console.log('storeInfo estado en Stock: ', storeInfo)
+    console.log('userName estado en Stock: ', userName)
+    console.log('initial estado en Stock: ', initial)
+    console.log('error estado en Stock: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form 
-            title="Registro de Producto"
+            title="Inventario"
             selectedIcon={selectedIcon}
             formData={{
                 productoId: "",
@@ -62,4 +62,4 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     );
 };
 
-export default NewProduct;
+export default Stock;

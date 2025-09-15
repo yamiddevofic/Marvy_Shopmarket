@@ -19,10 +19,12 @@ const ProfileSection = ({ userName: propUserName, error, adminInfo: propAdminInf
   const location = useLocation();
   const [ adminInfo, setAdminInfo ] = useState(null);
   const { selectedOption, setSelectedOption } = useAppContext();
+  useEffect(() => {
+    setSelectedOption('perfil');
+    console.log('selectedOption estado en ProfileSection: ', selectedOption);
+    console.log('adminInfo estado en ProfileSection: ', adminInfo);
+  }, []);
 
-  setSelectedOption('perfil');
-  console.log('selectedOption estado en ProfileSection: ', selectedOption)
-  console.log('adminInfo estado en ProfileSection: ', adminInfo)
 
   // Utilidades para validar datos seguros
   const safeObj = (obj) => (obj && typeof obj === 'object' && Object.keys(obj).length > 0 ? obj : null);

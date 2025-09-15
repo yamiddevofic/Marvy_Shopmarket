@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import ToggleDark from '../Toggle/ToggleTheme';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'
+import { Receipt, Truck, PackageSearch, Users, UserPlus, Bolt, ScrollText, Box } from "lucide-react";
 
 const LoadingSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
 );
 
-const Form = (formData) => {
+const Form = ({title, formData, selectedIcon}) => {
   const [formDataRender, setFormDataRender] = useState({
     formData
   });
-
+  console.log('formData en Form.jsx: ', formData)
+  // Mapeo de iconos por nombre
+  const iconMap = {
+    Receipt: Receipt,
+    Truck: Truck,
+    PackageSearch: PackageSearch,
+    Users: Users,
+    UserPlus: UserPlus,
+    Bolt: Bolt,
+    ScrollText: ScrollText,
+    Box: Box,
+  };
+  
+  const IconComponent = selectedIcon && iconMap[selectedIcon];
+  
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,6 +54,7 @@ const Form = (formData) => {
       tendero_Password: formDataRender.tenderoPassword,
       tienda_Id: formDataRender.tiendaId,
     };
+    
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/registrar-tendero`, {
@@ -80,11 +96,9 @@ const Form = (formData) => {
 
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+            {IconComponent ? <IconComponent className="h-8 w-8 text-white" /> : <PackageSearch className="h-8 w-8 text-white" />}
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Registro de Tendero</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
           <p className="text-gray-600 dark:text-gray-300 mt-2">Complete la información requerida</p>
         </div>
 
