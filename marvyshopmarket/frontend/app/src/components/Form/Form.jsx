@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import ToggleDark from '../Toggle/ToggleTheme';
-import { useLocation } from 'react-router-dom'
 import { Receipt, Truck, PackageSearch, Users, UserPlus, Bolt, ScrollText, Box } from "lucide-react";
 
 const LoadingSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
 );
 
-const Form = ({title, formData, selectedIcon}) => {
-  const [formDataRender, setFormDataRender] = useState({
-    formData
-  });
-  console.log('formData en Form.jsx: ', formData)
+const Form = ({
+  title,
+  initialData = {},
+  fields = [],
+  selectedIcon,
+  apiEndpoint,
+  submitButtonText = 'Completar Registro',
+  onSubmitSuccess,
+  onSubmitError
+}) => {
   // Mapeo de iconos por nombre
   const iconMap = {
     Receipt: Receipt,
@@ -27,17 +31,25 @@ const Form = ({title, formData, selectedIcon}) => {
   
   const IconComponent = selectedIcon && iconMap[selectedIcon];
   
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(initialData);
+  const [showPasswordFields, setShowPasswordFields] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormDataRender({
-      ...formDataRender,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
-    });
+    }));
+  };
+
+  const togglePasswordVisibility = (fieldName) => {
+    setShowPasswordFields(prev => ({
+      ...prev,
+      [fieldName]: !prev[fieldName]
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -46,54 +58,117 @@ const Form = ({title, formData, selectedIcon}) => {
     setError('');
     setSuccess('');
 
-    const dataToSend = {
-      tendero_Id: formDataRender.tenderoId,
-      tendero_Nombre: formDataRender.tenderoNombre,
-      tendero_Correo: formDataRender.tenderoCorreo,
-      tendero_Celular: formDataRender.tenderoCelular,
-      tendero_Password: formDataRender.tenderoPassword,
-      tienda_Id: formDataRender.tiendaId,
-    };
-    
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/registrar-tendero`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${apiEndpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSend),
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
-      if (data.message === 'Registro de tendero exitoso') {
+      if (response.ok) {
         setSuccess('¡Registro completado con éxito!');
-        setFormDataRender({
-          tenderoId: '',
-          tenderoNombre: '',
-          tenderoCorreo: '',
-          tenderoCelular: '',
-          tenderoPassword: '',
-          tiendaId: '',
-        });
+        setFormData(initialData);
+        if (onSubmitSuccess) {
+          onSubmitSuccess(data);
+        }
       } else {
-        setError(data.message || 'Error al registrar');
+        const errorMessage = data.message || 'Error al registrar';
+        setError(errorMessage);
+        if (onSubmitError) {
+          onSubmitError(errorMessage);
+        }
       }
     } catch (error) {
-      setError('Error de conexión. Por favor, intenta nuevamente.');
+      const errorMessage = 'Error de conexión. Por favor, intenta nuevamente.';
+      setError(errorMessage);
+      if (onSubmitError) {
+        onSubmitError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const renderField = (field) => {
+    const {
+      name,
+      type = 'text',
+      label,
+      placeholder = '',
+      required = false,
+      options = []
+    } = field;
+
+    const value = formData[name] || '';
+    const isPassword = type === 'password';
+    const showPassword = showPasswordFields[name];
+
+    if (type === 'select') {
+      return (
+        <div key={name}>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            {label}
+            {required && <span className="text-red-500">*</span>}
+          </label>
+          <select
+            name={name}
+            value={value}
+            onChange={handleChange}
+            required={required}
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
+          >
+            <option value="">Seleccionar...</option>
+            {options.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+    }
+
+    return (
+      <div key={name}>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          {label}
+          {required && <span className="text-red-500">*</span>}
+        </label>
+        <div className={isPassword ? 'relative' : ''}>
+          <input
+            type={isPassword ? (showPassword ? 'text' : 'password') : type}
+            name={name}
+            value={value}
+            onChange={handleChange}
+            required={required}
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
+            placeholder={placeholder}
+          />
+          {isPassword && (
+            <button
+              type="button"
+              onClick={() => togglePasswordVisibility(name)}
+              className="absolute inset-y-0 right-0 px-3 flex items-center"
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+              ) : (
+                <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4 transition-colors duration-200">
       <div className="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-all duration-200">
-        <div className="absolute top-4 right-4">
-          <ToggleDark />
-        </div>
-
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
             {IconComponent ? <IconComponent className="h-8 w-8 text-white" /> : <PackageSearch className="h-8 w-8 text-white" />}
@@ -116,102 +191,10 @@ const Form = ({title, formData, selectedIcon}) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                ID Tendero
-              </label>
-              <input
-                type="text"
-                name="tenderoId"
-                value={formData.tenderoId}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="Ingrese el ID"
-              />
+            <div className='flex justify-end mb-4'>
+              <ToggleDark />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Nombre Completo
-              </label>
-              <input
-                type="text"
-                name="tenderoNombre"
-                value={formData.tenderoNombre}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="Nombre completo"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                name="tenderoCorreo"
-                value={formData.tenderoCorreo}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="correo@ejemplo.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Celular
-              </label>
-              <input
-                type="text"
-                name="tenderoCelular"
-                value={formData.tenderoCelular}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="Número de celular"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="tenderoPassword"
-                  value={formData.tenderoPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 px-3 flex items-center"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                ID Tienda
-              </label>
-              <input
-                type="text"
-                name="tiendaId"
-                value={formData.tiendaId}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="ID de la tienda asociada"
-              />
-            </div>
+            {fields.map(renderField)}
           </div>
 
           <button
@@ -222,7 +205,7 @@ const Form = ({title, formData, selectedIcon}) => {
             {isLoading ? (
               <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              'Completar Registro'
+              submitButtonText
             )}
           </button>
         </form>

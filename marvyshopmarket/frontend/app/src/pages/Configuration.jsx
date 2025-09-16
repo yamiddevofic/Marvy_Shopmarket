@@ -47,17 +47,27 @@ const Configuration = ({ userName: propUserName, adminInfo: propAdminInfo, store
     console.log('error estado en Configuration. ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
+            <Form
             title="Configuración"
             selectedIcon={selectedIcon}
-            formData={{
+            initialData={{
                 reporteId: "",
                 reporteNombre: "",
                 reportePrecio: "",
                 reporteStock: "",
                 reporteImagen: "",
                 tiendaId: "",
-            }} />
+            }}
+            fields={[
+                { name: "reporteId", label: "ID Configuración", placeholder: "Ingrese el ID", required: true },
+                { name: "reporteNombre", label: "Nombre de Configuración", placeholder: "Nombre de la configuración", required: true },
+                { name: "reportePrecio", label: "Valor", type: "number", placeholder: "Valor de la configuración", required: true },
+                { name: "reporteStock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: false },
+                { name: "reporteImagen", label: "Imagen", placeholder: "URL de la imagen", required: false },
+                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+            ]}
+            apiEndpoint="/actualizar-configuracion"
+            submitButtonText="Guardar Configuración" />
         </Layout>
     );
 };

@@ -47,17 +47,25 @@ const Report = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: p
     console.log('error estado en Report: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
-            title="Reportes"
+            <Form
+            title="Generar Reporte"
             selectedIcon={selectedIcon}
-            formData={{
+            initialData={{
                 reporteId: "",
-                reporteNombre: "",
-                reportePrecio: "",
-                reporteStock: "",
-                reporteImagen: "",
+                reporteTipo: "",
+                reporteFechaInicio: "",
+                reporteFechaFin: "",
                 tiendaId: "",
-            }} />
+            }}
+            fields={[
+                { name: "reporteId", label: "ID Reporte", placeholder: "Ingrese el ID", required: true },
+                { name: "reporteTipo", label: "Tipo de Reporte", placeholder: "Tipo de reporte", required: true },
+                { name: "reporteFechaInicio", label: "Fecha de Inicio", type: "date", placeholder: "Fecha de inicio", required: true },
+                { name: "reporteFechaFin", label: "Fecha de Fin", type: "date", placeholder: "Fecha de fin", required: true },
+                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+            ]}
+            apiEndpoint="/generar-reporte"
+            submitButtonText="Generar Reporte" />
         </Layout>
     );
 };

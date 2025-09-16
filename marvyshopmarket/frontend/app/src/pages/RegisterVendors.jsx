@@ -47,16 +47,25 @@ const RegisterVendors = ({ userName: propUserName, adminInfo: propAdminInfo, sto
     console.log('error estado en RegisterVendors: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
+            <Form
             title="Registro de Proveedores"
             selectedIcon={selectedIcon}
-            formData={{
+            initialData={{
                 proveedorId: "",
                 proveedorNombre: "",
                 proveedorTelefono: "",
                 proveedorCorreo: "",
                 tiendaId: "",
-            }} />
+            }}
+            fields={[
+                { name: "proveedorId", label: "ID Proveedor", placeholder: "Ingrese el ID", required: true },
+                { name: "proveedorNombre", label: "Nombre del Proveedor", placeholder: "Nombre del proveedor", required: true },
+                { name: "proveedorTelefono", label: "Teléfono", placeholder: "Número de teléfono", required: true },
+                { name: "proveedorCorreo", label: "Correo Electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
+                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+            ]}
+            apiEndpoint="/registrar-proveedor"
+            submitButtonText="Completar Registro" />
         </Layout>
     );
 };

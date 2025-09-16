@@ -47,17 +47,27 @@ const Stock = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: pr
     console.log('error estado en Stock: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
+            <Form
             title="Inventario"
             selectedIcon={selectedIcon}
-            formData={{
+            initialData={{
                 productoId: "",
                 productoNombre: "",
                 productoPrecio: "",
                 productoStock: "",
                 productoImagen: "",
                 tiendaId: "",
-            }} />
+            }}
+            fields={[
+                { name: "productoId", label: "ID Producto", placeholder: "Ingrese el ID", required: true },
+                { name: "productoNombre", label: "Nombre del Producto", placeholder: "Nombre del producto", required: true },
+                { name: "productoPrecio", label: "Precio", type: "number", placeholder: "Precio del producto", required: true },
+                { name: "productoStock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: true },
+                { name: "productoImagen", label: "Imagen", placeholder: "URL de la imagen", required: false },
+                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+            ]}
+            apiEndpoint="/actualizar-inventario"
+            submitButtonText="Actualizar Inventario" />
         </Layout>
     );
 };

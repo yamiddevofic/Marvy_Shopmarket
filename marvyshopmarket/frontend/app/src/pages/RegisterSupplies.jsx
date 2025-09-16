@@ -47,18 +47,28 @@ const RegisterSupplies = ({ userName: propUserName, adminInfo: propAdminInfo, st
     console.log('error estado en NewProduct: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
+            {/* sección para registrar suministros */}
+            <Form
             title="Registro de Suministros"
             selectedIcon={selectedIcon}
-            formData={{
-                productoId: "",
-                productoNombre: "",
-                productoPrecio: "",
-                productoStock: "",
-                productoImagen: "",
-                tiendaId: "",
-                proveedorId:"",
-            }} />
+            initialData={{
+                suministroId: "",
+                suministroNombre: "",
+                suministroDescripcion: "",
+                suministroCantidad: "",
+                suministroPrecio: "",
+                suministroProveedor: "",
+            }}
+            fields={[
+                { name: "suministroId", label: "ID Suministro", placeholder: "Ingrese el ID", required: true },
+                { name: "suministroNombre", label: "Nombre del Suministro", placeholder: "Nombre del suministro", required: true },
+                { name: "suministroDescripcion", label: "Descripción", placeholder: "Descripción del suministro", required: false },
+                { name: "suministroCantidad", label: "Cantidad", type: "number", placeholder: "Cantidad disponible", required: true },
+                { name: "suministroPrecio", label: "Precio", type: "number", placeholder: "Precio del suministro", required: true },
+                { name: "suministroProveedor", label: "Proveedor", placeholder: "Nombre del proveedor", required: true }
+            ]}
+            apiEndpoint="/registrar-suministro"
+            submitButtonText="Completar Registro" />
         </Layout>
     );
 };

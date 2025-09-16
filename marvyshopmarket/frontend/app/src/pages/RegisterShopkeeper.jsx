@@ -47,17 +47,28 @@ const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, 
     console.log('error estado en NewProduct: ', error)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
-            <Form 
+            {/* sección para registrar tenderos */}
+            <Form
             title="Registro de Tenderos"
             selectedIcon={selectedIcon}
-            formData={{
+            initialData={{
                 tenderoId: "",
                 tenderoNombre: "",
                 tenderoCorreo: "",
                 tenderoCelular: "",
                 tenderoPassword: "",
                 tiendaId: "",
-            }} />
+            }}
+            fields={[
+                { name: "tenderoId", label: "ID Tendero", placeholder: "Ingrese el ID", required: true },
+                { name: "tenderoNombre", label: "Nombre Completo", placeholder: "Nombre completo", required: true },
+                { name: "tenderoCorreo", label: "Correo Electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
+                { name: "tenderoCelular", label: "Celular", placeholder: "Número de celular", required: true },
+                { name: "tenderoPassword", label: "Contraseña", type: "password", placeholder: "••••••••", required: true },
+                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda asociada", required: true }
+            ]}
+            apiEndpoint="/registrar-tendero"
+            submitButtonText="Completar Registro" />
         </Layout>
     );
 };
