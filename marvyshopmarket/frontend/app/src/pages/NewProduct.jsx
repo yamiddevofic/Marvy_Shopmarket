@@ -48,6 +48,7 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
+            id="new-product"
             title="Registro de Producto"
             selectedIcon={selectedIcon}
             initialData={{

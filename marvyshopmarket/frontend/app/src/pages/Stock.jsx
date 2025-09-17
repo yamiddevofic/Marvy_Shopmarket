@@ -48,6 +48,7 @@ const Stock = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: pr
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
+            id="stock"
             title="Inventario"
             selectedIcon={selectedIcon}
             initialData={{

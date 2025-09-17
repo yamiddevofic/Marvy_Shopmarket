@@ -48,6 +48,7 @@ const Report = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: p
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
+            id="report"
             title="Generar Reporte"
             selectedIcon={selectedIcon}
             initialData={{

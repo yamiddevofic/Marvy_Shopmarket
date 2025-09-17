@@ -48,6 +48,7 @@ const Configuration = ({ userName: propUserName, adminInfo: propAdminInfo, store
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
+            id="configuration"
             title="Configuración"
             selectedIcon={selectedIcon}
             initialData={{

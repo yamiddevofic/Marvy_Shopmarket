@@ -35,3 +35,6 @@ main_bp.add_url_rule('/api/cerrar-sesion', view_func= cerrar_sesion_api, methods
 
 ruta_protegida_api = RutaProtegidaAPI.as_view('ruta_protegida_api')
 main_bp.add_url_rule('/api/ruta-protegida', view_func=ruta_protegida_api, methods=['GET'])
+
+consultar_tenderos_api = ConsultarTenderosAPI.as_view('consultar_tenderos_api')
+main_bp.add_url_rule('/api/consultar-tenderos', view_func=consultar_tenderos_api, methods=['GET'])

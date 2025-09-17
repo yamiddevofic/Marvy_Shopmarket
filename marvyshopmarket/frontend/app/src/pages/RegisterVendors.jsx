@@ -48,6 +48,7 @@ const RegisterVendors = ({ userName: propUserName, adminInfo: propAdminInfo, sto
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
+            id="register-vendors"
             title="Registro de Proveedores"
             selectedIcon={selectedIcon}
             initialData={{

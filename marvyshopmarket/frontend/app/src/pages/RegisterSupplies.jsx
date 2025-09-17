@@ -49,6 +49,7 @@ const RegisterSupplies = ({ userName: propUserName, adminInfo: propAdminInfo, st
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             {/* sección para registrar suministros */}
             <Form
+            id="register-supplies"
             title="Registro de Suministros"
             selectedIcon={selectedIcon}
             initialData={{
