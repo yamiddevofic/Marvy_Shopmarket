@@ -2,9 +2,32 @@ import json
 import traceback
 from flask import request, jsonify, session, Response, redirect, url_for
 from flask.views import MethodView
-from .. import bcrypt, db
+from sqlalchemy.exc import OperationalError
+from sqlalchemy import text
+from .. import bcrypt, db, mongo
 from ..models import Administrador, Tenderos
 
+class VerificaConexionAMySQLAPI(MethodView):
+    def get(self):
+        try:
+            # Intentar una consulta simple
+            db.session.execute(text("SELECT 1"))
+            return jsonify({'message': 'Conexión exitosa con MySQL'}), 200
+        except Exception as e:
+            # Log the full traceback for debugging
+            print(traceback.format_exc())
+            return jsonify({'message': f'Error al conectar con MySQL: {str(e)}', 'trace': traceback.format_exc()}), 500
+
+class VerificaConexionAMongoDBAPI(MethodView):
+    def get(self):
+        try:
+            mongo.db.command("ping")
+            return jsonify({'message': 'Conexión exitosa con MongoDB', 'databases': mongo.db.productos.find_one()}), 200
+        except Exception as e:
+            # Log the full traceback for debugging
+            print(traceback.format_exc())
+            return jsonify({'message': f'Error al conectar con MongoDB: {str(e)}', 'trace': traceback.format_exc()}), 500   
+        
 class VerificarUsuarioAPI(MethodView):
     def get(self):
         response_data = {'message': 'Conexión exitosa con el servidor'}

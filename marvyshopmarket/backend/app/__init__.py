@@ -7,11 +7,13 @@ from flask_cors import CORS
 from sqlalchemy.exc import OperationalError
 import logging, os
 from .config import get_config
+from flask_pymongo import PyMongo
 
 log = logging.getLogger(__name__)
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 migrate = Migrate()
+mongo = PyMongo()
 
 def create_app() -> Flask:
     app = Flask(__name__)
@@ -29,7 +31,7 @@ def create_app() -> Flask:
 
     origins = [
         "http://localhost:5174",
-        "http://172.20.0.3:5173",
+        "http://172.18.0.3:5173",
         "http://localhost:5173",
         "http://localhost:5000",
         "https://marvyshopmarket.com",
@@ -44,6 +46,7 @@ def create_app() -> Flask:
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
+    mongo.init_app(app)
 
     # blueprints
     from .routes import main_bp

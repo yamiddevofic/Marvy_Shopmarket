@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import ToggleDark from '../Toggle/ToggleTheme';
 import { Receipt, Truck, PackageSearch, Users, User, UserPlus, Bolt, ScrollText, Box, Archive } from "lucide-react";
+import ResultsComponent from '../ResultComponent';
+import PlaceholderComponent from '../PlaceholderComponent';
 
 const LoadingSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
 );
+
+const today = new Date().toLocaleDateString(); // Get today's date in YYYY-MM-DD format
+const formatDate = today.split('/').reverse().join('-');
+console.log('Today is: ', formatDate)
 
 const Form = ({
   id,
@@ -17,7 +23,8 @@ const Form = ({
   apiEndpoint,
   submitButtonText = 'Completar Registro',
   onSubmitSuccess,
-  onSubmitError
+  onSubmitError,
+  storeInfo
 }) => {
   // Mapeo de iconos por nombre
   const iconMap = {
@@ -32,8 +39,17 @@ const Form = ({
   };
 
   // obtener datos obtenidos del endpoint
-  const m = data;
+  const m =  data;
+  console.log('m estado en Form: ', m)
+
+  console.log('storeInfo estado en Form: ', storeInfo)
+  console.log('initialData estado en Form: ', initialData)
+
+  const formDataInfo = initialData;
+  console.log('formDataInfo estado en Form: ', formDataInfo)
+
   
+
   const IconComponent = selectedIcon && iconMap[selectedIcon];
   
   const [formData, setFormData] = useState(initialData);
@@ -42,11 +58,12 @@ const Form = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = id === 'register-shopkeeper' ? 7 : 5;
 
   // Pagination calculations
   const totalPages = Math.ceil((m?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
+  // Si es el formulario de nuevo producto, recorrer el array de objetos sin slice
   const currentItems = m?.slice(startIndex, startIndex + itemsPerPage) || [];
 
   const goToPage = (page) => {
@@ -100,16 +117,40 @@ const Form = ({
     setIsLoading(true);
     setError('');
     setSuccess('');
-
+    
     try {
+      let dataToSend = { ...formData };
+      
+      // Special handling for new product form
+      if (id === 'new-product') {
+        
+        const _id = `prd_${Math.floor(1000 + Math.random() * 9000)}`; // Generate a random ID
+        console.log('_id generado: ', _id)
+        dataToSend = {
+          _id,
+          nombre: formData.nombre || '',
+          categoria: formData.categoria || '',
+          tienda_Id: storeInfo.id || 0,
+          stock: parseInt(formData.stock) || 0,
+          precios: [
+            {
+              fecha: formatDate,
+              precio: parseFloat(formData.precio) || 0
+            }
+          ]
+        };
+      }
+      
+      console.log('Datos a enviar:', dataToSend);
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}${apiEndpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
-
+      console.log('response: ', response);
       const data = await response.json();
 
       if (response.ok) {
@@ -211,10 +252,10 @@ const Form = ({
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800 grid grid-cols-1 ${id==='register-shopkeeper' ? 'lg:grid-cols-[35%_65%]': 'place-items-center'} transition-colors duration-200 max-w-7xl mx-auto w-full py-8 px-3`}>
-      <div className={`relative ${id==='register-shopkeeper' ? 'w-full max-w-full' : 'w-[45%]'} bg-white dark:bg-gray-800 rounded-tl-2xl rounded-bl-2xl rounded-tr-0 rounded-br-0 shadow-r-xl p-8 transition-all duration-200`}>
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className={`min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800 grid grid-cols-1 ${id==='register-shopkeeper' || id==='new-product' ? 'lg:grid-cols-[35%_65%]': 'place-items-center'} transition-colors duration-200 max-w-7xl mx-auto w-full py-8 px-3`}>
+      <div className={`relative ${id==='register-shopkeeper' || id==='new-product' ? 'w-full max-w-full' : 'w-[45%]'} bg-white dark:bg-gray-800 rounded-tl-2xl rounded-bl-2xl rounded-tr-0 rounded-br-0 shadow-r-xl p-8 transition-all duration-200`}>
+        <div className="text-center mb-8 perspective-1000">
+          <div className="w-16 h-16 bg-emerald-500 animate-girarmoneda dark:bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
             {IconComponent ? <IconComponent className="h-8 w-8 text-white" /> : <PackageSearch className="h-8 w-8 text-white" />}
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
@@ -258,82 +299,22 @@ const Form = ({
         </div>
       </div>
       {id==="register-shopkeeper" ? (
-        <div className="w-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-center items-center pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
-          {m && m.length > 0 ? (
-          <div className='text-black w-full h-auto px-8 py-10 rounded-lg dark:text-white'>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">Cuaderno de registro de tenderos</h3>
-            {/* Aquí puedes agregar la lógica para listar los tenderos registrados */}
-            {isLoading ? (
-              <LoadingSkeleton />
-            ) : (
-              <div>
-                <div className='hidden lg:block'>
-                  <div className="grid grid-cols-[24%_19%_19%_19%_19%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-4 place-items-center">
-                    <div className='flex gap-2 justify-center items-center w-full'>
-                      <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">Nombre</h4>
-                    </div>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">ID</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Correo</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Celular</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">ID Tienda</p>
-                  </div>
-                </div>
-                {// Cartas de tenderos
-                currentItems && currentItems.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4">
-                    {currentItems.map((tendero) => (
-                      <div key={tendero.tendero_Id} className="grid grid-cols-1 lg:grid-cols-[24%_19%_19%_19%_19%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
-                        <div className='flex gap-2 justify-left items-center w-full'>
-                          <div className="mb-4 flex items-center justify-center w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-full px-2">
-                            <User className="h-10 w-10 text-emerald-500 !text-white" />
-                          </div>
-                          <h4 className="rl-2 text-sm font-semibold text-gray-900 dark:text-white mb-2">{tendero.nombre}</h4>
-                        </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.id}</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.correo}</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.celular}</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.tienda_Id}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-600 dark:text-gray-300">No hay tenderos registrados.</p>
-                )}
-
-                {/* Pagination Controls */}
-                {m && m.length > itemsPerPage && (
-                  <div className="flex justify-center items-center mt-6 space-x-2">
-                    <button
-                      onClick={goToPrevPage}
-                      disabled={currentPage === 1}
-                      className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Anterior
-                    </button>
-                    <span className="text-gray-700 dark:text-gray-300">
-                      Página {currentPage} de {totalPages}
-                    </span>
-                    <button
-                      onClick={goToNextPage}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Siguiente
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>) : (
-            <div className='text-black w-full h-auto px-8 py-10 rounded-lg dark:text-white flex flex-col justify-center items-center'>
-              <div>
-                <Archive className="h-16 w-16 text-emerald-500 mb-4" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">¡Oh, oh!, parece que ocurrió algo</h3>
-              <p className="text-gray-600 dark:text-gray-300">No hay tenderos registrados.</p>
-            </div>
-          )}
-        </div>
+        <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
+        {m && m.length > 0 ? (
+        <ResultsComponent id={id} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+        ) : (
+          <PlaceholderComponent id={id} Archive={Archive} />
+        )}
+      </div>
+      ) : null}
+      {id === 'new-product' ? (
+        <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
+        {m && m.length > 0 ? (
+        <ResultsComponent id={id} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+        ) : (
+          <PlaceholderComponent id={id} Archive={Archive} />
+        )}
+      </div>
       ) : null}
     </div>
   );

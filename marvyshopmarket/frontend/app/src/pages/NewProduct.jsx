@@ -12,6 +12,7 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     const [ adminInfo, setAdminInfo ] = useState(null);
     const { selectedOption, setSelectedOption } = useAppContext();
     const [error, setError] = useState(null);
+    const [data, setData] = useState(null);
 
     console.log('selectedOption estado en NewProduct: ', selectedOption)
     console.log('adminInfo estado en NewProduct: ', adminInfo)
@@ -29,7 +30,31 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
         safeStr(propInitial) || 
         (userName ? userName.charAt(0).toUpperCase() : '?')
       );
-    
+
+      const consultarProductos = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/listar-productos`);
+          const data = await response.json();
+          console.log('Productos consultados:', data);
+          return data;
+        } catch (error) {
+          console.error('Error al consultar productos:', error);
+        }
+      };
+      
+      useEffect(() => {
+        const fetchProductos = async () => {
+          try {
+            const data = await consultarProductos();
+            setData(data || []); // Guardar en estado
+          } catch (err) {
+            setError('Error cargando productos');
+          }
+        };
+      
+        fetchProductos();
+      }, []);
+
       // Mantener sincronizado si cambian props o location.state
       useEffect(() => {
         setAdminInfo((prev) => safeObj(propAdminInfo) || prev || null);
@@ -45,28 +70,29 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
     console.log('userName estado en NewProduct: ', userName)
     console.log('initial estado en NewProduct: ', initial)
     console.log('error estado en NewProduct: ', error)
+    console.log('Productos registrados en NewProduct: ', data)
     return (
         <Layout userName={userName} error={error} adminInfo={adminInfo} storeInfo={storeInfo} initial={initial} selectedOption={selectedOption} selectedIcon={selectedIcon}>
             <Form
             id="new-product"
+            data={data}
             title="Registro de Producto"
             selectedIcon={selectedIcon}
             initialData={{
-                productoId: "",
-                productoNombre: "",
-                productoPrecio: "",
-                productoStock: "",
-                productoImagen: "",
-                tiendaId: "",
+                _id: "",
+                nombre: "",
+                categoria: "",
+                precio: [],
+                stock: 0,
+                tienda_Id: storeInfo?.id || ""
             }}
             fields={[
-                { name: "productoId", label: "ID Producto", placeholder: "Ingrese el ID", required: true },
-                { name: "productoNombre", label: "Nombre del Producto", placeholder: "Nombre del producto", required: true },
-                { name: "productoPrecio", label: "Precio", type: "number", placeholder: "Precio del producto", required: true },
-                { name: "productoStock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: true },
-                { name: "productoImagen", label: "Imagen", placeholder: "URL de la imagen", required: false },
-                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+                { name: "nombre", label: "Nombre del Producto", placeholder: "Nombre del producto", required: true },
+                { name: "categoria", label: "Categoria", placeholder: "Categoria del producto", required: true },
+                { name: "precio", label: "Precio", type: "number", placeholder: "Precio del producto", required: true },
+                { name: "stock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: true },
             ]}
+            storeInfo={storeInfo}
             apiEndpoint="/registrar-producto"
             submitButtonText="Completar Registro" />
         </Layout>

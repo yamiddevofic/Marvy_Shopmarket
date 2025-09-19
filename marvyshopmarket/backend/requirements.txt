@@ -9,3 +9,4 @@ mysqlclient
 python-dotenv
 flask-cors
 flask_migrate
+Flask-PyMongo
