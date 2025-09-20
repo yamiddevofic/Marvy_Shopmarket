@@ -50,3 +50,9 @@ main_bp.add_url_rule('/api/registrar-producto', view_func=registrar_producto_api
 
 listar_productos_api = ListarProductosMongoAPI.as_view('listar_productos_mongo_api')
 main_bp.add_url_rule('/api/listar-productos', view_func=listar_productos_api, methods=['GET'])
+
+eliminar_producto_api = EliminarProductoMongoAPI.as_view('eliminar_producto_mongo_api')
+main_bp.add_url_rule('/api/eliminar-producto/<id>', view_func=eliminar_producto_api, methods=['DELETE'])
+
+eliminar_tendero_api = EliminarTenderoAPI.as_view('eliminar_tendero_api')
+main_bp.add_url_rule('/api/eliminar-tendero/<tendero_id>', view_func=eliminar_tendero_api, methods=['DELETE'])

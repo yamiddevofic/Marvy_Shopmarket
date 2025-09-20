@@ -27,3 +27,12 @@ class ListarProductosMongoAPI(MethodView):
             return jsonify([{'_id': producto['_id' ], 'nombre': producto['nombre'], 'categoria': producto['categoria'], 'precio': producto['precios'][0]['precio'], 'stock': producto['stock']} for producto in productos])
         except Exception as e:
             return jsonify({'message': f'Error al listar productos: {str(e)}'}), 500
+    
+class EliminarProductoMongoAPI(MethodView):
+    def delete(self, id):
+        try:
+            mongo.db.productos.delete_one({'_id': id})
+            return jsonify({'message': 'Producto eliminado exitosamente'}), 200
+        except Exception as e:
+            return jsonify({'message': f'Error al eliminar producto: {str(e)}'}), 500
+    

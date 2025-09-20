@@ -116,3 +116,20 @@ class ConsultarTenderosAPI(MethodView):
                 error_file.write(traceback.format_exc())
                 error_file.write("\n" + "-"*50 + "\n")
             return jsonify({'message': 'Error interno del servidor'}), 500
+
+class EliminarTenderoAPI(MethodView):
+    def delete(self, tendero_id):
+        try:
+            tendero = Tenderos.query.filter_by(tendero_Id=tendero_id).first()
+            if not tendero:
+                return jsonify({'message': 'Tendero no encontrado'}), 404
+            db.session.delete(tendero)
+            db.session.commit()
+            return jsonify({'message': 'Tendero eliminado exitosamente'}), 200
+        except Exception as e:
+            db.session.rollback()
+            with open('error_log.txt', 'a', encoding='utf-8') as error_file:
+                error_file.write(f"Error en eliminación de tendero: {str(e)}\n")
+                error_file.write(traceback.format_exc())
+                error_file.write("\n" + "-"*50 + "\n")
+            return jsonify({'message': 'Error interno del servidor'}), 500

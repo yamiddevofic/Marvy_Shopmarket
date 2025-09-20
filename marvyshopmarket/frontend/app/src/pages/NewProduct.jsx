@@ -41,17 +41,17 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
           console.error('Error al consultar productos:', error);
         }
       };
-      
+
+      const fetchProductos = async () => {
+        try {
+          const data = await consultarProductos();
+          setData(data || []); // Guardar en estado
+        } catch (err) {
+          setError('Error cargando productos');
+        }
+      };
+
       useEffect(() => {
-        const fetchProductos = async () => {
-          try {
-            const data = await consultarProductos();
-            setData(data || []); // Guardar en estado
-          } catch (err) {
-            setError('Error cargando productos');
-          }
-        };
-      
         fetchProductos();
       }, []);
 
@@ -94,7 +94,8 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
             ]}
             storeInfo={storeInfo}
             apiEndpoint="/registrar-producto"
-            submitButtonText="Completar Registro" />
+            submitButtonText="Completar Registro"
+            onSubmitSuccess={fetchProductos} />
         </Layout>
     );
 };

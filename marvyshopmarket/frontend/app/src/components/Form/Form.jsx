@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import ToggleDark from '../Toggle/ToggleTheme';
 import { Receipt, Truck, PackageSearch, Users, User, UserPlus, Bolt, ScrollText, Box, Archive } from "lucide-react";
-import ResultsComponent from '../ResultComponent';
+import ParentComponent from '../ParentComponent';
 import PlaceholderComponent from '../PlaceholderComponent';
 
 const LoadingSkeleton = () => (
@@ -301,7 +301,7 @@ const Form = ({
       {id==="register-shopkeeper" ? (
         <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
         {m && m.length > 0 ? (
-        <ResultsComponent id={id} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+        <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
         ) : (
           <PlaceholderComponent id={id} Archive={Archive} />
         )}
@@ -310,7 +310,7 @@ const Form = ({
       {id === 'new-product' ? (
         <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
         {m && m.length > 0 ? (
-        <ResultsComponent id={id} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+        <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
         ) : (
           <PlaceholderComponent id={id} Archive={Archive} />
         )}
