@@ -132,4 +132,30 @@ class EliminarTenderoAPI(MethodView):
                 error_file.write(f"Error en eliminación de tendero: {str(e)}\n")
                 error_file.write(traceback.format_exc())
                 error_file.write("\n" + "-"*50 + "\n")
+class ActualizarTenderoAPI(MethodView):
+    def patch(self, tendero_id):
+        try:
+            data = request.get_json()
+            tendero = Tenderos.query.filter_by(tendero_Id=tendero_id).first()
+            if not tendero:
+                return jsonify({'message': 'Tendero no encontrado'}), 404
+
+            # Update fields if provided
+            if 'nombre' in data:
+                tendero.tendero_Nombre = data['nombre']
+            if 'correo' in data:
+                tendero.tendero_Correo = data['correo']
+            if 'celular' in data:
+                tendero.tendero_Celular = data['celular']
+            if 'tienda_Id' in data:
+                tendero.tienda_Id = data['tienda_Id']
+
+            db.session.commit()
+            return jsonify({'message': 'Tendero actualizado exitosamente'}), 200
+        except Exception as e:
+            db.session.rollback()
+            with open('error_log.txt', 'a', encoding='utf-8') as error_file:
+                error_file.write(f"Error en actualización de tendero: {str(e)}\n")
+                error_file.write(traceback.format_exc())
+                error_file.write("\n" + "-"*50 + "\n")
             return jsonify({'message': 'Error interno del servidor'}), 500

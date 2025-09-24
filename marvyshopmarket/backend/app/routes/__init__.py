@@ -55,4 +55,9 @@ eliminar_producto_api = EliminarProductoMongoAPI.as_view('eliminar_producto_mong
 main_bp.add_url_rule('/api/eliminar-producto/<id>', view_func=eliminar_producto_api, methods=['DELETE'])
 
 eliminar_tendero_api = EliminarTenderoAPI.as_view('eliminar_tendero_api')
+actualizar_tendero_api = ActualizarTenderoAPI.as_view('actualizar_tendero_api')
+main_bp.add_url_rule('/api/actualizar-tendero/<tendero_id>', view_func=actualizar_tendero_api, methods=['PATCH'])
 main_bp.add_url_rule('/api/eliminar-tendero/<tendero_id>', view_func=eliminar_tendero_api, methods=['DELETE'])
+
+actualizar_producto_api = ActualizarProductoMongoAPI.as_view('actualizar_producto_mongo_api')
+main_bp.add_url_rule('/api/actualizar-producto/<id>', view_func=actualizar_producto_api, methods=['PATCH'])

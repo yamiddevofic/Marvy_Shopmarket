@@ -5,6 +5,16 @@ import { User } from 'lucide-react'; // Si User es un icono, importalo aquí
 const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, goToNextPage, goToPage, goToPrevPage, isLoading, itemsPerPage, totalPages: propTotalPages, currentItems: propCurrentItems, LoadingSkeleton, User, Box, error }) => { // typeId podría ser "new-product" o "register-shopkeeper"
     const [items, setItems] = useState(m || []); // El estado de TODOS los ítems (productos o tenderos), inicializado con m
 
+    const formatPrice = (price) => {
+        const priceFormatted = price.toLocaleString('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
+        return priceFormatted;
+    };
+
     // Calcular totalPages y currentItems desde items
     const totalPages = Math.ceil(items.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -42,7 +52,18 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
         // Opcional: ajustar la paginación para mostrar el nuevo ítem si fuera necesario
     }, []);
 
+    // *** MANEJO DE ACTUALIZACIÓN ***
+    const handleItemUpdated = useCallback((updatedItemId, updatedData) => {
+        setItems(prevItems =>
+            prevItems.map(item =>
+                (item._id === updatedItemId || item.id === updatedItemId)
+                    ? { ...item, ...updatedData }
+                    : item
+            )
+        );
+    }, []);
 
+    console.log("Items:", items)
     return (
         <div className="w-full h-full">
             {/* Aquí podría ir tu formulario para agregar productos/tenderos */}
@@ -66,6 +87,8 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
                 error={error}
                 onItemDeleted={handleItemDeleted} // Pasa la función para eliminar
                 onItemAdded={handleItemAdded} // Pasa la función para añadir
+                onItemUpdated={handleItemUpdated} // Pasa la función para actualizar
+                formatPrice={formatPrice}
             />
         </div>
     );

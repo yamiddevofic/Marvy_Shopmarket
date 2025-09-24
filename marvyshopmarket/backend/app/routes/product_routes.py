@@ -35,4 +35,13 @@ class EliminarProductoMongoAPI(MethodView):
             return jsonify({'message': 'Producto eliminado exitosamente'}), 200
         except Exception as e:
             return jsonify({'message': f'Error al eliminar producto: {str(e)}'}), 500
+
+class ActualizarProductoMongoAPI(MethodView):
+    def patch(self, id):
+        try:
+            data = request.get_json()
+            mongo.db.productos.update_one({'_id': id}, {'$set': data})
+            return jsonify({'message': 'Producto actualizado exitosamente'}), 200
+        except Exception as e:
+            return jsonify({'message': f'Error al actualizar producto: {str(e)}'}), 500
     
