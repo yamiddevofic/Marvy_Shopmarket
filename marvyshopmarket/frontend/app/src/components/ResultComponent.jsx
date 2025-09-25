@@ -35,7 +35,7 @@ const ResultComponent = ({
     // Los console.log están bien para depuración, pero no en producción.
 
     return (
-        <div className='text-black w-full px-2 rounded-lg dark:text-white'>
+        <div className='text-black w-full px-2 rounded-lg dark:text-white pb-10'>
           <Example open={open} setOpen={setOpen} keyRow={keyRow} m={m} id={id} item={item} onItemDeleted={onItemDeleted} onItemAdded={onItemAdded} onItemUpdated={onItemUpdated}/>
           <div className="flex items-center justify-between">
             {/* Pagination Controls */}
@@ -74,7 +74,7 @@ const ResultComponent = ({
                     )}
                     </div>
                     <div className='hidden lg:block'>
-                        <div className="grid grid-cols-[25%_18%_25%_18%_15%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow  place-items-center">
+                        <div className="grid grid-cols-[20%_18%_28%_18%_15%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow  place-items-center">
                             <div className='flex gap-2 justify-center items-center w-full'>
                             <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">Nombre</h4>
                             </div>
@@ -88,14 +88,11 @@ const ResultComponent = ({
                     <div
                       onClick={() => {
                         setOpen(true);
-                        setItem(m[index])
-                        console.log("index:", index)
-                        console.log("item:", item)
-                        console.log("m[index]:", m[index])
+                        setItem(tendero)
                         setKeyRow(index)
                       }}
                       key={tendero.id}
-                      className="cursor-pointer grid grid-cols-1 lg:grid-cols-[25%_18%_25%_18%_15%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
+                      className="cursor-pointer grid grid-cols-1 lg:grid-cols-[20%_18%_28%_18%_15%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
                       <div className='flex gap-2 justify-left items-center w-full'>
                         <div className="mb-4º flex items-center justify-center w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-full px-2">
                           <User className="h-10 w-10 text-emerald-500 !text-white" />
@@ -137,7 +134,7 @@ const ResultComponent = ({
                         </div>
                     )}
                   </div>
-                  <div className="grid grid-cols-[18%_24%_20%_20%_10%_8%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow place-items-center">
+                  <div className="grid grid-cols-[16%_36%_20%_20%_10%_8%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow place-items-center">
                     <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">ID</h4>
                     <div className='flex gap-2 justify-center items-center w-full'>
                     <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">Nombre</h4>
@@ -149,10 +146,9 @@ const ResultComponent = ({
                   {currentItems.map((producto, index) => (
                     <div onClick={() => {
                       setOpen(true);
-                      setItem(m[index])
-                      console.log("index:", index)
+                      setItem(producto)
                       setKeyRow(index)}}
-                      key={producto._id} className="cursor-pointer grid grid-cols-1 lg:grid-cols-[18%_24%_20%_20%_10%_8%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
+                      key={producto._id} className="cursor-pointer grid grid-cols-1 lg:grid-cols-[16%_36%_20%_20%_10%_8%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
                       <p className="text-sm text-gray-700 dark:text-gray-300 flex">{producto._id}</p>
                       <div className='flex gap-2 justify-left items-center w-full'>
                         <div className="mb-4º flex items-center justify-center w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-full px-2">

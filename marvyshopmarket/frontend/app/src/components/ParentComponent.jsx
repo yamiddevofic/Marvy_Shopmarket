@@ -15,10 +15,13 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
         return priceFormatted;
     };
 
-    // Calcular totalPages y currentItems desde items
-    const totalPages = Math.ceil(items.length / itemsPerPage);
+    // Ordenar items alfabéticamente por nombre para tenderos y productos
+    const sortedItems = (typeId === "register-shopkeeper" || typeId === "new-product") ? [...items].sort((a, b) => a.nombre.localeCompare(b.nombre)) : items;
+
+    // Calcular totalPages y currentItems desde sortedItems
+    const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentItems = items.slice(startIndex, startIndex + itemsPerPage);
+    const currentItems = sortedItems.slice(startIndex, startIndex + itemsPerPage);
 
     // Actualizar items cuando m cambia
     useEffect(() => {
@@ -71,7 +74,7 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
 
             <ResultComponent
                 id={typeId}
-                m={items} // La lista completa de ítems ahora viene del estado local
+                m={sortedItems} // La lista completa ordenada de ítems
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 goToPage={goToPage}

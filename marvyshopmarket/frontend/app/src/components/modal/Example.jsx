@@ -203,8 +203,7 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 sm:mt-0 sm:text-left w-full bg-gradient-to-br from-gray-700 to-gray-800 p-6 rounded-xl shadow-lg border border-gray-600">
                     <DialogTitle as="h3" className="text-lg font-bold text-white mb-4 flex items-center">
-                      <ExclamationTriangleIcon className="h-6 w-6 text-yellow-400 mr-2" />
-                      Edit {item.nombre}
+                      {item.nombre}
                     </DialogTitle>
                       <form onSubmit={handleSubmit} className="space-y-4 w-full" id="edit-form">
                           {mapTypeInput}
@@ -214,15 +213,16 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
               </div>
               
               <div className="px-6 py-4 sm:flex sm:flex-row-reverse sm:px-8 bg-gray-750 border-t border-gray-600 flex justify-end gap-3 pt-4 justify-center">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:from-gray-600 hover:to-gray-700 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all duration-200"
+              <button
+                  type="submit"
+                  form="edit-form"
+                  data-autofocus
+                  className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:from-green-600 hover:to-emerald-700 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Cancel
+                  Editar
                 </button>
                 <button
                   type="button"
@@ -232,18 +232,18 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                  Delete
+                  Borrar
                 </button>
+                
                 <button
-                  type="submit"
-                  form="edit-form"
-                  data-autofocus
-                  className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:from-green-600 hover:to-emerald-700 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200"
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:from-gray-600 hover:to-gray-700 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all duration-200"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  Update
+                  Cancelar
                 </button>
               </div>
             </DialogPanel>
