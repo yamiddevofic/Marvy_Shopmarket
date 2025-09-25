@@ -39,7 +39,7 @@ const OptionsGrid = ({ selectedOption, setSelectedOption,
       <OptionCard
         icon={PackageSearch}
         title="Inventario"
-        description="Gestión de productos и stock"
+        description="Gestión de productos en stock"
         onClick={() => handleSelectOption('inventario', 'PackageSearch')}
         selectedOption="inventario"
       />
