@@ -29,18 +29,26 @@ def create_app() -> Flask:
         SESSION_COOKIE_SECURE=True,
     )
 
-    origins = [
+    CORS(app,
+     origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
         "http://localhost:5174",
         "http://172.19.0.3:5173",
-        "http://localhost:5173",
         "http://localhost:5000",
         "https://marvyshopmarket.com",
         "https://marvy-shopmarket.onrender.com"
-    ]
-
-    CORS(app, origins=origins, supports_credentials=True,
-         resources={r"/api/*": {"origins": origins},
-                    r"/upload/*": {"origins": origins}})
+     ],
+     supports_credentials=True,
+     resources={r"/api/*": {"origins": [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://172.19.0.3:5173",
+        "http://localhost:5000",
+        "https://marvyshopmarket.com",
+        "https://marvy-shopmarket.onrender.com"
+     ]}})
 
     # extensiones
     db.init_app(app)

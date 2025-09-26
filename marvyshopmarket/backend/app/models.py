@@ -12,13 +12,13 @@ class Administrador(db.Model):
     adm_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, nombre, correo , celular, password, tienda):
-         self.adm_Id = id
-         self.adm_Nombre = nombre
-         self.adm_Correo = correo
-         self.adm_Celular = celular
-         self.adm_Password = password
-         self.tienda_Id = tienda
+    def __init__(self, adm_Id, adm_Nombre, adm_Correo, adm_Celular=None, adm_Password=None, tienda_Id=None):
+          self.adm_Id = adm_Id
+          self.adm_Nombre = adm_Nombre
+          self.adm_Correo = adm_Correo
+          self.adm_Celular = adm_Celular
+          self.adm_Password = adm_Password
+          self.tienda_Id = tienda_Id
 
 class Caja(db.Model):
     __tablename__ = 'caja'
@@ -78,31 +78,6 @@ class Informe(db.Model):
          self.inf_Doc = documento
          self.tienda_Id = tienda
 
-class Productos(db.Model):
-    __tablename__ = 'productos'
-    Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    prod_Id= db.Column(db.BigInteger)
-    prod_Nombre = db.Column(db.String(70))
-    prod_Precio = db.Column(db.Float)
-    prod_Ganancia= db.Column(db.Float)
-    prod_TotalPrecio = db.Column(db.Float,db.Computed('(prod_Precio*(prod_Ganancia/100))+prod_Precio'))
-    prod_Cantidad = db.Column(db.BigInteger)
-    prod_Categoria = db.Column(db.String(45))
-    prod_Total = db.Column(db.Float,db.Computed('(prod_Precio * prod_Cantidad)'))
-    prod_TotalGana = db.Column(db.Float,db.Computed('(prod_TotalPrecio * prod_Cantidad)'))
-    prod_Img= db.Column(db.LargeBinary)
-    tendero_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tendero_Id'))
-    tienda_Id = db.Column(db.BigInteger,db.ForeignKey('tenderos.tienda_Id'))
-
-    def __init__(self, producto_id, nombre, precio, ganancia, cantidad, imagen, tendero, tienda):
-         self.prod_Id = producto_id
-         self.prod_Nombre = nombre
-         self.prod_Precio = precio
-         self.prod_Ganancia = ganancia
-         self.prod_Cantidad = cantidad
-         self.prod_Img = imagen
-         self.tendero_Id = tendero
-         self.tienda_Id = tienda
 
 class Proveedores(db.Model):
     __tablename__ = 'proveedores'
@@ -163,13 +138,13 @@ class Tenderos(db.Model):
     tendero_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, nombre, correo, celular, password, tienda):
-         self.tendero_Id = id
-         self.tendero_Nombre = nombre
-         self.tendero_Correo = correo
-         self.tendero_Celular = celular
-         self.tendero_Password = password
-         self.tienda_Id = tienda
+    def __init__(self, tendero_Id, tendero_Nombre, tendero_Correo, tendero_Celular=None, tendero_Password=None, tienda_Id=None):
+          self.tendero_Id = tendero_Id
+          self.tendero_Nombre = tendero_Nombre
+          self.tendero_Correo = tendero_Correo
+          self.tendero_Celular = tendero_Celular
+          self.tendero_Password = tendero_Password
+          self.tienda_Id = tienda_Id
 
 class Tiendas(db.Model):
     __tablename__ = 'tiendas'
@@ -178,59 +153,61 @@ class Tiendas(db.Model):
     tienda_Correo = db.Column(db.String(100))
     tienda_Celular = db.Column(db.String(12))
     tienda_Ubicacion = db.Column(db.String(100))
-    tienda_IMG = db.Column(db.String(255))
+    tienda_IMG = db.Column(db.LargeBinary)
 
-    def __init__(self, id, nombre, correo, celular, ubicacion, imagen):
-         self.tienda_Id = id
-         self.tienda_Nombre = nombre
-         self.tienda_Correo = correo
-         self.tienda_Celular = celular
-         self.tienda_Ubicacion = ubicacion
-         self.tienda_IMG = imagen
+    def __init__(self, tienda_Id, tienda_Nombre, tienda_Correo, tienda_Celular=None, tienda_Ubicacion=None, tienda_IMG=None):
+          self.tienda_Id = tienda_Id
+          self.tienda_Nombre = tienda_Nombre
+          self.tienda_Correo = tienda_Correo
+          self.tienda_Celular = tienda_Celular
+          self.tienda_Ubicacion = tienda_Ubicacion
+          self.tienda_IMG = tienda_IMG
+class Usuario(db.Model):
+    __tablename__ = 'usuario'
+    usuario_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    correo = db.Column(db.String(100), unique=True, nullable=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    rol_id = db.Column(db.BigInteger, nullable=False)
+    tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id', ondelete='SET NULL'), nullable=True)
+    activo = db.Column(db.Boolean, default=True)
+    documento = db.Column(db.Integer, unique=True, nullable=True)
+
+    def __init__(self, nombre, correo, password_hash, rol_id, tienda_Id=None, activo=True, documento=None):
+        self.nombre = nombre
+        self.correo = correo
+        self.password_hash = password_hash
+        self.rol_id = rol_id
+        self.tienda_Id = tienda_Id
+        self.activo = activo
+        self.documento = documento
 
 class Ventas(db.Model):
     __tablename__ = 'ventas'
     venta_Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    venta_Cantidad = db.Column(db.Integer)
     venta_Metodo = db.Column(db.String(45))
     venta_Datetime = db.Column(db.DateTime)
-    venta_Pago = db.Column(db.Float)
-    tendero_Id = db.Column(db.BigInteger, db.ForeignKey('tenderos.tendero_Id'), nullable=False)
-    tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'), nullable=False)
+    venta_Pago_Tot = db.Column(db.Float)
+    usuario_id = db.Column(db.BigInteger, db.ForeignKey('usuario.usuario_id', ondelete='CASCADE'), nullable=False)
+    tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id', ondelete='CASCADE'), nullable=False)
 
-    # Restricción de clave externa con cascada
-    ForeignKeyConstraint(
-        ['venta_Id', 'tendero_Id', 'tienda_Id'],
-        ['ventas.venta_Id', 'ventas.tienda_Id', 'ventas.tendero_Id'],
-        ondelete="CASCADE"
-    )
-
-    tendero = db.relationship("Tenderos", backref="ventas")
-    tienda = db.relationship("Tiendas", backref="ventas")
-
-    def __init__(self, cantidad, metodo, datetime, pago, tendero_id, tienda_id):
-        self.venta_Cantidad = cantidad
+    def __init__(self, metodo, datetime, pago_tot, usuario_id, tienda_id):
         self.venta_Metodo = metodo
         self.venta_Datetime = datetime
-        self.venta_Pago = pago
-        self.tendero_Id = tendero_id
+        self.venta_Pago_Tot = pago_tot
+        self.usuario_id = usuario_id
         self.tienda_Id = tienda_id
+
+
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'
-    ventas_venta_Id = db.Column(db.BigInteger, db.ForeignKey('ventas.venta_Id'), primary_key=True)
-    ventas_tendero_Id = db.Column(db.BigInteger, primary_key=True)
-    ventas_tienda_Id = db.Column(db.BigInteger, primary_key=True)
-    productos_Id = db.Column(db.BigInteger, db.ForeignKey('productos.Id'), primary_key=True)
-    productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
-    productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
+    venta_Id = db.Column(db.BigInteger, db.ForeignKey('ventas.venta_Id', ondelete='CASCADE'), primary_key=True)
+    producto_id_mongo = db.Column(db.String(50), primary_key=True)
+    cantidad = db.Column(db.Integer, nullable=False)
+    precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
 
-    venta = db.relationship('Ventas', backref='ventas_has_productos', foreign_keys=[ventas_venta_Id, ventas_tendero_Id, ventas_tienda_Id])
-    producto = db.relationship('Productos', backref='ventas_has_productos', foreign_keys=[productos_Id, productos_tendero_Id, productos_tienda_Id])
-
-    def __init__(self, ventas_venta_Id, ventas_tendero_Id, ventas_tienda_Id, productos_Id, productos_tendero_Id, productos_tienda_Id):
-        self.ventas_venta_Id = ventas_venta_Id
-        self.ventas_tendero_Id = ventas_tendero_Id
-        self.ventas_tienda_Id = ventas_tienda_Id
-        self.productos_Id = productos_Id
-        self.productos_tendero_Id = productos_tendero_Id
-        self.productos_tienda_Id = productos_tienda_Id
+    def __init__(self, venta_Id, producto_id_mongo, cantidad, precio_unitario):
+        self.venta_Id = venta_Id
+        self.producto_id_mongo = producto_id_mongo
+        self.cantidad = cantidad
+        self.precio_unitario = precio_unitario

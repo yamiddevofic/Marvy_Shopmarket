@@ -132,6 +132,12 @@ class EliminarTenderoAPI(MethodView):
                 error_file.write(f"Error en eliminación de tendero: {str(e)}\n")
                 error_file.write(traceback.format_exc())
                 error_file.write("\n" + "-"*50 + "\n")
+            response = jsonify({'message': 'Error interno del servidor'})
+            origin = request.headers.get('Origin')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+                response.headers.add('Access-Control-Allow-Credentials', 'true')
+            return response, 500
 class ActualizarTenderoAPI(MethodView):
     def patch(self, tendero_id):
         try:
@@ -158,4 +164,9 @@ class ActualizarTenderoAPI(MethodView):
                 error_file.write(f"Error en actualización de tendero: {str(e)}\n")
                 error_file.write(traceback.format_exc())
                 error_file.write("\n" + "-"*50 + "\n")
-            return jsonify({'message': 'Error interno del servidor'}), 500
+            response = jsonify({'message': 'Error interno del servidor'})
+            origin = request.headers.get('Origin')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+                response.headers.add('Access-Control-Allow-Credentials', 'true')
+            return response, 500
