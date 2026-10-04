@@ -7,3 +7,7 @@ backend/venv
 # Pruebas
 .pytest_cache
 uploads/
+
+# Bytecode de Python
+__pycache__/
+*.py[cod]
