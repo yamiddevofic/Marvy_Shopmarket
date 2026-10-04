@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../services/api';
 import { Eye, EyeOff, User, Store, Upload } from 'lucide-react';
 import ToggleDark from '../components/Toggle/ToggleTheme';
 import Input from '../components/Input/Input';
@@ -39,20 +39,10 @@ const SignUp = () => {
         jsonData.tienda_Img = base64Image;
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/registrar-admin-tienda`, jsonData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.status === 201) {
-        navigate('/');
-      }
+      await api.post('/registrar-admin-tienda', jsonData);
+      navigate('/');
     } catch (error) {
-      setError(
-        error.response?.data?.message || 
-        'Error al registrar. Por favor, intente nuevamente.'
-      );
+      setError(error.message || 'Error al registrar. Por favor, intente nuevamente.');
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { api } from '../../services/api'
 
 
 export default function Example({ open, id, setOpen, m, keyRow, item, onItemDeleted, onItemAdded, onItemUpdated}) {
@@ -72,29 +73,15 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
       console.log("bodyHead:", bodyHead)
       try {
         const endpoint = id === "new-product" ? `actualizar-producto/${item._id}` : `actualizar-tendero/${item.id}`;
-        const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify(bodyHead),
-          credentials: 'include'
-        });
-
-        if (response.ok) {
-          console.log(`${id === "new-product" ? "Producto" : "Tendero"} actualizado exitosamente`);
-          // Notificar al componente padre
-          if (onItemUpdated) {
-            onItemUpdated(item._id || item.id, formattedData);
-          }
-          setOpen(false);
-        } else {
-          const errorData = await response.json();
-          console.error(`Error al actualizar ${id === "new-product" ? "producto" : "tendero"}:`, errorData.message);
+        await api.patch(`/${endpoint}`, bodyHead);
+        console.log(`${id === "new-product" ? "Producto" : "Tendero"} actualizado exitosamente`);
+        // Notificar al componente padre
+        if (onItemUpdated) {
+          onItemUpdated(item._id || item.id, formattedData);
         }
+        setOpen(false);
       } catch (error) {
-        console.error(`Error de red al intentar actualizar ${id === "new-product" ? "producto" : "tendero"}:`, error);
+        console.error(`Error al actualizar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
       }
     }
 
@@ -105,33 +92,19 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
       console.log(`ID del ${id === "new-product" ? "producto" : "tendero"} a eliminar:`, itemId);
       try {
           const endpoint = id === "new-product" ? `eliminar-producto/${itemId}` : `eliminar-tendero/${itemId}`;
-          const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
-              method: 'DELETE',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('token')}`
-              },
-              credentials: 'include'
-          });
-
-          if (response.ok) {
-              console.log(`${id === "new-product" ? "Producto" : "Tendero"} eliminado exitosamente`);
-              // *** LLAMAR A onItemDeleted ***
-              if (onItemDeleted) {
-                  onItemDeleted(itemId); // Notifica al componente padre
-                  setOpen(false)
-              }
-              // Si quieres, puedes resetear la página a la 1,
-              // pero si el padre actualiza 'm', la paginación se ajustará automáticamente.
-              // setCurrentPage(1);
-          } else {
-              const errorData = await response.json();
-              console.error(`Error al eliminar ${id === "new-product" ? "producto" : "tendero"}:`, errorData.message);
-              // Aquí podrías mostrar una notificación de error al usuario
+          await api.delete(`/${endpoint}`);
+          console.log(`${id === "new-product" ? "Producto" : "Tendero"} eliminado exitosamente`);
+          // *** LLAMAR A onItemDeleted ***
+          if (onItemDeleted) {
+              onItemDeleted(itemId); // Notifica al componente padre
+              setOpen(false)
           }
+          // Si quieres, puedes resetear la página a la 1,
+          // pero si el padre actualiza 'm', la paginación se ajustará automáticamente.
+          // setCurrentPage(1);
       } catch (error) {
-          console.error(`Error de red al intentar eliminar ${id === "new-product" ? "producto" : "tendero"}:`, error);
-          // Aquí podrías mostrar una notificación de error de red al usuario
+          console.error(`Error al eliminar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
+          // Aquí podrías mostrar una notificación de error al usuario
       }
     };
 

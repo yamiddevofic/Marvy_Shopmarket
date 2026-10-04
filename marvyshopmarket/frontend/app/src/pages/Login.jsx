@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ToggleDark from '../components/Toggle/ToggleTheme';
 import Cookies from 'js-cookie';
 import { useAppContext } from '../context/AppContext';
+import { api } from '../services/api';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -49,18 +50,7 @@ const Login = () => {
       setIsLoading(true);
       setError('');
   
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/verificar-usuario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userid: cedula, password }),
-        credentials: 'include',  // MUY importante
-      });
-      
-      if (!response.ok) {
-        throw new Error("Error al iniciar sesión");
-      }
-      
-      const data = await response.json();
+      const data = await api.post('/verificar-usuario', { userid: cedula, password });
       console.log("Usuario autenticado:", data.name);
       // Establecer cookie para que ProtectedRoute permita el acceso
       // Nota: Debe ser exactamente 'true' porque ProtectedRoute compara strings

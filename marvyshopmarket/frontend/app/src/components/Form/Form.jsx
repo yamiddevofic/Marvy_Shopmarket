@@ -4,6 +4,7 @@ import ToggleDark from '../Toggle/ToggleTheme';
 import { Receipt, Truck, PackageSearch, Users, User, UserPlus, Bolt, ScrollText, Box, Archive } from "lucide-react";
 import ParentComponent from '../ParentComponent';
 import PlaceholderComponent from '../PlaceholderComponent';
+import { api } from '../../services/api';
 
 const LoadingSkeleton = () => (
   <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
@@ -122,15 +123,11 @@ const Form = ({
       let dataToSend = { ...formData };
       
       // Special handling for new product form
+      // (el backend genera el _id y toma la tienda de la sesión)
       if (id === 'new-product') {
-        
-        const _id = `prd_${Math.floor(1000 + Math.random() * 9000)}`; // Generate a random ID
-        console.log('_id generado: ', _id)
         dataToSend = {
-          _id,
           nombre: formData.nombre || '',
           categoria: formData.categoria || '',
-          tienda_Id: storeInfo.id || 0,
           stock: parseInt(formData.stock) || 0,
           precios: [
             {
@@ -143,32 +140,15 @@ const Form = ({
       
       console.log('Datos a enviar:', dataToSend);
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL}${apiEndpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
-      console.log('response: ', response);
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess('¡Registro completado con éxito!');
-        setFormData(initialData);
-        scrollToTop(); // Scroll to top after success
-        if (onSubmitSuccess) {
-          onSubmitSuccess(data);
-        }
-      } else {
-        const errorMessage = data.message || 'Error al registrar';
-        setError(errorMessage);
-        if (onSubmitError) {
-          onSubmitError(errorMessage);
-        }
+      const data = await api.post(apiEndpoint, dataToSend);
+      setSuccess('¡Registro completado con éxito!');
+      setFormData(initialData);
+      scrollToTop(); // Scroll to top after success
+      if (onSubmitSuccess) {
+        onSubmitSuccess(data);
       }
     } catch (error) {
-      const errorMessage = 'Error de conexión. Por favor, intenta nuevamente.';
+      const errorMessage = error.message || 'Error al registrar';
       setError(errorMessage);
       if (onSubmitError) {
         onSubmitError(errorMessage);

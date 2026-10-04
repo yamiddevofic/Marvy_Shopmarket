@@ -3,3 +3,7 @@
 .vscode
 **/ngrok.exe
 backend/venv
+
+# Pruebas
+.pytest_cache
+uploads/

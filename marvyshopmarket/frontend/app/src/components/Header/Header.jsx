@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ToggleDark from '../Toggle/ToggleTheme';
 import { User, ChevronDown, Menu, X, Receipt, Truck, PackageSearch, Users } from 'lucide-react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../../services/api';
 import Cookies from 'js-cookie';
 
 const Header = ({ userName, adminInfo, storeInfo, selectedOption, selectedIcon }) => {
@@ -20,17 +20,15 @@ const Header = ({ userName, adminInfo, storeInfo, selectedOption, selectedIcon }
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/cerrar-sesion`);
-      if (response.status === 200) {
-        // Eliminar la información de sesión almacenada en localStorage
-        localStorage.removeItem('loggedIn');
-        localStorage.removeItem('userName');
-        Cookies.remove('loggedIn');
-        Cookies.remove('userName');
+      await api.post('/cerrar-sesion');
+      // Eliminar la información de sesión almacenada en localStorage
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('userName');
+      Cookies.remove('loggedIn');
+      Cookies.remove('userName');
 
-        // Redirigir a la página de inicio de sesión u otra página
-        navigate('/');
-      }
+      // Redirigir a la página de inicio de sesión u otra página
+      navigate('/');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       // Aquí podrías mostrar un mensaje de error al usuario

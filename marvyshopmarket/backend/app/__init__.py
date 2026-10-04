@@ -1,68 +1,52 @@
 # backend/app/__init__.py
+import logging
+
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_migrate import Migrate
 from flask_cors import CORS
-from sqlalchemy.exc import OperationalError
-import logging, os
+
 from .config import get_config
-from flask_pymongo import PyMongo
+from .errors import register_error_handlers
+from .extensions import bcrypt, db, migrate, mongo
 
 log = logging.getLogger(__name__)
-db = SQLAlchemy()
-bcrypt = Bcrypt()
-migrate = Migrate()
-mongo = PyMongo()
 
-def create_app() -> Flask:
+
+def create_app(config_object=None) -> Flask:
     app = Flask(__name__)
-    app.secret_key = os.getenv("SECRET_KEY")
-    app.config.from_object(get_config())
+    app.config.from_object(config_object or get_config())
+    _validate_config(app)
+    _configure_logging(app)
+    app.json.ensure_ascii = False  # respuestas con tildes legibles (UTF-8)
 
-    is_prod = os.getenv("FLASK_ENV") == "production"
-
-    # Cookies de sesión: en producción, Secure y SameSite=None para permitir credenciales cross-site sobre HTTPS.
-    # En desarrollo, permitir HTTP (no Secure) y SameSite=Lax (mismo sitio: localhost:puerto distinto sigue siendo same-site).
-    app.config.update(
-        SESSION_COOKIE_SAMESITE="None",
-        SESSION_COOKIE_SECURE=True,
-    )
-
-    CORS(app,
-     origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://172.19.0.3:5173",
-        "http://localhost:5000",
-        "https://marvyshopmarket.com",
-        "https://marvy-shopmarket.onrender.com"
-     ],
-     supports_credentials=True,
-     resources={r"/api/*": {"origins": [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://172.19.0.3:5173",
-        "http://localhost:5000",
-        "https://marvyshopmarket.com",
-        "https://marvy-shopmarket.onrender.com"
-     ]}})
+    CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=True)
 
     # extensiones
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
-    mongo.init_app(app)
+    if app.config.get('MONGO_URI'):
+        mongo.init_app(app)
+    else:
+        log.warning('MONGO_URI no está configurado: los endpoints de productos no estarán disponibles')
 
-    # blueprints
-    from .routes import main_bp
-    app.register_blueprint(main_bp)
+    # importa los modelos para que Flask-Migrate los detecte
+    from . import models  # noqa: F401
+    from .routes import register_blueprints
 
-    @app.errorhandler(OperationalError)
-    def db_err(e):
-        log.error("DB error: %s", e)
-        return {"message": "db error"}, 500
-
+    register_blueprints(app)
+    register_error_handlers(app)
     return app
+
+
+def _validate_config(app):
+    missing = [key for key in ('SECRET_KEY', 'SQLALCHEMY_DATABASE_URI') if not app.config.get(key)]
+    if missing:
+        raise RuntimeError(f"Faltan variables de configuración: {', '.join(missing)}")
+
+
+def _configure_logging(app):
+    # Los logs van a stderr (Docker/Render los recogen); no se escriben archivos locales.
+    logging.basicConfig(
+        level=logging.DEBUG if app.debug else logging.INFO,
+        format='%(asctime)s %(levelname)s [%(name)s] %(message)s',
+    )
