@@ -11,3 +11,7 @@ uploads/
 # Bytecode de Python
 __pycache__/
 *.py[cod]
+
+# Demo local
+dev.db
+.venv/

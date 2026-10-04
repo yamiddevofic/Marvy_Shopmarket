@@ -1,7 +1,7 @@
 // Cliente HTTP único para la API del backend.
 // Todas las peticiones envían la cookie de sesión (credentials: 'include')
 // y los errores se lanzan como ApiError con el mensaje que devuelve el backend.
-const API_URL = import.meta.env.VITE_API_URL ?? '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export class ApiError extends Error {
   constructor(message, status, data) {

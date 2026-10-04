@@ -135,6 +135,19 @@ backend/app/
 Todas las operaciones sobre tenderos y productos se limitan a la tienda de la sesión.
 En el frontend, todas las llamadas pasan por `src/services/api.js` (envía la cookie de sesión).
 
+## Demo local sin bases de datos 🧪
+
+Para probar la app en tu máquina sin MySQL, MongoDB ni `.env` (Python 3.10+ y Node 18+):
+
+```bash
+cd marvyshopmarket
+./run-demo.sh          # Linux / macOS (en Windows usa Git Bash o WSL)
+```
+
+Abre http://127.0.0.1:5173 e inicia sesión con cédula `12345678` y contraseña `clave123`.
+Usa SQLite (`backend/dev.db`) y un MongoDB simulado con productos de ejemplo. Ctrl+C detiene todo.
+Solo para desarrollo: no uses esta configuración en producción.
+
 ## Pruebas ✅
 
 ```bash
