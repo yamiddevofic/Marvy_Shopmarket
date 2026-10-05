@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import ToggleTheme from '../components/Toggle/ToggleTheme';
 import EscenaTienda from '../components/Login/EscenaTienda';
 import EmblemaTienda from '../components/Login/EmblemaTienda';
-import TarjetasNegocio from '../components/Login/TarjetasNegocio';
+import { EtiquetaPrecio, TableroVentas } from '../components/Login/TarjetasNegocio';
 import { useAppContext } from '../context/AppContext';
 import { api } from '../services/api';
 
@@ -86,23 +86,30 @@ const Login = () => {
       <a className="login__saltar" href="#login-cedula">Saltar al formulario</a>
 
       <header className="login-hero">
-        <EscenaTienda />
-        <TarjetasNegocio />
-
         <div className="login-hero__tema">
           <ToggleTheme floating={false} />
         </div>
 
-        <div className="login-hero__texto">
-          <div className="login-hero__marca">
-            <EmblemaTienda />
-            <span className="login-hero__nombre">Marvy Shopmarket</span>
+        <div className="login-hero__cabecera">
+          <div className="login-hero__texto">
+            <div className="login-hero__marca">
+              <EmblemaTienda />
+              <span className="login-hero__nombre">Marvy Shopmarket</span>
+            </div>
+            <h1 className="login-hero__titulo">
+              <span className="login-hero__linea">{TITULAR_LINEA_1.map(palabra)}</span>
+              <em className="login-hero__linea login-hero__remate">{TITULAR_REMATE.map(palabra)}</em>
+            </h1>
+            <p className="login-hero__bajada">Ventas, inventario y tenderos en un solo lugar.</p>
           </div>
-          <h1 className="login-hero__titulo">
-            <span className="login-hero__linea">{TITULAR_LINEA_1.map(palabra)}</span>
-            <em className="login-hero__linea login-hero__remate">{TITULAR_REMATE.map(palabra)}</em>
-          </h1>
-          <p className="login-hero__bajada">Ventas, inventario y tenderos en un solo lugar.</p>
+          <TableroVentas />
+        </div>
+
+        <div className="login-hero__escena">
+          <div className="login-hero__marco">
+            <EscenaTienda />
+            <EtiquetaPrecio />
+          </div>
         </div>
       </header>
 
