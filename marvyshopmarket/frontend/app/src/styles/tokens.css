@@ -1,0 +1,120 @@
+/*
+ * Tokens de diseño en tres capas:
+ *   primitivos (paleta)  →  semánticos (superficie, foco, hit)  →  tokens de escena (por componente)
+ * El modo oscuro redefine los MISMOS primitivos bajo html.dark, así cualquier
+ * componente que use tokens funciona en los dos temas sin reglas propias.
+ */
+
+:root {
+  /* ── Primitivos ─────────────────────────────────────────────── */
+  --verde-900: #064e3b;
+  --verde-800: #065f46;
+  --verde-700: #047857;
+  --verde-600: #059669;
+  --verde-500: #10b981;
+  --verde-400: #34d399;
+  --verde-200: #a7f3d0;
+  --verde-100: #d1fae5;
+  --verde-50: #ecfdf5;
+
+  --madera-700: #7c4a21;
+  --madera-500: #b07135;
+  --madera-300: #e0b07a;
+  --mostaza-400: #f2b84b;
+  --tomate-500: #d9482b;
+
+  --tinta-900: #0f1f18;
+  --tinta-700: #2c4038;
+  --tinta-500: #4f6359;
+  --tinta-300: #9fb1a8;
+
+  --linea-200: #d5e3db;
+  --linea-100: #e8f1ec;
+
+  --papel: #ffffff;
+  --fondo: #f1f7f3;
+
+  --alerta-600: #b45309;
+  --alerta-100: #fef3c7;
+  --error-600: #b42318;
+  --error-100: #fde4e1;
+
+  /* ── Semánticos ─────────────────────────────────────────────── */
+  --surface: var(--papel);
+  --page-bg: var(--fondo);
+  --texto: var(--tinta-900);
+  --texto-suave: var(--tinta-500);
+  --primario: var(--verde-700);
+  --primario-hover: var(--verde-800);
+  --sobre-primario: #ffffff;
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--verde-500) 45%, transparent);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* sombras tintadas con el verde de marca, no gris neutro */
+  --sombra-sm: 0 1px 2px rgb(6 78 59 / 0.08), 0 2px 6px rgb(6 78 59 / 0.06);
+  --sombra-md: 0 6px 18px rgb(6 78 59 / 0.12), 0 2px 4px rgb(6 78 59 / 0.06);
+  --sombra-lg: 0 24px 48px -12px rgb(6 78 59 / 0.28);
+
+  --step-0: clamp(0.94rem, 0.9rem + 0.2vw, 1rem);
+  --step-1: clamp(1.1rem, 1rem + 0.45vw, 1.25rem);
+  --step-2: clamp(1.35rem, 1.15rem + 0.9vw, 1.75rem);
+  --step-3: clamp(1.75rem, 1.35rem + 1.8vw, 2.6rem);
+  --step-4: clamp(2.1rem, 1.5rem + 2.8vw, 3.6rem);
+
+  --fuente-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-remate: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+
+  /* tamaño táctil mínimo */
+  --hit: 44px;
+}
+
+@media (pointer: coarse) {
+  :root { --hit: 48px; }
+}
+
+/* ── Tema oscuro: mismos nombres, otros valores ─────────────────── */
+html.dark {
+  --verde-900: #d1fae5;
+  --verde-800: #a7f3d0;
+  --verde-700: #5fe0ad;
+  --verde-600: #34d399;
+  --verde-500: #10b981;
+  --verde-400: #0f9f6e;
+  --verde-200: #1d4a3c;
+  --verde-100: #10261d;
+  --verde-50: #0c1d16;
+
+  --madera-700: #e0b07a;
+  --madera-500: #c48a4f;
+  --madera-300: #7c4a21;
+
+  --tinta-900: #e8f3ed;
+  --tinta-700: #c2d3ca;
+  --tinta-500: #9db1a7;
+  --tinta-300: #5b6f66;
+
+  --linea-200: #2a3d34;
+  --linea-100: #1c2c25;
+
+  --papel: #13211b;
+  --fondo: #0b1611;
+
+  --alerta-600: #f0b45a;
+  --alerta-100: #3a2d12;
+  --error-600: #ff8a7d;
+  --error-100: #3c1a17;
+
+  /* de noche el primario es claro: el texto encima va oscuro (contraste AA) */
+  --sobre-primario: #06231a;
+  --primario-hover: var(--verde-800);
+
+  --sombra-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --sombra-md: 0 6px 18px rgb(0 0 0 / 0.45);
+  --sombra-lg: 0 24px 48px -12px rgb(0 0 0 / 0.6);
+
+  color-scheme: dark;
+}
