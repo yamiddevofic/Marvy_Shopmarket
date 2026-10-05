@@ -4,6 +4,7 @@ import Layout from "../Layout/Layout";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
+import { api } from "../services/api";
 
 const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
     
@@ -33,10 +34,7 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
 
       const consultarProductos = async () => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/listar-productos`);
-          const data = await response.json();
-          console.log('Productos consultados:', data);
-          return data;
+          return await api.get('/listar-productos');
         } catch (error) {
           console.error('Error al consultar productos:', error);
         }

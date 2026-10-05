@@ -4,6 +4,7 @@ import Layout from "../Layout/Layout";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
+import { api } from "../services/api";
 
 const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: propStoreInfo, initial: propInitial, selectedIcon: propSelectedIcon }) => {
     
@@ -39,41 +40,7 @@ const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, 
       // Función para consultar los tenderos registrados desde el backend 
       const fetchShopkeepers = async () => {
         try {
-          console.log('Iniciandzo consulta de tenderos...');
-          console.log('URL de la API:', import.meta.env.VITE_API_URL + '/consultar-tenderos');
-          
-          const response = await fetch(import.meta.env.VITE_API_URL + '/consultar-tenderos', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Incluir cookies para la sesión
-          });
-          
-          console.log('Response status:', response.status);
-          console.log('Response ok:', response.ok);
-          console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-          console.log('Response url:', response.url);
-          console.log('Response type:', response.type);
-          
-          if (!response.ok) {
-            let errorMessage = `Error ${response.status}: ${response.statusText}`;
-            try {
-              const errorData = await response.json();
-              errorMessage = errorData.message || errorMessage;
-              console.error('Error data:', errorData);
-            } catch (e) {
-              console.error('No se pudo parsear el error:', e);
-              const text = await response.text();
-              console.error('Response text:', text);
-            }
-            throw new Error(errorMessage);
-          }
-          
-          const data = await response.json();
-          console.log('Datos completos de respuesta:', data);
-          console.log('Tenderos array:', data.tenderos);
-          console.log('Total de tenderos:', data.total);
+          const data = await api.get('/consultar-tenderos');
           setTenderos(data.tenderos || []);
         } catch (error) {
           console.error('Error al consultar los tenderos:', error);

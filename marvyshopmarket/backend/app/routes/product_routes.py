@@ -1,47 +1,34 @@
-from flask import request, jsonify
-from .. import mongo
-from flask.views import MethodView
-from datetime import datetime
+from flask import Blueprint, jsonify
 
-class RegistrarProductoMongoAPI(MethodView):
-    def post(self):
-        try:
-            data = request.get_json()
-            required_fields = ['_id', 'nombre', 'categoria', 'precios', 'stock', 'tienda_Id']
+from ..auth import current_tienda_id, login_required
+from ..errors import json_body
+from ..services import producto_service
 
-            for field in required_fields:
-                if field not in data:
-                    return jsonify({'message': f'El campo {field} es requerido'}), 400
-        
-            # Insertar el nuevo producto
-            mongo.db.productos.insert_one(data)
-            return jsonify({'message': 'Producto registrado exitosamente'}), 201
-        
-        except Exception as e:
-            return jsonify({'message': f'Error al registrar producto: {str(e)}'}), 500
-        
-class ListarProductosMongoAPI(MethodView):
-    def get(self):
-        try:
-            productos = mongo.db.productos.find()
-            return jsonify([{'_id': producto['_id' ], 'nombre': producto['nombre'], 'categoria': producto['categoria'], 'precio': producto['precios'][0]['precio'], 'stock': producto['stock']} for producto in productos])
-        except Exception as e:
-            return jsonify({'message': f'Error al listar productos: {str(e)}'}), 500
-    
-class EliminarProductoMongoAPI(MethodView):
-    def delete(self, id):
-        try:
-            mongo.db.productos.delete_one({'_id': id})
-            return jsonify({'message': 'Producto eliminado exitosamente'}), 200
-        except Exception as e:
-            return jsonify({'message': f'Error al eliminar producto: {str(e)}'}), 500
+producto_bp = Blueprint('producto', __name__, url_prefix='/api')
 
-class ActualizarProductoMongoAPI(MethodView):
-    def patch(self, id):
-        try:
-            data = request.get_json()
-            mongo.db.productos.update_one({'_id': id}, {'$set': data})
-            return jsonify({'message': 'Producto actualizado exitosamente'}), 200
-        except Exception as e:
-            return jsonify({'message': f'Error al actualizar producto: {str(e)}'}), 500
-    
+
+@producto_bp.post('/registrar-producto')
+@login_required()
+def registrar_producto():
+    producto_id = producto_service.registrar(current_tienda_id(), json_body())
+    return jsonify({'message': 'Producto registrado exitosamente', '_id': producto_id}), 201
+
+
+@producto_bp.get('/listar-productos')
+@login_required()
+def listar_productos():
+    return jsonify(producto_service.listar(current_tienda_id()))
+
+
+@producto_bp.patch('/actualizar-producto/<producto_id>')
+@login_required()
+def actualizar_producto(producto_id):
+    producto_service.actualizar(current_tienda_id(), producto_id, json_body())
+    return jsonify({'message': 'Producto actualizado exitosamente'})
+
+
+@producto_bp.delete('/eliminar-producto/<producto_id>')
+@login_required()
+def eliminar_producto(producto_id):
+    producto_service.eliminar(current_tienda_id(), producto_id)
+    return jsonify({'message': 'Producto eliminado exitosamente'})

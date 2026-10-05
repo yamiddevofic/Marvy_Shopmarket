@@ -7,6 +7,7 @@ import QuickActionButton from '../components/Button/QuickActionButton';
 import Cookies from 'js-cookie';
 import Layout from '../Layout/Layout';
 import { useAppContext } from '../context/AppContext';
+import { api } from '../services/api';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,20 +41,7 @@ const Home = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/consultar-info`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-  
-        console.log('Estado de la respuesta:', res.status);
-  
-        if (!res.ok) {
-          console.log('No autenticado');
-          navigate('/', { replace: true });
-          return;
-        }
-  
-        const data = await res.json();
+        const data = await api.get('/consultar-info');
         setAdminInfo(data.datos.administrador);       // ✅ Guardar la info
         setStoreInfo(data.datos.tienda);            // ✅ Mantener objeto de tienda completo
         setUserName(data.datos.administrador?.nombre || null); // ✅ Guardar nombre de usuario

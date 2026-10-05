@@ -1,91 +1,32 @@
-import json
-import traceback
-from flask import request, jsonify, session, Response, redirect, url_for
-from flask.views import MethodView
-from sqlalchemy.exc import OperationalError
-from sqlalchemy import text
-from .. import bcrypt, db, mongo
-from ..models import Administrador, Tenderos
+from flask import Blueprint, jsonify, session
 
-class VerificaConexionAMySQLAPI(MethodView):
-    def get(self):
-        try:
-            # Intentar una consulta simple
-            db.session.execute(text("SELECT 1"))
-            return jsonify({'message': 'Conexión exitosa con MySQL'}), 200
-        except Exception as e:
-            # Log the full traceback for debugging
-            print(traceback.format_exc())
-            return jsonify({'message': f'Error al conectar con MySQL: {str(e)}', 'trace': traceback.format_exc()}), 500
+from ..auth import login_required, start_session
+from ..errors import json_body
+from ..services import auth_service
 
-class VerificaConexionAMongoDBAPI(MethodView):
-    def get(self):
-        try:
-            mongo.db.command("ping")
-            return jsonify({'message': 'Conexión exitosa con MongoDB', 'databases': mongo.db.productos.find_one()}), 200
-        except Exception as e:
-            # Log the full traceback for debugging
-            print(traceback.format_exc())
-            return jsonify({'message': f'Error al conectar con MongoDB: {str(e)}', 'trace': traceback.format_exc()}), 500   
-        
-class VerificarUsuarioAPI(MethodView):
-    def get(self):
-        response_data = {'message': 'Conexión exitosa con el servidor'}
-        response_json = json.dumps(response_data, ensure_ascii=False)
-        return Response(response_json, content_type='application/json; charset=utf-8', status=200)
-
-    def post(self):
-        data = request.get_json()
-        userid = data.get('userid')
-        password = data.get('password')
-
-        if not userid or not password:
-            return jsonify({'message': 'Faltan datos de usuario o contraseña'}), 400
-
-        try:
-            administrador = db.session.query(Administrador).filter_by(adm_Id=int(userid)).first()
-            tendero = db.session.query(Tenderos).filter_by(tendero_Id=int(userid)).first()
-
-            if administrador and bcrypt.check_password_hash(administrador.adm_Password, password):
-                session['tienda_Id'] = administrador.tienda_Id
-                session['adm_Id'] = administrador.adm_Id
-                session['logged_in'] = True
-                return jsonify({
-                    'message': 'Autenticación exitosa',
-                    'name': administrador.adm_Nombre
-                }), 200
-            elif tendero and bcrypt.check_password_hash(tendero.tendero_Password, password):
-                session['tienda_Id'] = tendero.tienda_Id
-                session['tendero_Id'] = tendero.tendero_Id
-                session['logged_in'] = True
-                return jsonify({
-                    'message': 'Autenticación exitosa',
-                    'name': tendero.tendero_Nombre
-                }), 200
-            else:
-                return jsonify({'message': 'Usuario no encontrado o contraseña incorrecta'}), 401
-
-        except Exception as e:
-            # Log the full traceback for debugging
-            print(traceback.format_exc())
-            return jsonify({'message': f'Error interno del servidor: {str(e)}', 'trace': traceback.format_exc()}), 500
+auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
 
-class CerrarSesionAPI(MethodView):
-    def post(self):
-        try:
-            # Limpiar todas las variables de sesión
-            session.clear()
-            return jsonify({'message': 'Cierre de sesión exitoso'}), 200
-        except Exception as e:
-            with open('error_log.txt', 'a', encoding='utf-8') as error_file:
-                error_file.write(f"Error: {str(e)}\n")
-                error_file.write(traceback.format_exc())
-                error_file.write("\n" + "-"*50 + "\n")
-            return jsonify({'message': 'Error al cerrar sesión, vuelve a intentarlo'}), 500
+@auth_bp.get('/verificar-usuario')
+def estado_servidor():
+    return jsonify({'message': 'Conexión exitosa con el servidor'})
 
-class RutaProtegidaAPI(MethodView):
-    def get(self):
-        if not session.get('logged_in'):
-            return redirect(url_for('main.verificar_usuario_api'))
-        return jsonify({'message': 'Acceso permitido a la ruta protegida'}), 200
+
+@auth_bp.post('/verificar-usuario')
+def iniciar_sesion():
+    data = json_body()
+    rol, user_id, tienda_id, nombre = auth_service.autenticar(data.get('userid'), data.get('password'))
+    start_session(rol, user_id, tienda_id)
+    return jsonify({'message': 'Autenticación exitosa', 'name': nombre, 'rol': rol})
+
+
+@auth_bp.post('/cerrar-sesion')
+def cerrar_sesion():
+    session.clear()
+    return jsonify({'message': 'Cierre de sesión exitoso'})
+
+
+@auth_bp.get('/ruta-protegida')
+@login_required()
+def ruta_protegida():
+    return jsonify({'message': 'Acceso permitido a la ruta protegida'})

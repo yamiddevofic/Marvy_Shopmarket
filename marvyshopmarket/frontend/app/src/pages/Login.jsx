@@ -1,214 +1,194 @@
-import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff, ShoppingCart } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import ToggleDark from '../components/Toggle/ToggleTheme';
 import Cookies from 'js-cookie';
+import ToggleTheme from '../components/Toggle/ToggleTheme';
+import EscenaTienda from '../components/Login/EscenaTienda';
+import EmblemaTienda from '../components/Login/EmblemaTienda';
+import TarjetasNegocio from '../components/Login/TarjetasNegocio';
 import { useAppContext } from '../context/AppContext';
+import { api } from '../services/api';
+
+// Titular en dos líneas: afirmación + remate en serif cursiva.
+// Cada palabra entra por separado (--i marca el escalonado).
+const TITULAR_LINEA_1 = ['Tu', 'tienda', 'de', 'barrio,'];
+const TITULAR_REMATE = ['siempre', 'al', 'día'];
+const CEDULA_VALIDA = /^\d{8,10}$/;
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [mostrarAyuda, setMostrarAyuda] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setAdminInfo, setSelectedOption, adminInfo, selectedOption } = useAppContext();
-  
+  const { setAdminInfo, setSelectedOption } = useAppContext();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   // Redirección automática si ya está autenticado
   useEffect(() => {
-    const isLoggedIn = Cookies.get('loggedIn'); // Lee la cookie
-    if (isLoggedIn === 'true' && location.pathname !== '/home') { // Las cookies se guardan como strings
+    const isLoggedIn = Cookies.get('loggedIn'); // Las cookies se guardan como strings
+    if (isLoggedIn === 'true' && location.pathname !== '/home') {
       navigate('/home', { replace: true });
     }
   }, [navigate, location.pathname]);
+
   useEffect(() => {
     setAdminInfo('default');
     setSelectedOption('login');
-    console.log('setAdminInfo en Login:', adminInfo);
-    console.log('selectedOption en Login:', selectedOption);
-  }, []);
+  }, [setAdminInfo, setSelectedOption]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!cedula || !password) {
-      setError('Por favor completa todos los campos');
+      setError('Escribe tu cédula y tu contraseña para entrar.');
       return;
     }
-  
-    const cedulaRegex = /^\d{8,10}$/;
-    if (!cedulaRegex.test(cedula)) {
-      setError('Formato de cédula inválido');
+    if (!CEDULA_VALIDA.test(cedula)) {
+      setError('La cédula debe tener entre 8 y 10 números.');
       return;
     }
-  
+
     try {
       setIsLoading(true);
       setError('');
-  
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/verificar-usuario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userid: cedula, password }),
-        credentials: 'include',  // MUY importante
-      });
-      
-      if (!response.ok) {
-        throw new Error("Error al iniciar sesión");
-      }
-      
-      const data = await response.json();
-      console.log("Usuario autenticado:", data.name);
-      // Establecer cookie para que ProtectedRoute permita el acceso
-      // Nota: Debe ser exactamente 'true' porque ProtectedRoute compara strings
+
+      const data = await api.post('/verificar-usuario', { userid: cedula, password });
+      // ProtectedRoute compara exactamente con el texto 'true'
       Cookies.set('loggedIn', 'true', { sameSite: 'Lax' });
 
-      // Opcional: guardar info básica si la usas en otras vistas
       try {
         localStorage.setItem('authInfo', JSON.stringify(data));
-        setAdminInfo(data);
-      } catch (e) {
-        console.warn('No se pudo guardar authInfo en localStorage', e);
+      } catch {
+        // sin almacenamiento local la sesión sigue funcionando con la cookie
       }
-
+      setAdminInfo(data);
       navigate('/home', { replace: true });
-      
-  
     } catch (err) {
-      setError(err.message || 'Error al conectar con el servidor');
+      setError(err.message || 'No pudimos conectar con el servidor. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  let indicePalabra = 0;
+  const palabra = (texto) => (
+    <span key={texto} className="login-hero__palabra" style={{ '--i': indicePalabra++ }}>
+      {texto}
+    </span>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-green-600 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4 transition-colors duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-all duration-200">
-        <div className="absolute top-4 right-4">
-          <ToggleDark />
+    <div className="login">
+      <a className="login__saltar" href="#login-cedula">Saltar al formulario</a>
+
+      <header className="login-hero">
+        <EscenaTienda />
+        <TarjetasNegocio />
+
+        <div className="login-hero__tema">
+          <ToggleTheme floating={false} />
         </div>
 
-        {/* Logo Section */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="bg-emerald-500 dark:bg-emerald-600 p-4 rounded-full mb-4 shadow-lg">
-            <ShoppingCart className="w-8 h-8 text-white" />
+        <div className="login-hero__texto">
+          <div className="login-hero__marca">
+            <EmblemaTienda />
+            <span className="login-hero__nombre">Marvy Shopmarket</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Marvy Shopmarket
+          <h1 className="login-hero__titulo">
+            <span className="login-hero__linea">{TITULAR_LINEA_1.map(palabra)}</span>
+            <em className="login-hero__linea login-hero__remate">{TITULAR_REMATE.map(palabra)}</em>
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            Inicia sesión en tu cuenta
-          </p>
+          <p className="login-hero__bajada">Ventas, inventario y tenderos en un solo lugar.</p>
         </div>
+      </header>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-500/50 text-red-700 dark:text-red-300 rounded-lg">
-            {error}
-          </div>
-        )}
+      <main className="login-panel">
+        <div className="login-panel__tarjeta">
+          <h2 className="login-panel__titulo">Inicia sesión</h2>
+          <p className="login-panel__ayuda">Entra con tu cédula y la contraseña de tu tienda.</p>
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label 
-              htmlFor="cedula" 
-              className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Cédula
-            </label>
-            <input
-              id="cedula"
-              type="text"
-              inputMode="numeric"
-              pattern="\d*"
-              maxLength="10"
-              value={cedula}
-              onChange={(e) => setCedula(e.target.value.replace(/\D/g, ''))}
-              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-              placeholder="Ingresa tu cédula"
-            />
+          <div className="login-panel__error" role="alert" aria-live="assertive">
+            {error && <p>{error}</p>}
           </div>
 
-          <div>
-            <label 
-              htmlFor="password" 
-              className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Contraseña
-            </label>
-            <div className="relative mt-1">
+          <form onSubmit={handleSubmit} className="login-form" noValidate>
+            <div className="login-form__campo">
+              <label htmlFor="login-cedula" className="login-form__etiqueta">Cédula</label>
               <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
-                placeholder="••••••••"
+                id="login-cedula"
+                type="text"
+                inputMode="numeric"
+                autoComplete="username"
+                maxLength="10"
+                value={cedula}
+                onChange={(e) => setCedula(e.target.value.replace(/\D/g, ''))}
+                className="login-form__input"
+                placeholder="Ej. 1012345678"
+                aria-invalid={Boolean(error) && !CEDULA_VALIDA.test(cedula)}
               />
+            </div>
+
+            <div className="login-form__campo">
+              <label htmlFor="login-password" className="login-form__etiqueta">Contraseña</label>
+              <div className="login-form__con-boton">
+                <input
+                  id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="login-form__input"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="login-form__ojo"
+                  aria-label="Mostrar contraseña"
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="login-form__olvido">
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center"
+                className="login-form__enlace"
+                aria-expanded={mostrarAyuda}
+                aria-controls="login-ayuda-clave"
+                onClick={() => setMostrarAyuda(!mostrarAyuda)}
               >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                ) : (
-                  <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                )}
+                ¿Olvidaste tu contraseña?
               </button>
+              <p id="login-ayuda-clave" className="login-form__nota" hidden={!mostrarAyuda}>
+                Pídele al administrador de tu tienda que te asigne una nueva.
+              </p>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 dark:border-gray-600 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                Recordarme
-              </label>
-            </div>
-            <button
-              type="button"
-              className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors"
-            >
-              ¿Olvidaste tu contraseña?
+            <button type="submit" disabled={isLoading} aria-busy={isLoading} className="login-form__entrar">
+              {isLoading ? (
+                <>
+                  <span className="login-form__girando" aria-hidden="true" />
+                  Entrando…
+                </>
+              ) : (
+                'Entrar a mi tienda'
+              )}
             </button>
-          </div>
+          </form>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-          >
-            {isLoading ? (
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              'Iniciar sesión'
-            )}
-          </button>
-        </form>
-
-        {/* Sign Up Link */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            ¿No tienes una cuenta?{' '}
-            <Link 
-              to="/registrarse" 
-              className="font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors"
-            >
-              Regístrate aquí
-            </Link>
+          <p className="login-panel__registro">
+            ¿Aún no tienes cuenta?{' '}
+            <Link to="/registrarse" className="login-form__enlace">Registra tu tienda</Link>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

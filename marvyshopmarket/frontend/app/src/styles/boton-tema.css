@@ -1,0 +1,61 @@
+/* Botón rápido de tema: sol → luna con un transform de 0.5 s. */
+.boton-tema {
+  display: inline-grid;
+  place-items: center;
+  width: var(--hit);
+  height: var(--hit);
+  padding: 0;
+}
+
+.boton-tema__icono {
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+  color: var(--primario);
+  transition: transform 0.5s ease;
+}
+
+.boton-tema__astro {
+  fill: currentColor;
+  transition: r 0.5s ease;
+}
+
+.boton-tema__rayos {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  transform-origin: 12px 12px;
+  transition: transform 0.5s ease, opacity 0.35s ease;
+}
+
+.boton-tema__sombra {
+  transition: cx 0.5s ease, cy 0.5s ease;
+}
+
+/* Activado: los rayos se recogen y la sombra recorta el sol en luna creciente. */
+.boton-tema[aria-pressed='true'] .boton-tema__icono {
+  transform: rotate(-40deg);
+}
+
+.boton-tema[aria-pressed='true'] .boton-tema__astro {
+  r: 9px;
+}
+
+.boton-tema[aria-pressed='true'] .boton-tema__rayos {
+  transform: scale(0.4);
+  opacity: 0;
+}
+
+.boton-tema[aria-pressed='true'] .boton-tema__sombra {
+  cx: 17px;
+  cy: 7px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-tema__icono,
+  .boton-tema__astro,
+  .boton-tema__rayos,
+  .boton-tema__sombra {
+    transition: none;
+  }
+}

@@ -1,7 +1,11 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import LargeBinary, ForeignKey, ForeignKeyConstraint
-from sqlalchemy.orm import relationship
-from app import db
+# backend/app/models.py
+"""Modelos SQLAlchemy (MySQL).
+
+Se usa el constructor por defecto de SQLAlchemy, que recibe los nombres de
+columna como argumentos con nombre, p. ej. ``Tiendas(tienda_Id=1, ...)``.
+"""
+from .extensions import db
+
 
 class Administrador(db.Model):
     __tablename__ = 'administrador'
@@ -12,13 +16,6 @@ class Administrador(db.Model):
     adm_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, adm_Id, adm_Nombre, adm_Correo, adm_Celular=None, adm_Password=None, tienda_Id=None):
-          self.adm_Id = adm_Id
-          self.adm_Nombre = adm_Nombre
-          self.adm_Correo = adm_Correo
-          self.adm_Celular = adm_Celular
-          self.adm_Password = adm_Password
-          self.tienda_Id = tienda_Id
 
 class Caja(db.Model):
     __tablename__ = 'caja'
@@ -28,12 +25,6 @@ class Caja(db.Model):
     caja_Total = db.Column(db.Float)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, ingresos, egresos, total, tienda):
-         self.caja_Id = id
-         self.caja_Ingresos = ingresos
-         self.caja_Egresos = egresos
-         self.caja_Total = total
-         self.tienda_Id = tienda
 
 class Factura(db.Model):
     __tablename__ = 'factura'
@@ -42,11 +33,6 @@ class Factura(db.Model):
     fac_Tipo = db.Column(db.String(45))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, fecha, tipo, tienda):
-         self.fac_Id = id
-         self.fac_Datetime = fecha
-         self.fac_Tipo = tipo
-         self.tienda_Id = tienda
 
 class Gastos(db.Model):
     __tablename__ = 'gastos'
@@ -56,12 +42,6 @@ class Gastos(db.Model):
     gastos_Precio = db.Column(db.Float)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, descripcion, tipo, precio, tienda):
-         self.gastos_Id = id
-         self.gastos_Descr = descripcion
-         self.gastos_Tipo = tipo
-         self.gastos_Precio = precio
-         self.tienda_Id = tienda
 
 class Informe(db.Model):
     __tablename__ = 'informe'
@@ -71,63 +51,36 @@ class Informe(db.Model):
     inf_Doc = db.Column(db.LargeBinary)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, id, fecha, tipo, documento, tienda):
-         self.inf_Id = id
-         self.inf_Datetime = fecha
-         self.inf_Tipo = tipo
-         self.inf_Doc = documento
-         self.tienda_Id = tienda
-
 
 class Proveedores(db.Model):
     __tablename__ = 'proveedores'
-    id=db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     prov_Id = db.Column(db.String(50))
     prov_Nombre = db.Column(db.String(70))
     prov_Ubicacion = db.Column(db.String(100))
     prov_Contacto = db.Column(db.String(50))
     prov_prod_nom = db.Column(db.String(500))
 
-    def __init__(self, id, nombre, ubicacion, contacto, productos):
-        self.prov_Id = id
-        self.prov_Nombre =nombre
-        self.prov_Ubicacion = ubicacion
-        self.prov_Contacto = contacto
-        self.prov_prod_nom = productos
 
 class Suministros(db.Model):
     __tablename__ = 'suministros'
     sum_Id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     sum_Cantidad = db.Column(db.BigInteger)
     sum_Datetime = db.Column(db.DateTime)
-    sum_Metodo_pago = db.Column(db.String(100))  # Cambio aquí
-    sum_Total = db.Column(db.Float)  # Cambio aquí
+    sum_Metodo_pago = db.Column(db.String(100))
+    sum_Total = db.Column(db.Float)
     sum_prod_Nom = db.Column(db.String(65))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, cantidad, fecha, metodo_pago, total, tienda, sumi_producto_nombre ):
-        self.sum_Cantidad = cantidad
-        self.sum_Datetime = fecha
-        self.sum_Metodo_pago = metodo_pago
-        self.sum_Total = total
-        self.tienda_Id = tienda
-        self.sum_prod_Nom = sumi_producto_nombre
-        
+
 class SuministrosHasProductos(db.Model):
     __tablename__ = 'suministros_has_productos'
-
     suministros_sum_Id = db.Column(db.BigInteger, primary_key=True)
     suministros_tienda_Id = db.Column(db.BigInteger, primary_key=True)
     productos_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tendero_Id = db.Column(db.BigInteger, primary_key=True)
     productos_tienda_Id = db.Column(db.BigInteger, primary_key=True)
-    
-    def __init__(self, suministro, tienda, producto,tendero, productos_tienda):
-        self.suministros_sum_Id = suministro
-        self.suministros_tienda_Id = tienda
-        self.productos_Id = producto
-        self.productos_tendero_Id = tendero
-        self.productos_tienda_Id = productos_tienda
+
 
 class Tenderos(db.Model):
     __tablename__ = 'tenderos'
@@ -138,13 +91,6 @@ class Tenderos(db.Model):
     tendero_Password = db.Column(db.String(100))
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id'))
 
-    def __init__(self, tendero_Id, tendero_Nombre, tendero_Correo, tendero_Celular=None, tendero_Password=None, tienda_Id=None):
-          self.tendero_Id = tendero_Id
-          self.tendero_Nombre = tendero_Nombre
-          self.tendero_Correo = tendero_Correo
-          self.tendero_Celular = tendero_Celular
-          self.tendero_Password = tendero_Password
-          self.tienda_Id = tienda_Id
 
 class Tiendas(db.Model):
     __tablename__ = 'tiendas'
@@ -153,15 +99,10 @@ class Tiendas(db.Model):
     tienda_Correo = db.Column(db.String(100))
     tienda_Celular = db.Column(db.String(12))
     tienda_Ubicacion = db.Column(db.String(100))
+    # Guarda la URL relativa del logo (p. ej. b'/uploads/tienda_1.png'), no la imagen.
     tienda_IMG = db.Column(db.LargeBinary)
 
-    def __init__(self, tienda_Id, tienda_Nombre, tienda_Correo, tienda_Celular=None, tienda_Ubicacion=None, tienda_IMG=None):
-          self.tienda_Id = tienda_Id
-          self.tienda_Nombre = tienda_Nombre
-          self.tienda_Correo = tienda_Correo
-          self.tienda_Celular = tienda_Celular
-          self.tienda_Ubicacion = tienda_Ubicacion
-          self.tienda_IMG = tienda_IMG
+
 class Usuario(db.Model):
     __tablename__ = 'usuario'
     usuario_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
@@ -173,14 +114,6 @@ class Usuario(db.Model):
     activo = db.Column(db.Boolean, default=True)
     documento = db.Column(db.Integer, unique=True, nullable=True)
 
-    def __init__(self, nombre, correo, password_hash, rol_id, tienda_Id=None, activo=True, documento=None):
-        self.nombre = nombre
-        self.correo = correo
-        self.password_hash = password_hash
-        self.rol_id = rol_id
-        self.tienda_Id = tienda_Id
-        self.activo = activo
-        self.documento = documento
 
 class Ventas(db.Model):
     __tablename__ = 'ventas'
@@ -191,13 +124,6 @@ class Ventas(db.Model):
     usuario_id = db.Column(db.BigInteger, db.ForeignKey('usuario.usuario_id', ondelete='CASCADE'), nullable=False)
     tienda_Id = db.Column(db.BigInteger, db.ForeignKey('tiendas.tienda_Id', ondelete='CASCADE'), nullable=False)
 
-    def __init__(self, metodo, datetime, pago_tot, usuario_id, tienda_id):
-        self.venta_Metodo = metodo
-        self.venta_Datetime = datetime
-        self.venta_Pago_Tot = pago_tot
-        self.usuario_id = usuario_id
-        self.tienda_Id = tienda_id
-
 
 class VentasHasProductos(db.Model):
     __tablename__ = 'ventas_has_productos'
@@ -205,9 +131,3 @@ class VentasHasProductos(db.Model):
     producto_id_mongo = db.Column(db.String(50), primary_key=True)
     cantidad = db.Column(db.Integer, nullable=False)
     precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
-
-    def __init__(self, venta_Id, producto_id_mongo, cantidad, precio_unitario):
-        self.venta_Id = venta_Id
-        self.producto_id_mongo = producto_id_mongo
-        self.cantidad = cantidad
-        self.precio_unitario = precio_unitario

@@ -1,65 +1,64 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { useId, useState } from 'react';
+import PropTypes from 'prop-types';
+import { guardarTema, leerTema } from '../../tema';
 
-const cn = (...classes) => {
-  return classes.filter(Boolean).join(' ');
-};
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
-const useTheme = () => {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || 'light';
-    }
-    return 'light';
-  });
+// Botón rápido de tema: un sol que recoge sus rayos y una sombra que lo
+// convierte en luna. Es un toggle: aria-pressed indica si el modo oscuro está activo.
+// `floating` (por defecto) lo fija en la esquina inferior derecha.
+const ToggleTheme = ({ className, floating = true }) => {
+  const [tema, setTema] = useState(leerTema);
+  const mascara = `sombra-${useId().replace(/:/g, '')}`;
+  const oscuro = tema === 'dark';
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  return [theme, setTheme];
-};
-
-const ToggleTheme = ({ className }) => {
-  const [theme, setTheme] = useTheme();
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const toggleTheme = () => {
-    setIsAnimating(true);
-    setTheme(theme === 'light' ? 'dark' : 'light');
-    setTimeout(() => setIsAnimating(false), 500);
+  const alternar = () => {
+    const siguiente = oscuro ? 'light' : 'dark';
+    guardarTema(siguiente);
+    setTema(siguiente);
   };
 
   return (
     <button
-      onClick={toggleTheme}
+      type="button"
+      onClick={alternar}
+      aria-pressed={oscuro}
+      aria-label="Modo oscuro"
+      title={oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       className={cn(
-        "p-3 rounded-full fixed right-4 bottom-4 transition-all duration-300",
-        "hover:scale-110 focus:outline-none focus:ring-2",
-        "focus:ring-emerald-400 focus:ring-offset-2",
-        "bg-white dark:bg-emerald-800 shadow-lg",
+        'boton-tema rounded-full transition-all duration-300',
+        'hover:scale-110 focus:outline-none focus-visible:ring-2',
+        'focus-visible:ring-emerald-400 focus-visible:ring-offset-2',
+        'bg-white dark:bg-emerald-800 shadow-lg',
+        floating && 'fixed right-4 bottom-4 z-40',
         className
       )}
-      aria-label={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
-      title={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
     >
-      {theme === 'light' ? (
-        <Moon 
-          className="w-6 h-6 text-emerald-600 transition-colors"
-          strokeWidth={2}
-        />
-      ) : (
-        <Sun 
-          className="w-6 h-6 text-emerald-300 transition-colors"
-          strokeWidth={2}
-        />
-      )}
+      <svg className="boton-tema__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <mask id={mascara}>
+          <rect width="24" height="24" fill="white" />
+          <circle className="boton-tema__sombra" cx="24" cy="4" r="7" fill="black" />
+        </mask>
+        <circle className="boton-tema__astro" cx="12" cy="12" r="5" mask={`url(#${mascara})`} />
+        <g className="boton-tema__rayos">
+          <line x1="12" y1="1.5" x2="12" y2="3.5" />
+          <line x1="12" y1="20.5" x2="12" y2="22.5" />
+          <line x1="1.5" y1="12" x2="3.5" y2="12" />
+          <line x1="20.5" y1="12" x2="22.5" y2="12" />
+          <line x1="4.6" y1="4.6" x2="6" y2="6" />
+          <line x1="18" y1="18" x2="19.4" y2="19.4" />
+          <line x1="4.6" y1="19.4" x2="6" y2="18" />
+          <line x1="18" y1="6" x2="19.4" y2="4.6" />
+        </g>
+      </svg>
     </button>
   );
+};
+
+ToggleTheme.propTypes = {
+  className: PropTypes.string,
+  /** true: fijo en la esquina inferior derecha; false: se ubica donde lo ponga el padre */
+  floating: PropTypes.bool,
 };
 
 export default ToggleTheme;

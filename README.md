@@ -46,8 +46,8 @@
 | Capa           | Tech Stack                                    | Detalles clave                                         |
 | -------------- | --------------------------------------------- | ------------------------------------------------------ |
 | **Frontend**   | React + Vite + Tailwind CSS                   | Hot-reload con Docker bind-mount y polling.            |
-| **Backend**    | Flask 2 + SQLAlchemy + Gunicorn               | API REST en `/api/*`, CORS enable.                     |
-| **BD**         | MySQL 8 (Hostinger)                           | Conexión vía `mysqlclient`, URI en `.env`.             |
+| **Backend**    | Flask 3 + SQLAlchemy + Gunicorn               | API REST en `/api/*`, CORS configurable por entorno.   |
+| **BD**         | MySQL 8 (Hostinger) + MongoDB Atlas           | MySQL: tiendas/usuarios. MongoDB: productos.           |
 | **Infra dev**  | Docker Compose                                | Servicios `frontend` y `backend` en misma red interna. |
 | **Infra prod** | Multi-stage build ⇒ Nginx (static) + Gunicorn | Listo para CI/CD.                                      |
 
@@ -70,12 +70,15 @@
 ### 1. Pre-requisitos
 
 * Docker Desktop (v4.x) con Compose v2 activado.
-* Archivo `backend/.env` con credenciales:
+* Archivo `backend/.env` con credenciales (copia `backend/.env.example`):
 
 ```env
 SECRET_KEY=🎲cámbiame!
 SQLALCHEMY_DATABASE_URI=mysql+mysqldb://usuario:clave@srv1534.hstgr.io/bd?charset=utf8mb4
+MONGO_URI=mongodb+srv://usuario:clave@cluster.mongodb.net/tienda
 ```
+
+La app no arranca si faltan `SECRET_KEY` o `SQLALCHEMY_DATABASE_URI`. Sin `MONGO_URI` los endpoints de productos responden 503.
 
 ### 2. Levantar todo
 
@@ -112,6 +115,46 @@ npm run dev -- --host    # http://localhost:5173
 ```
 
 Configura `VITE_API_URL` en `frontend/app/.env.local` si tu backend corre en otro puerto.
+
+---
+
+## Estructura del backend 🧱
+
+```
+backend/app/
+├── __init__.py      # create_app(): config, extensiones, CORS, blueprints, errores
+├── config.py        # Development / Production / Testing (secretos solo por entorno)
+├── extensions.py    # db, bcrypt, migrate, mongo
+├── auth.py          # sesión y decorador login_required(rol)
+├── errors.py        # APIError + manejadores JSON globales
+├── models.py        # modelos SQLAlchemy
+├── services/        # lógica de negocio (auth, tienda, tendero, producto)
+└── routes/          # blueprints HTTP delgados, uno por dominio
+```
+
+Todas las operaciones sobre tenderos y productos se limitan a la tienda de la sesión.
+En el frontend, todas las llamadas pasan por `src/services/api.js` (envía la cookie de sesión).
+
+## Demo local sin bases de datos 🧪
+
+Para probar la app en tu máquina sin MySQL, MongoDB ni `.env` (Python 3.10+ y Node 18+):
+
+```bash
+cd marvyshopmarket
+./run-demo.sh          # Linux / macOS (en Windows usa Git Bash o WSL)
+```
+
+Abre http://127.0.0.1:5173 e inicia sesión con cédula `12345678` y contraseña `clave123`.
+Usa SQLite (`backend/dev.db`) y un MongoDB simulado con productos de ejemplo. Ctrl+C detiene todo.
+Solo para desarrollo: no uses esta configuración en producción.
+
+## Pruebas ✅
+
+```bash
+cd backend
+pip install -r requirements-dev.txt   # no requiere MySQL ni MongoDB (usa SQLite y mongomock)
+python -m pytest
+```
 
 ---
 
