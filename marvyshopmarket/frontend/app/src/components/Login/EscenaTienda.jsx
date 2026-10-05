@@ -95,23 +95,17 @@ const EscenaTienda = () => (
           <stop offset="0" className="escena-tienda__cielo-1" />
           <stop offset="1" className="escena-tienda__cielo-2" />
         </linearGradient>
-        <mask id="escena-luna">
-          <rect width="800" height="520" fill="white" />
-          <circle cx="668" cy="96" r="30" fill="black" />
-        </mask>
       </defs>
     <rect width="800" height="520" fill="url(#escena-cielo)" className="escena-tienda__cielo" />
 
-    {/* Noche: estrellas y luna */}
+    {/* Noche: estrellas */}
     <g className="escena-tienda__estrellas">
       {ESTRELLAS.map(([cx, cy, r], i) => (
         <circle key={i} cx={cx} cy={cy} r={r} style={{ '--i': i }} />
       ))}
     </g>
-    <circle cx="650" cy="110" r="32" mask="url(#escena-luna)" className="escena-tienda__luna" />
 
-    {/* Día: sol, nubes y aves */}
-    <circle cx="650" cy="110" r="36" className="escena-tienda__sol" />
+    {/* Día: nubes y aves */}
     <g className="escena-tienda__nube escena-tienda__nube--a">
       <ellipse cx="150" cy="120" rx="54" ry="18" />
       <ellipse cx="180" cy="104" rx="34" ry="20" />
@@ -126,6 +120,20 @@ const EscenaTienda = () => (
       <path d="M470 40 q6 -6 12 0 q6 -6 12 0" />
     </g>
 
+    </svg>
+
+    {/* Sol y luna: pieza propia anclada arriba a la derecha, para que el
+        recorte lateral del cielo en pantallas angostas nunca los saque de cuadro */}
+    <svg className="escena-astro" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="escena-luna">
+          <rect width="100" height="100" fill="white" />
+          <circle cx="68" cy="36" r="32" fill="black" />
+        </mask>
+      </defs>
+      <circle cx="50" cy="50" r="46" className="escena-tienda__resplandor-astro" />
+      <circle cx="50" cy="50" r="36" className="escena-tienda__sol" />
+      <circle cx="50" cy="50" r="34" mask="url(#escena-luna)" className="escena-tienda__luna" />
     </svg>
 
     {/* Barrio y tienda: ocupan solo el espacio libre bajo el texto, anclados abajo */}
