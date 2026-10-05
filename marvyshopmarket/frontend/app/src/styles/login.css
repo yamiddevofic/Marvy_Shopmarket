@@ -944,7 +944,7 @@ html.dark .login-hero {
 }
 
 /* Hero compacto en móvil apaisado */
-@media (max-height: 640px) and (max-width: 899px) {
+@media (max-height: 640px) and (max-width: 899px) and (orientation: landscape) {
   /* La escena se corre a la derecha y el titular queda sobre cielo liso, legible */
   .login-hero {
     --recorte: 1.3;

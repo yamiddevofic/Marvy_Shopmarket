@@ -185,8 +185,8 @@ const EscenaTienda = () => (
         <stop offset="1" className="escena-tienda__niebla-abajo" />
       </linearGradient>
       <mask id="escena-luna">
-        <rect x="600" y="140" width="200" height="160" fill="white" />
-        <circle cx="712" cy="206" r="26" fill="black" />
+        <rect x="520" y="140" width="200" height="160" fill="white" />
+        <circle cx="636" cy="206" r="26" fill="black" />
       </mask>
       <pattern id="escena-baldosas" width="48" height="40" patternUnits="userSpaceOnUse" x="0" y="484">
         <path d="M0 0 V40 M0 18 H48" className="escena-tienda__junta" />
@@ -201,11 +201,13 @@ const EscenaTienda = () => (
         )),
       )}
     </g>
-    <circle cx="696" cy="220" r="28" mask="url(#escena-luna)" className="escena-tienda__luna" />
+    <circle cx="620" cy="220" r="28" mask="url(#escena-luna)" className="escena-tienda__luna" />
 
     {/* Día: sol, nubes y aves */}
-    <circle cx="696" cy="226" r="46" className="escena-tienda__sol-aura" />
-    <circle cx="696" cy="226" r="32" className="escena-tienda__sol" />
+    {/* Entre el techo de la tienda y el edificio vecino: dentro del cuadro
+        también cuando el móvil recorta los lados de la escena */}
+    <circle cx="620" cy="226" r="46" className="escena-tienda__sol-aura" />
+    <circle cx="620" cy="226" r="32" className="escena-tienda__sol" />
     <g className="escena-tienda__nube escena-tienda__nube--a">
       <ellipse cx="150" cy="120" rx="54" ry="18" />
       <ellipse cx="180" cy="104" rx="34" ry="20" />
