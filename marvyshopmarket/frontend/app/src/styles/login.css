@@ -141,16 +141,47 @@ html.dark .login-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  height: clamp(360px, 54svh, 480px);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  /* las medidas de la escena y las tarjetas se calculan sobre el ancho del hero (cqw) */
+  container-type: inline-size;
+  /* mínima y no fija: si el texto ocupa más (pantallas angostas), el hero crece y el barrio no se corta */
+  min-height: clamp(400px, 58svh, 500px);
   background: linear-gradient(var(--cielo-1), var(--cielo-2));
 }
 
-.escena-tienda {
+/* El cielo cubre todo el hero; el barrio solo la fila libre bajo el texto,
+   así el titular nunca se superpone con el techo de la tienda. */
+.escena-cielo {
   position: absolute;
   inset: 0;
   z-index: -1;
   width: 100%;
   height: 100%;
+}
+
+.escena-astro {
+  position: absolute;
+  top: 68px;
+  right: 16px;
+  z-index: -1;
+  width: clamp(52px, 13vw, 96px);
+  height: auto;
+  overflow: visible;
+}
+
+.escena-tienda {
+  grid-row: 2;
+  grid-column: 1;
+  align-self: end;
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  /* tope de alto según el ancho: en cajas altas y angostas el recorte lateral
+     dejaría fuera la tienda; así siempre se ve su ancho completo y sobra cielo arriba */
+  max-height: calc(100cqw * 0.66);
+  /* sin tamaño intrínseco: la fila la fija el espacio libre, no la proporción del SVG */
+  contain: size;
 }
 
 .login-hero__tema {
@@ -161,6 +192,7 @@ html.dark .login-hero {
 }
 
 .login-hero__texto {
+  grid-row: 1;
   display: grid;
   gap: 10px;
   max-width: 34rem;
@@ -252,6 +284,8 @@ html.dark .login-hero {
 .emblema-tienda__producto:nth-child(3) { fill: var(--tomate-500); }
 
 /* ── Escena: colores desde tokens, transición día ↔ noche ─────────── */
+.escena-cielo *,
+.escena-astro *,
 .escena-tienda * {
   transition: fill 0.8s ease, opacity 0.8s ease, stop-color 0.8s ease, stroke 0.8s ease;
 }
@@ -263,6 +297,10 @@ html.dark .login-hero {
 .escena-tienda__resplandor { opacity: var(--resplandor-opacidad); }
 
 .escena-tienda__sol { fill: var(--astro-sol); opacity: var(--sol-opacidad); }
+.escena-tienda__resplandor-astro {
+  fill: var(--astro-sol);
+  opacity: calc(var(--sol-opacidad) * 0.18 + var(--luna-opacidad) * 0.08);
+}
 .escena-tienda__luna { fill: var(--astro-luna); opacity: var(--luna-opacidad); }
 
 .escena-tienda__estrellas {
@@ -414,10 +452,8 @@ html.dark .login-hero {
   opacity: calc(0.35 + var(--luz-opacidad) * 0.65);
 }
 
-/* En móvil el astro y las aves no caben junto al titular: se omiten en vez de cortarlos */
+/* En móvil las aves no caben junto al titular: se omiten en vez de cortarlas */
 @media (max-width: 767px) {
-  .escena-tienda__sol,
-  .escena-tienda__luna,
   .escena-tienda__aves {
     display: none;
   }
@@ -771,20 +807,31 @@ html.dark .login-hero {
 /* ── Responsivo ──────────────────────────────────────────────────── */
 @media (min-width: 768px) {
   .login-hero {
-    height: clamp(440px, 56svh, 560px);
+    min-height: clamp(460px, 58svh, 580px);
+  }
+
+  .escena-astro {
+    top: 72px;
+    right: 32px;
   }
 
   .login-hero__texto {
     padding: 32px 40px 0;
   }
 
+  /* las tarjetas viven en la franja de la escena, nunca sobre el texto ni el astro */
   .tarjetas-negocio {
     display: block;
+    position: relative;
+    grid-row: 2;
+    grid-column: 1;
+    align-self: stretch;
+    pointer-events: none;
   }
 
-  .tiquete { top: 176px; right: 24px; }
-  .etiqueta-precio { left: 32px; bottom: 120px; }
-  .aviso-stock { right: 40px; bottom: 150px; }
+  .tiquete { top: 8px; right: 24px; }
+  .etiqueta-precio { left: 24px; bottom: 24%; }
+  .aviso-stock { right: 28px; bottom: 36%; }
 
   .login-panel__tarjeta {
     padding: 32px 28px;
@@ -802,6 +849,12 @@ html.dark .login-hero {
     min-height: 100dvh;
   }
 
+  .escena-astro {
+    top: 64px;
+    right: 40px;
+    width: 80px;
+  }
+
   .login-hero__texto {
     padding: 48px 56px 0;
     gap: 14px;
@@ -816,9 +869,9 @@ html.dark .login-hero {
     height: 56px;
   }
 
-  .tiquete { top: 22%; right: 6%; }
-  .etiqueta-precio { left: 6%; bottom: 20%; }
-  .aviso-stock { right: 8%; bottom: 30%; }
+  .tiquete { top: 4%; right: 4%; }
+  .etiqueta-precio { left: 5%; bottom: 18%; }
+  .aviso-stock { left: 5%; right: auto; bottom: 42%; }
 
   .login-panel {
     align-items: center;
@@ -832,20 +885,33 @@ html.dark .login-hero {
 }
 
 /* Hero compacto en móvil apaisado */
-@media (max-height: 640px) and (max-width: 1023px) {
-  /* La escena se corre a la derecha y el titular queda sobre cielo liso, legible */
+@media (max-height: 640px) and (max-width: 1023px) and (orientation: landscape) {
+  /* Texto a la izquierda y escena a la derecha, sin solaparse */
   .login-hero {
+    min-height: 0;
     height: 250px;
-  }
-
-  .escena-tienda {
-    left: 42%;
-    width: 58%;
+    grid-template-columns: 42% 1fr;
+    grid-template-rows: 1fr;
   }
 
   .login-hero__texto {
-    max-width: 42%;
+    grid-column: 1;
     padding-right: 16px;
+  }
+
+  .escena-tienda {
+    grid-row: 1;
+    grid-column: 2;
+    min-height: 0;
+    /* mismo tope que en vertical, pero sobre el ancho de esta columna (58 %) */
+    max-height: calc(100cqw * 0.58 * 0.66);
+  }
+
+  /* el astro va al lado del botón de tema, sobre el cielo y no sobre la tienda */
+  .escena-astro {
+    top: 14px;
+    right: 72px;
+    width: 40px;
   }
 
   .login-hero__bajada,
