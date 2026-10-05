@@ -81,29 +81,25 @@ Producto.propTypes = {
 };
 
 const EscenaTienda = () => (
-  <svg
-    className="escena-tienda"
-    viewBox="0 0 800 520"
-    preserveAspectRatio="xMidYMax slice"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <defs>
-      <linearGradient id="escena-cielo" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" className="escena-tienda__cielo-1" />
-        <stop offset="1" className="escena-tienda__cielo-2" />
-      </linearGradient>
-      <radialGradient id="escena-halo">
-        <stop offset="0" className="escena-tienda__halo-centro" />
-        <stop offset="1" className="escena-tienda__halo-borde" />
-      </radialGradient>
-      <mask id="escena-luna">
-        <rect width="800" height="520" fill="white" />
-        <circle cx="668" cy="96" r="30" fill="black" />
-      </mask>
-    </defs>
-
-    {/* Cielo */}
+  <>
+    {/* Cielo: cubre todo el hero, anclado arriba */}
+    <svg
+      className="escena-cielo"
+      viewBox="0 0 800 520"
+      preserveAspectRatio="xMidYMin slice"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id="escena-cielo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" className="escena-tienda__cielo-1" />
+          <stop offset="1" className="escena-tienda__cielo-2" />
+        </linearGradient>
+        <mask id="escena-luna">
+          <rect width="800" height="520" fill="white" />
+          <circle cx="668" cy="96" r="30" fill="black" />
+        </mask>
+      </defs>
     <rect width="800" height="520" fill="url(#escena-cielo)" className="escena-tienda__cielo" />
 
     {/* Noche: estrellas y luna */}
@@ -129,6 +125,23 @@ const EscenaTienda = () => (
       <path d="M430 52 q8 -8 16 0 q8 -8 16 0" />
       <path d="M470 40 q6 -6 12 0 q6 -6 12 0" />
     </g>
+
+    </svg>
+
+    {/* Barrio y tienda: ocupan solo el espacio libre bajo el texto, anclados abajo */}
+    <svg
+      className="escena-tienda"
+      viewBox="0 150 800 370"
+      preserveAspectRatio="xMidYMax slice"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <radialGradient id="escena-halo">
+          <stop offset="0" className="escena-tienda__halo-centro" />
+          <stop offset="1" className="escena-tienda__halo-borde" />
+        </radialGradient>
+      </defs>
 
     {/* Barrio lejano */}
     <g className="escena-tienda__capa-1">
@@ -248,7 +261,8 @@ const EscenaTienda = () => (
       <path d="M702 312 h32 l-6 -22 h-20 z" />
     </g>
     <rect x="708" y="292" width="20" height="18" rx="2" className="escena-tienda__farol-luz" />
-  </svg>
+    </svg>
+  </>
 );
 
 export default EscenaTienda;
