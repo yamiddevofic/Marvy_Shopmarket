@@ -2,6 +2,7 @@
 @import './styles/tokens.css';
 @import './styles/boton-tema.css';
 @import './styles/login.css';
+@import './styles/registro.css';
 
 @tailwind base;
 @tailwind components;

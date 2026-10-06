@@ -1,17 +1,70 @@
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, ImagePlus, Store, UserRound } from 'lucide-react';
+import ToggleTheme from '../components/Toggle/ToggleTheme';
+import EmblemaTienda from '../components/Login/EmblemaTienda';
+import EscenaApertura from '../components/Registro/EscenaApertura';
+import TarjetaTienda from '../components/Registro/TarjetaTienda';
 import { api } from '../services/api';
-import { Eye, EyeOff, User, Store, Upload } from 'lucide-react';
-import ToggleDark from '../components/Toggle/ToggleTheme';
-import Input from '../components/Input/Input';
+
+const TITULAR_LINEA_1 = ['Abre', 'tu', 'tienda'];
+const TITULAR_REMATE = ['en', 'minutos'];
+
+const PASOS = [
+  { titulo: 'Tus datos', ayuda: 'Serás el administrador de la tienda.', icono: UserRound },
+  { titulo: 'Tu tienda', ayuda: 'Así te van a conocer tus clientes.', icono: Store },
+];
+
+const CAMPOS_ADMIN = ['adm_Id', 'adm_Nombre', 'adm_Correo', 'adm_Celular', 'adm_Password'];
+const CAMPOS_TIENDA = ['tienda_Id', 'tienda_Nombre', 'tienda_Correo', 'tienda_Celular', 'tienda_Ubicacion', 'tienda_Img'];
+
+const NIVELES_CLAVE = ['Muy corta', 'Débil', 'Aceptable', 'Buena', 'Fuerte'];
+
+// 0–4: largo, mayúsculas y minúsculas, números y símbolos
+const fuerzaClave = (clave) => {
+  if (!clave) return 0;
+  if (clave.length < 6) return 1;
+  const puntos = [
+    clave.length >= 10,
+    /[a-z]/.test(clave) && /[A-Z]/.test(clave),
+    /\d/.test(clave),
+    /[^A-Za-z0-9]/.test(clave),
+  ].filter(Boolean).length;
+  return Math.max(1, Math.min(4, puntos + 1));
+};
+
+const leerComoBase64 = (archivo) =>
+  new Promise((resolve, reject) => {
+    const lector = new FileReader();
+    lector.onload = () => resolve(lector.result);
+    lector.onerror = reject;
+    lector.readAsDataURL(archivo);
+  });
+
+const Campo = ({ id, etiqueta, ayuda, children }) => (
+  <div className="registro-form__campo">
+    <label htmlFor={id} className="registro-form__etiqueta">{etiqueta}</label>
+    {children}
+    {ayuda && <p className="registro-form__ayuda">{ayuda}</p>}
+  </div>
+);
+
+Campo.propTypes = {
+  id: PropTypes.string.isRequired,
+  etiqueta: PropTypes.string.isRequired,
+  ayuda: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const [paso, setPaso] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
-  
   const [formData, setFormData] = useState({
     adm_Id: '',
     adm_Nombre: '',
@@ -23,283 +76,319 @@ const SignUp = () => {
     tienda_Correo: '',
     tienda_Celular: '',
     tienda_Ubicacion: '',
-    tienda_Img: null
+    tienda_Img: null,
   });
+
+  const fuerza = fuerzaClave(formData.adm_Password);
+
+  const todos = [...CAMPOS_ADMIN, ...CAMPOS_TIENDA];
+  const llenos = todos.filter((campo) => Boolean(formData[campo])).length;
+  const avance = Math.round((llenos / todos.length) * 100);
+
+  const handleChange = (e) => {
+    const { name, type, value, files } = e.target;
+    if (type === 'file') {
+      const file = files[0] || null;
+      setFormData((previo) => ({ ...previo, [name]: file }));
+      if (file) {
+        leerComoBase64(file).then(setPreviewImage).catch(() => setPreviewImage(null));
+      } else {
+        setPreviewImage(null);
+      }
+      return;
+    }
+    setFormData((previo) => ({ ...previo, [name]: value }));
+  };
+
+  // Solo dígitos (cédula y celulares)
+  const handleNumero = (e) => {
+    const { name, value } = e.target;
+    setFormData((previo) => ({ ...previo, [name]: value.replace(/\D/g, '') }));
+  };
+
+  // Valida los campos del paso visible con la validación nativa del navegador
+  const pasoValido = () => {
+    const visibles = formRef.current.querySelectorAll('[data-paso]:not([hidden]) input');
+    for (const input of visibles) {
+      if (!input.checkValidity()) {
+        input.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const irAlPaso = (destino) => {
+    setError('');
+    setPaso(destino);
+    formRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!pasoValido()) return;
+    // Enter en el primer paso avanza en vez de enviar
+    if (paso < PASOS.length - 1) {
+      irAlPaso(paso + 1);
+      return;
+    }
+
     setLoading(true);
     setError('');
-
     try {
       const jsonData = { ...formData };
-      
       if (formData.tienda_Img) {
-        const base64Image = await convertImageToBase64(formData.tienda_Img);
-        jsonData.tienda_Img = base64Image;
+        jsonData.tienda_Img = await leerComoBase64(formData.tienda_Img);
       }
-
       await api.post('/registrar-admin-tienda', jsonData);
       navigate('/');
-    } catch (error) {
-      setError(error.message || 'Error al registrar. Por favor, intente nuevamente.');
+    } catch (err) {
+      setError(err.message || 'No pudimos crear tu cuenta. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
-  const convertImageToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  let indicePalabra = 0;
+  const palabra = (texto) => (
+    <span key={texto} className="registro-hero__palabra" style={{ '--i': indicePalabra++ }}>
+      {texto}
+    </span>
+  );
 
-  const handleChange = (e) => {
-    if (e.target.type === 'file') {
-      const file = e.target.files[0];
-      setFormData({
-        ...formData,
-        [e.target.name]: file
-      });
-      
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => setPreviewImage(e.target.result);
-        reader.readAsDataURL(file);
-      }
-    } else {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      });
-    }
-  };
+  const ultimo = paso === PASOS.length - 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-500 to-green-400 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-200">
-      <div className="relative w-full max-w-6xl rounded-2xl p-8 transition-all duration-200">
-        <div className="absolute top-4 right-4">
-          <ToggleDark />
+    <div className="registro">
+      <a className="registro__saltar" href="#registro-formulario">Saltar al formulario</a>
+
+      <header className="registro-hero">
+        <div className="registro-hero__tema">
+          <ToggleTheme floating={false} />
         </div>
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white dark:text-white">
-            Registro de Cuenta
-          </h1>
-          <p className="text-white dark:text-gray-300 mt-2">
-            Complete la información del administrador y la tienda
-          </p>
-          {error && (
-            <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-500/50 text-red-700 dark:text-red-300 rounded-lg">
-              {error}
+        <div className="registro-hero__cabecera">
+          <div className="registro-hero__texto">
+            <div className="registro-hero__marca">
+              <EmblemaTienda />
+              <span className="registro-hero__nombre">Marvy Shopmarket</span>
             </div>
-          )}
+            <h1 className="registro-hero__titulo">
+              <span className="registro-hero__linea">{TITULAR_LINEA_1.map(palabra)}</span>
+              <em className="registro-hero__linea registro-hero__remate">{TITULAR_REMATE.map(palabra)}</em>
+            </h1>
+            <p className="registro-hero__bajada">Crea tu cuenta y empieza a vender hoy mismo.</p>
+          </div>
+          <TarjetaTienda
+            nombre={formData.tienda_Nombre}
+            ubicacion={formData.tienda_Ubicacion}
+            logo={previewImage}
+            avance={avance}
+          />
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Admin Section */}
-            <div className="flex-1">
-              <div className="bg-emerald-50 dark:bg-gray-700/50 p-6 rounded-xl border border-emerald-100 dark:border-gray-600 h-full">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Administrador
-                  </h2>
-                </div>
+        <div className="registro-hero__escena">
+          <div className="registro-hero__marco">
+            <EscenaApertura />
+          </div>
+        </div>
+      </header>
 
-                <div className="space-y-4">
-                  <Input
-                    label="ID Administrador"
-                    name="adm_Id"
-                    value={formData.adm_Id}
-                    onChange={handleChange}
-                    placeholder="Ingresa el ID"
-                    required
-                  />
-                  <Input
-                    label="Nombre"
-                    name="adm_Nombre"
-                    value={formData.adm_Nombre}
-                    onChange={handleChange}
-                    placeholder="Nombre completo"
-                    required
-                  />
-                  <Input
-                    label="Correo"
-                    type="email"
-                    name="adm_Correo"
-                    value={formData.adm_Correo}
-                    onChange={handleChange}
-                    placeholder="correo@ejemplo.com"
-                    required
-                  />
-                  <Input
-                    label="Celular"
-                    type="tel"
-                    name="adm_Celular"
-                    value={formData.adm_Celular}
-                    onChange={handleChange}
-                    placeholder="Número de celular"
-                    required
-                  />
-                  <div className="relative">
-                    <Input
-                      label="Contraseña"
-                      type={showPassword ? 'text' : 'password'}
-                      name="adm_Password"
-                      value={formData.adm_Password}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2 bottom-2 p-2"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                      ) : (
-                        <Eye className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <main className="registro-panel">
+        <div className="registro-panel__tarjeta">
+          <ol className="registro-pasos" aria-label="Progreso del registro">
+            {PASOS.map(({ titulo, icono: Icono }, i) => (
+              <li
+                key={titulo}
+                className="registro-pasos__item"
+                data-estado={i < paso ? 'hecho' : i === paso ? 'actual' : 'pendiente'}
+                aria-current={i === paso ? 'step' : undefined}
+              >
+                <span className="registro-pasos__marca">
+                  {i < paso ? <Check aria-hidden="true" /> : <Icono aria-hidden="true" />}
+                </span>
+                <span className="registro-pasos__texto">
+                  <span className="registro-pasos__numero">Paso {i + 1} de {PASOS.length}</span>
+                  <span className="registro-pasos__titulo">{titulo}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
 
-            {/* Store Section */}
-            <div className="flex-1">
-              <div className="bg-emerald-50 dark:bg-gray-700/50 p-6 rounded-xl border border-emerald-100 dark:border-gray-600 h-full">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-emerald-500 dark:bg-emerald-600 rounded-full flex items-center justify-center">
-                    <Store className="w-5 h-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Tienda
-                  </h2>
-                </div>
-
-                <div className="space-y-4">
-                  <Input
-                    label="ID Tienda"
-                    name="tienda_Id"
-                    value={formData.tienda_Id}
-                    onChange={handleChange}
-                    placeholder="ID de la tienda"
-                    required
-                  />
-                  <Input
-                    label="Nombre de Tienda"
-                    name="tienda_Nombre"
-                    value={formData.tienda_Nombre}
-                    onChange={handleChange}
-                    placeholder="Nombre de la tienda"
-                    required
-                  />
-                  <Input
-                    label="Correo de Tienda"
-                    type="email"
-                    name="tienda_Correo"
-                    value={formData.tienda_Correo}
-                    onChange={handleChange}
-                    placeholder="correo@tienda.com"
-                    required
-                  />
-                  <Input
-                    label="Celular de Tienda"
-                    type="tel"
-                    name="tienda_Celular"
-                    value={formData.tienda_Celular}
-                    onChange={handleChange}
-                    placeholder="Número de la tienda"
-                    required
-                  />
-                  <Input
-                    label="Ubicación"
-                    name="tienda_Ubicacion"
-                    value={formData.tienda_Ubicacion}
-                    onChange={handleChange}
-                    placeholder="Dirección de la tienda"
-                    required
-                  />
-                  
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Logo de Tienda
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-1">
-                        <div className="relative">
-                          <input
-                            type="file"
-                            name="tienda_Img"
-                            onChange={handleChange}
-                            className="hidden"
-                            id="tienda_Img"
-                            accept="image/*"
-                            required
-                          />
-                          <label
-                            htmlFor="tienda_Img"
-                            className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                          >
-                            <Upload className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
-                            <span className="text-gray-500 dark:text-gray-400">
-                              Seleccionar imagen
-                            </span>
-                          </label>
-                        </div>
-                      </div>
-                      {previewImage && (
-                        <div className="w-12 h-12 rounded-lg overflow-hidden">
-                          <img
-                            src={previewImage}
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="registro-panel__cabeza">
+            <h2 className="registro-panel__titulo" id="registro-formulario" tabIndex={-1}>
+              {PASOS[paso].titulo}
+            </h2>
+            <p className="registro-panel__ayuda">{PASOS[paso].ayuda}</p>
           </div>
 
-          <div className="mt-8 space-y-4 flex flex-col justify-center align-center">
-            <div className="flex items-center justify-center">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full lg:w-[50%] flex justify-center py-3 px-4 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+          <div className="registro-panel__error" role="alert" aria-live="assertive">
+            {error && <p>{error}</p>}
+          </div>
+
+          <form ref={formRef} onSubmit={handleSubmit} className="registro-form" noValidate>
+            <fieldset className="registro-form__grupo" data-paso="0" hidden={paso !== 0}>
+              <legend className="registro-form__leyenda">Datos del administrador</legend>
+
+              <Campo id="adm_Id" etiqueta="Cédula">
+                <input
+                  id="adm_Id" name="adm_Id" type="text" inputMode="numeric" autoComplete="username"
+                  required pattern="\d{8,10}" maxLength="10" title="Entre 8 y 10 números"
+                  value={formData.adm_Id} onChange={handleNumero}
+                  className="registro-form__input" placeholder="Ej. 1012345678"
+                />
+              </Campo>
+              <Campo id="adm_Nombre" etiqueta="Nombre completo">
+                <input
+                  id="adm_Nombre" name="adm_Nombre" type="text" autoComplete="name" required
+                  value={formData.adm_Nombre} onChange={handleChange}
+                  className="registro-form__input" placeholder="Como aparece en tu cédula"
+                />
+              </Campo>
+              <div className="registro-form__fila">
+                <Campo id="adm_Correo" etiqueta="Correo">
+                  <input
+                    id="adm_Correo" name="adm_Correo" type="email" autoComplete="email" required
+                    value={formData.adm_Correo} onChange={handleChange}
+                    className="registro-form__input" placeholder="correo@ejemplo.com"
+                  />
+                </Campo>
+                <Campo id="adm_Celular" etiqueta="Celular">
+                  <input
+                    id="adm_Celular" name="adm_Celular" type="tel" inputMode="tel" autoComplete="tel" required
+                    minLength="7" maxLength="10"
+                    value={formData.adm_Celular} onChange={handleNumero}
+                    className="registro-form__input" placeholder="3001234567"
+                  />
+                </Campo>
+              </div>
+              <Campo id="adm_Password" etiqueta="Contraseña">
+                <div className="registro-form__con-boton">
+                  <input
+                    id="adm_Password" name="adm_Password" type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password" required minLength="6"
+                    value={formData.adm_Password} onChange={handleChange}
+                    className="registro-form__input" placeholder="Mínimo 6 caracteres"
+                    aria-describedby="registro-fuerza"
+                  />
+                  <button
+                    type="button"
+                    className="registro-form__ojo"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label="Mostrar contraseña"
+                    aria-pressed={showPassword}
+                  >
+                    {showPassword ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                  </button>
+                </div>
+                <div className="registro-fuerza" id="registro-fuerza" data-nivel={fuerza}>
+                  <div className="registro-fuerza__barras" aria-hidden="true">
+                    {[1, 2, 3, 4].map((n) => (
+                      <span key={n} className={n <= fuerza ? 'registro-fuerza__barra registro-fuerza__barra--on' : 'registro-fuerza__barra'} />
+                    ))}
+                  </div>
+                  <span className="registro-fuerza__texto" aria-live="polite">
+                    {formData.adm_Password ? `Seguridad: ${NIVELES_CLAVE[fuerza]}` : 'Combina letras, números y símbolos.'}
+                  </span>
+                </div>
+              </Campo>
+            </fieldset>
+
+            <fieldset className="registro-form__grupo" data-paso="1" hidden={paso !== 1}>
+              <legend className="registro-form__leyenda">Datos de la tienda</legend>
+
+              <div className="registro-form__logo">
+                <input
+                  id="tienda_Img" name="tienda_Img" type="file" accept="image/*" required
+                  onChange={handleChange} className="registro-form__archivo"
+                />
+                <label htmlFor="tienda_Img" className="registro-form__soltar">
+                  <span className="registro-form__miniatura">
+                    {previewImage ? <img src={previewImage} alt="Vista previa del logo" /> : <ImagePlus aria-hidden="true" />}
+                  </span>
+                  <span className="registro-form__soltar-texto">
+                    <strong>{formData.tienda_Img ? 'Cambiar logo' : 'Sube el logo de tu tienda'}</strong>
+                    <span>{formData.tienda_Img ? formData.tienda_Img.name : 'PNG o JPG, cuadrado se ve mejor'}</span>
+                  </span>
+                </label>
+              </div>
+
+              <div className="registro-form__fila">
+                <Campo id="tienda_Id" etiqueta="ID de la tienda">
+                  <input
+                    id="tienda_Id" name="tienda_Id" type="text" required
+                    value={formData.tienda_Id} onChange={handleChange}
+                    className="registro-form__input" placeholder="Ej. T-001"
+                  />
+                </Campo>
+                <Campo id="tienda_Nombre" etiqueta="Nombre de la tienda">
+                  <input
+                    id="tienda_Nombre" name="tienda_Nombre" type="text" autoComplete="organization" required
+                    value={formData.tienda_Nombre} onChange={handleChange}
+                    className="registro-form__input" placeholder="Ej. Tienda La Esquina"
+                  />
+                </Campo>
+              </div>
+              <div className="registro-form__fila">
+                <Campo id="tienda_Correo" etiqueta="Correo de la tienda">
+                  <input
+                    id="tienda_Correo" name="tienda_Correo" type="email" required
+                    value={formData.tienda_Correo} onChange={handleChange}
+                    className="registro-form__input" placeholder="tienda@ejemplo.com"
+                  />
+                </Campo>
+                <Campo id="tienda_Celular" etiqueta="Celular de la tienda">
+                  <input
+                    id="tienda_Celular" name="tienda_Celular" type="tel" inputMode="tel" required
+                    minLength="7" maxLength="10"
+                    value={formData.tienda_Celular} onChange={handleNumero}
+                    className="registro-form__input" placeholder="3001234567"
+                  />
+                </Campo>
+              </div>
+              <Campo id="tienda_Ubicacion" etiqueta="Ubicación">
+                <input
+                  id="tienda_Ubicacion" name="tienda_Ubicacion" type="text" autoComplete="street-address" required
+                  value={formData.tienda_Ubicacion} onChange={handleChange}
+                  className="registro-form__input" placeholder="Dirección o barrio"
+                />
+              </Campo>
+            </fieldset>
+
+            <div className="registro-form__acciones">
+              {paso > 0 && (
+                <button type="button" className="registro-form__atras" onClick={() => irAlPaso(paso - 1)}>
+                  <ArrowLeft aria-hidden="true" />
+                  Atrás
+                </button>
+              )}
+              <button type="submit" disabled={loading} aria-busy={loading} className="registro-form__siguiente">
                 {loading ? (
-                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <>
+                    <span className="registro-form__girando" aria-hidden="true" />
+                    Creando tu tienda…
+                  </>
+                ) : ultimo ? (
+                  <>
+                    Crear mi tienda
+                    <Check aria-hidden="true" />
+                  </>
                 ) : (
-                  'Completar Registro'
+                  <>
+                    Continuar
+                    <ArrowRight aria-hidden="true" />
+                  </>
                 )}
               </button>
             </div>
-            <p className="text-center text-white dark:text-gray-300">
-              ¿Ya tienes una cuenta?{' '}
-              <Link 
-                to="/" 
-                className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 font-medium transition-colors"
-              >
-                Inicia sesión
-              </Link>
-            </p>
-          </div>
-        </form>
-      </div>
+          </form>
+
+          <p className="registro-panel__ingreso">
+            ¿Ya tienes cuenta?{' '}
+            <Link to="/" className="registro-form__enlace">Inicia sesión</Link>
+          </p>
+        </div>
+      </main>
     </div>
   );
 };
