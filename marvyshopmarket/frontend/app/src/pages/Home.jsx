@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header/Header';
 import StatsGrid from '../components/Stats/StatsGrid';
 import OptionsGrid from '../components/Options/OptionsGrid';
-import QuickActionButton from '../components/Button/QuickActionButton';
+import { MapPin, Box, Receipt } from 'lucide-react';
+import FachadaTienda from '../components/Panel/FachadaTienda';
 import Cookies from 'js-cookie';
 import Layout from '../Layout/Layout';
 import { useAppContext } from '../context/AppContext';
@@ -19,13 +19,6 @@ const Home = () => {
   useEffect(() => {
     setSelectedOption('home');
     
-    // Depuración - puedes comentar o eliminar estos logs después de verificar
-    console.log('=== Debug Home Component ===');
-    console.log('selectedOption en Home:', selectedOption);
-    console.log('adminInfo en Home:', adminInfo);
-    console.log('storeInfo en Home:', storeInfo);
-    console.log('userName en Home:', userName);
-    console.log('selectedIcon en Home:', selectedIcon);
   }, []); // El array vacío asegura que solo se ejecute una vez al montar el componente
 
   const handleSelectOption = (option, iconName) => {
@@ -33,8 +26,6 @@ const Home = () => {
     setSelectedIcon(iconName);
     localStorage.setItem('selectedOption', option);
     localStorage.setItem('selectedIcon', iconName);
-    console.log('Option selected:', option);
-    console.log('Icon selected:', iconName);
     navigate(`/${option}`);
   };
 
@@ -68,76 +59,78 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800">
-        <main className="container mx-auto px-4 py-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
-            <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+      <div className="panel">
+        <main className="panel-cargando" aria-busy="true" aria-label="Cargando el panel">
+          <div className="panel-cargando__bloque panel-cargando__bloque--hero" />
+          <div className="panel-cargando__fila">
+            <div className="panel-cargando__bloque" />
+            <div className="panel-cargando__bloque" />
+            <div className="panel-cargando__bloque" />
           </div>
         </main>
       </div>
     );
   }
-  
-  console.log("Nombre del usuario en Home:", userName);
-  console.log("Información del administrador en Home:", adminInfo);
-  console.log("Información de la tienda en Home:", storeInfo);
-  console.log("selectedOption estado en Home: ", selectedOption)
-  console.log("selectedIcon estado en Home: ", selectedIcon)
-  
+
+  const primerNombre = (userName || '').trim().split(/\s+/)[0];
+  const hora = new Date().getHours();
+  const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+  const fecha = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
     <Layout adminInfo={adminInfo} storeInfo={storeInfo} userName={userName} selectedOption={selectedOption}>
-    <div className="min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-[#06141b] dark:to-[#11212d] transition-colors duration-200">
-
-      <main className="container mx-auto px-4 py-6 lg:px-8">
-        {/* Sección de acciones rápidas */}
-        <div className="mt-8 bg-white dark:bg-[#12212D] rounded-2xl p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-              Acciones Rápidas
-            </h3>
-            <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-              Personalizar
-            </button>
+      <main className="panel-principal">
+        <section className="panel-hero" aria-labelledby="panel-titulo">
+          <div className="panel-hero__astros" aria-hidden="true">
+            <span className="panel-hero__sol" />
+            <span className="panel-hero__luna" />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickActionButton text="Nuevo Producto" onClick={() => handleSelectOption('productos', 'Box')} />
-            <QuickActionButton text="Generar Reporte" onClick={() => handleSelectOption('reportes', 'ScrollText')} />
-            <QuickActionButton text="Ver Ventas" onClick={() => handleSelectOption('ventas', 'Receipt')} />
-            <QuickActionButton text="Configuración" onClick={() => handleSelectOption('configuracion', 'Bolt')} />
-          </div>
-        </div>
-
-        {/* Sección de estadísticas */}
-        <div className="space-y-8">
-          <section className="bg-white dark:bg-[#12212D] rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Estadísticas Generales
-              </h2>
-              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                Ver todo
+          <div className="panel-hero__texto">
+            <p className="panel-hero__fecha">{fecha}</p>
+            <h1 id="panel-titulo" className="panel-hero__titulo">
+              <span className="panel-hero__linea">{saludo}{primerNombre ? `, ${primerNombre}` : ''}</span>
+              <em className="panel-hero__linea panel-hero__remate">tu tienda te espera</em>
+            </h1>
+            <div className="panel-hero__tienda">
+              <span className="panel-hero__logo">
+                {storeInfo?.imagen ? <img src={storeInfo.imagen} alt="" /> : (storeInfo?.nombre || 'T').charAt(0).toUpperCase()}
+              </span>
+              <span className="panel-hero__datos">
+                <span className="panel-hero__nombre">{storeInfo?.nombre || 'Tu tienda'}</span>
+                {storeInfo?.ubicacion && (
+                  <span className="panel-hero__lugar"><MapPin aria-hidden="true" />{storeInfo.ubicacion}</span>
+                )}
+              </span>
+            </div>
+            <div className="panel-hero__acciones">
+              <button type="button" className="panel-boton panel-boton--primario" onClick={() => handleSelectOption('ventas', 'Receipt')}>
+                <Receipt aria-hidden="true" /> Ver ventas
+              </button>
+              <button type="button" className="panel-boton" onClick={() => handleSelectOption('productos', 'Box')}>
+                <Box aria-hidden="true" /> Nuevo producto
               </button>
             </div>
-            <StatsGrid />
-          </section>
+          </div>
+          <div className="panel-hero__escena">
+            <FachadaTienda />
+          </div>
+        </section>
 
-          {/* Sección de opciones */}
-          <section className="bg-white dark:bg-[#12212D] rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Opciones Disponibles
-              </h2>
-              <button className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                Ver más
-              </button>
-            </div>
-            <OptionsGrid  selectedOption={selectedOption} setSelectedOption={setSelectedOption} setSelectedIcon={setSelectedIcon} selectedIcon={selectedIcon}/>
-          </section>
-        </div>
+        <section className="panel-seccion" aria-labelledby="panel-resumen">
+          <header className="panel-seccion__cabeza">
+            <h2 id="panel-resumen" className="panel-seccion__titulo">Resumen del negocio</h2>
+            <span className="panel-seccion__etiqueta">Cifras de ejemplo</span>
+          </header>
+          <StatsGrid />
+        </section>
+
+        <section className="panel-seccion" aria-labelledby="panel-modulos">
+          <header className="panel-seccion__cabeza">
+            <h2 id="panel-modulos" className="panel-seccion__titulo">¿Qué quieres hacer hoy?</h2>
+          </header>
+          <OptionsGrid setSelectedOption={setSelectedOption} setSelectedIcon={setSelectedIcon} />
+        </section>
       </main>
-    </div>
     </Layout>
   );
 };
