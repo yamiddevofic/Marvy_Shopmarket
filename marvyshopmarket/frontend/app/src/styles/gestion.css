@@ -1,22 +1,33 @@
 /*
  * Pantallas de gestión (productos, inventario, ventas, reportes, proveedores,
- * suministros, tenderos): cabecera con cielo e ilustración, tarjeta de
- * formulario y, donde aplica, la lista de registros.
- * Mismo lenguaje que panel.css (va dentro de `.panel`, del Layout) y tokens
- * globales; el tema oscuro solo redefine tokens. Mobile first.
+ * suministros, tenderos y configuración), todas armadas por Form.jsx:
+ *   cabecera compacta con la ilustración de la pantalla → tarjeta del formulario
+ *   → (en productos y tenderos) la lista con búsqueda, paginación y edición.
+ * Compone las piezas de panel.css (tarjeta, boton, chip, aviso, esqueleto).
+ * Las pantallas de solo formulario se centran en una columna de lectura.
  */
 
 .gestion {
   display: grid;
-  gap: 20px;
-  max-width: 1120px;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--ancho-max);
   margin: 0 auto;
   padding: 16px 16px 40px;
 }
 
-/* ── Cabecera con ilustración ────────────────────────────────────── */
+.gestion--simple {
+  max-width: 820px;
+}
+
+.gestion > * {
+  animation: panel-subir 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.gestion > :nth-child(2) { animation-delay: 0.06s; }
+
+/* ── Cabecera: adentro de la tienda, bajo el toldo ───────────────── */
 .gestion-hero {
-  /* paleta de las ilustraciones (día) */
   --il-trazo: #5b3a1c;
   --il-papel: #ffffff;
   --il-tinta: #2c4038;
@@ -45,12 +56,11 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 128px;
+  grid-template-columns: minmax(0, 1fr) 104px;
   align-items: end;
   gap: 12px;
   overflow: hidden;
-  /* adentro de la tienda: pared clara con puntos, bajo un toldo a rayas */
-  padding: 34px 16px 0 20px;
+  padding: 28px 12px 0 20px;
   background:
     radial-gradient(circle, color-mix(in srgb, var(--verde-700) 14%, transparent) 1.2px, transparent 1.6px) 0 0 / 18px 18px,
     linear-gradient(var(--surface), var(--verde-50));
@@ -93,19 +103,19 @@ html.dark .gestion-hero {
   position: absolute;
   inset: 0 0 auto;
   z-index: -1;
-  height: 18px;
-  background: repeating-linear-gradient(90deg, var(--il-toldo-a) 0 22px, var(--il-toldo-b) 22px 44px);
-  -webkit-mask: radial-gradient(circle at 11px 11px, #000 10.5px, transparent 11px) 0 7px / 22px 11px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 8px no-repeat;
-  mask: radial-gradient(circle at 11px 11px, #000 10.5px, transparent 11px) 0 7px / 22px 11px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 8px no-repeat;
-  animation: gestion-toldo 6s ease-in-out infinite;
+  height: 14px;
+  background: repeating-linear-gradient(90deg, var(--il-toldo-a) 0 18px, var(--il-toldo-b) 18px 36px);
+  -webkit-mask: radial-gradient(circle at 9px 9px, #000 8.5px, transparent 9px) 0 5px / 18px 9px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 6px no-repeat;
+  mask: radial-gradient(circle at 9px 9px, #000 8.5px, transparent 9px) 0 5px / 18px 9px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 6px no-repeat;
   transform-origin: top;
+  animation: gestion-toldo 6s ease-in-out infinite;
 }
 
 .gestion-hero__texto {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
-  padding-bottom: 20px;
+  padding-bottom: 18px;
 }
 
 .gestion-hero__titulo {
@@ -114,13 +124,12 @@ html.dark .gestion-hero {
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  text-wrap: balance;
 }
 
 .gestion-hero__bajada {
   margin: 0;
-  max-width: 36rem;
-  font-size: 0.92rem;
+  max-width: 34rem;
+  font-size: 0.9rem;
   line-height: 1.45;
   color: var(--tinta-700);
 }
@@ -201,54 +210,16 @@ html.dark .gestion-hero {
 .ilus-tiquete { transform-origin: 50% 100%; animation-name: gestion-asomar; }
 .ilus-lapiz { transform-origin: 0 100%; }
 
-/* ── Cuerpo: tarjetas ────────────────────────────────────────────── */
+
+/* ── Cuerpo ──────────────────────────────────────────────────────── */
 .gestion__cuerpo {
   display: grid;
-  gap: 20px;
+  gap: 16px;
   align-items: start;
 }
 
-.gestion-tarjeta {
-  display: grid;
-  gap: 16px;
-  min-width: 0;
-  padding: 20px 16px;
-  background: var(--surface);
-  border: 1px solid var(--linea-200);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--sombra-sm);
-}
-
-.gestion-tarjeta > [role='alert']:empty,
-.gestion-tarjeta > [role='status']:empty {
+.gestion-formulario__avisos:empty {
   display: none;
-}
-
-.gestion-aviso {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  border-radius: var(--radius-sm);
-}
-
-.gestion-aviso svg {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
-}
-
-.gestion-aviso--error {
-  color: var(--error-600);
-  background: var(--error-100);
-}
-
-.gestion-aviso--ok {
-  color: var(--verde-800);
-  background: var(--verde-100);
 }
 
 /* ── Formulario ──────────────────────────────────────────────────── */
@@ -305,13 +276,10 @@ html.dark .gestion-hero {
   border-color: var(--error-600);
 }
 
-/* el ícono del calendario del navegador sigue el tema */
+/* el ícono del calendario sigue el tema vía color-scheme (tokens.css) */
 .gestion-form__input::-webkit-calendar-picker-indicator {
   opacity: 0.7;
-}
-
-html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  cursor: pointer;
 }
 
 .gestion-form__con-boton {
@@ -342,71 +310,13 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   height: 20px;
 }
 
-/* ── Botones ─────────────────────────────────────────────────────── */
-.gestion-boton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: var(--hit);
-  padding: 0 18px;
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--texto);
-  background: var(--surface);
-  border: 1.5px solid var(--linea-200);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
 
-.gestion-boton svg {
-  width: 18px;
-  height: 18px;
-}
-
-.gestion-boton:hover {
-  background: var(--verde-50);
-}
-
-.gestion-boton--primario {
-  color: var(--sobre-primario);
-  background: var(--primario);
-  border-color: var(--primario);
-  box-shadow: var(--sombra-sm);
-}
-
-.gestion-boton--primario:hover {
-  background: var(--primario-hover);
-  border-color: var(--primario-hover);
-}
-
-.gestion-boton--primario:disabled {
-  cursor: progress;
-  opacity: 0.75;
-}
-
-.gestion-boton--peligro {
-  color: var(--error-600);
-  border-color: color-mix(in srgb, var(--error-600) 40%, transparent);
-}
-
-.gestion-boton--peligro:hover {
-  background: var(--error-100);
+.gestion-form__pie {
+  display: flex;
 }
 
 .gestion-form__enviar {
   width: 100%;
-}
-
-.gestion-girando {
-  width: 18px;
-  height: 18px;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: gestion-girar 0.8s linear infinite;
 }
 
 /* ── Lista de registros ──────────────────────────────────────────── */
@@ -417,36 +327,47 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
 }
 
 .gestion-lista__cabeza {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
+  display: grid;
+  gap: 12px;
 }
 
-.gestion-lista__titulo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: var(--step-1);
-  font-weight: 700;
+.gestion-buscar {
+  position: relative;
+  display: block;
 }
 
-.gestion-lista__total {
-  padding: 2px 10px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--verde-800);
-  background: var(--verde-100);
-  border-radius: var(--radius-pill);
-  font-variant-numeric: tabular-nums;
-}
-
-.gestion-lista__ayuda {
-  margin: -4px 0 0;
-  font-size: 0.85rem;
+.gestion-buscar svg {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 18px;
+  height: 18px;
   color: var(--texto-suave);
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.gestion-buscar__input {
+  width: 100%;
+  min-height: var(--hit);
+  padding: 0 14px 0 42px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--texto);
+  background: var(--page-bg);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gestion-buscar__input::placeholder {
+  color: var(--tinta-300);
+}
+
+.gestion-buscar__input:focus {
+  outline: none;
+  border-color: var(--primario);
+  box-shadow: var(--focus-ring);
 }
 
 .gestion-lista__filas {
@@ -457,14 +378,41 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   list-style: none;
 }
 
+.gestion-lista__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gestion-lista__rango {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestion-lista__esqueleto {
+  height: 60px;
+  border-radius: var(--radius-md);
+}
+
+.gestion-lista__esqueleto--titulo {
+  width: 50%;
+  height: 28px;
+}
+
 .gestion-paginas {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .gestion-paginas__texto {
+  min-width: 3.5em;
   font-size: 0.85rem;
+  text-align: center;
   color: var(--texto-suave);
   font-variant-numeric: tabular-nums;
 }
@@ -472,8 +420,8 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
 .gestion-paginas__boton {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: var(--hit);
+  height: var(--hit);
   color: var(--primario);
   background: var(--surface);
   border: 1px solid var(--linea-200);
@@ -495,14 +443,30 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   opacity: 0.4;
 }
 
-/* Fila: tarjeta en móvil, fila de tabla en pantallas anchas */
+.gestion-sin-resultados {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 24px 16px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--texto-suave);
+  border: 1px dashed var(--linea-200);
+  border-radius: var(--radius-md);
+}
+
+.gestion-sin-resultados p {
+  margin: 0;
+}
+
+/* Fila: tarjeta en móvil, fila de tabla desde 1024 px */
 .gestion-fila {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px 14px;
   width: 100%;
-  padding: 14px 44px 14px 14px;
+  padding: 12px 44px 12px 12px;
   font: inherit;
   color: var(--texto);
   text-align: left;
@@ -519,12 +483,12 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   box-shadow: var(--sombra-sm);
 }
 
-.gestion-fila--cabeza {
-  display: none;
-}
-
 .gestion-fila--productos {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gestion-fila--cabeza {
+  display: none;
 }
 
 .gestion-fila__principal {
@@ -553,8 +517,8 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
 }
 
 .gestion-fila__avatar svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .gestion-fila__textos {
@@ -564,7 +528,7 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
 
 .gestion-fila__nombre {
   overflow: hidden;
-  font-weight: 700;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -579,18 +543,24 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
 
 .gestion-fila__dato {
   display: grid;
+  align-content: start;
   min-width: 0;
-  overflow-wrap: anywhere;
   font-size: 0.9rem;
+  overflow-wrap: anywhere;
 }
 
 .gestion-fila__dato::before {
   content: attr(data-etiqueta);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--texto-suave);
+}
+
+.gestion-fila--tenderos .gestion-fila__dato[data-etiqueta='Correo'] {
+  grid-column: 1 / -1;
+  grid-row: 3;
 }
 
 .gestion-fila__dato--cifra {
@@ -598,29 +568,25 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   font-variant-numeric: tabular-nums;
 }
 
-.gestion-fila__dato--bajo {
-  color: var(--alerta-600);
+.gestion-fila__stock {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
 .gestion-fila__editar {
   position: absolute;
-  top: 16px;
+  top: 14px;
   right: 14px;
   width: 18px;
   height: 18px;
   color: var(--tinta-300);
+  transition: color 0.2s ease;
 }
 
 .gestion-fila:hover .gestion-fila__editar {
   color: var(--primario);
-}
-
-.gestion-esqueleto {
-  height: 240px;
-  background: linear-gradient(90deg, var(--linea-100), var(--linea-200), var(--linea-100));
-  background-size: 200% 100%;
-  border-radius: var(--radius-md);
-  animation: panel-brillo 1.4s ease-in-out infinite;
 }
 
 /* ── Estado vacío ────────────────────────────────────────────────── */
@@ -764,6 +730,35 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   gap: 10px;
 }
 
+
+.gestion-dialogo__campos {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gestion-dialogo__confirmar {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  background: var(--error-100);
+  border-radius: var(--radius-md);
+}
+
+.gestion-dialogo__confirmar p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--texto);
+}
+
+.gestion-dialogo__confirmar .gestion-dialogo__derecha {
+  justify-content: flex-end;
+}
+
 /* ── Animaciones ─────────────────────────────────────────────────── */
 @keyframes gestion-toldo { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.08); } }
 
@@ -779,73 +774,104 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
   50% { transform: translateY(-3px); }
 }
 
-.gestion-hero,
-.gestion-tarjeta {
-  animation: panel-subir 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.gestion-tarjeta:nth-child(2) { animation-delay: 0.12s; }
 
 /* ── Tablet (≥ 640 px) ───────────────────────────────────────────── */
 @media (min-width: 640px) {
-  .gestion { padding: 24px 24px 56px; gap: 24px; }
+  .gestion {
+    gap: 24px;
+    padding: 24px 24px 56px;
+  }
 
   .gestion-hero {
-    grid-template-columns: minmax(0, 1fr) 220px;
-    padding: 28px 28px 0 32px;
+    grid-template-columns: minmax(0, 1fr) 168px;
+    padding: 32px 24px 0 32px;
   }
 
-  .gestion-hero__texto { padding-bottom: 28px; }
-  .gestion-tarjeta { padding: 24px; }
+  .gestion-hero__texto { padding-bottom: 24px; }
 
-  .gestion:not(.gestion--lista) .gestion-form__campos {
+  .gestion--simple .gestion-form__campos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 18px;
+    gap: 16px 20px;
   }
 
-  .gestion:not(.gestion--lista) .gestion__cuerpo {
-    max-width: 760px;
+  .gestion--simple .gestion-form__pie {
+    justify-content: flex-end;
+  }
+
+  .gestion--simple .gestion-form__enviar {
+    width: auto;
+    padding: 0 28px;
+  }
+
+  .gestion-lista__cabeza {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .gestion-buscar {
+    flex: none;
+    width: min(100%, 280px);
+  }
+
+  .gestion-fila--tenderos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .gestion-fila--tenderos .gestion-fila__dato[data-etiqueta='Correo'] {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .gestion-dialogo__marco { align-items: center; }
   .gestion-dialogo__panel { padding: 24px; }
-
-  .gestion-fila--productos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .gestion-fila--tenderos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* ── Desktop (≥ 1024 px) ─────────────────────────────────────────── */
 @media (min-width: 1024px) {
   .gestion-hero {
-    grid-template-columns: minmax(0, 1fr) 280px;
-    padding: 32px 40px 0 44px;
+    grid-template-columns: minmax(0, 1fr) 196px;
+    padding: 32px 32px 0 40px;
   }
 
   .gestion--lista .gestion__cuerpo {
-    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+    grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+    gap: 24px;
   }
 
-  .gestion--lista .gestion__cuerpo > .gestion-tarjeta:first-child {
+  /* el formulario acompaña al recorrer la lista */
+  .gestion--lista .gestion-formulario {
     position: sticky;
-    top: 88px;
+    top: 124px;
   }
 
   /* la lista se vuelve tabla: cabecera visible y etiquetas por celda ocultas */
   .gestion-fila {
     align-items: center;
-    padding: 10px 44px 10px 12px;
+    min-height: 60px;
+    padding: 8px 44px 8px 12px;
   }
 
   .gestion-fila__principal { grid-column: auto; }
   .gestion-fila__dato::before { content: none; }
 
+  .gestion-fila--productos { grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .gestion-fila--tenderos { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, 1.9fr) minmax(0, 1fr); }
+
+  .gestion-fila__num {
+    justify-items: end;
+    text-align: right;
+  }
+
   .gestion-fila--cabeza {
     display: grid;
+    min-height: 0;
     padding-top: 0;
     padding-bottom: 0;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--texto-suave);
     background: none;
@@ -853,17 +879,6 @@ html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
     cursor: default;
   }
 
-  .gestion-fila--cabeza:hover { box-shadow: none; background: none; }
-
-  .gestion-fila--productos { grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.6fr); }
-  .gestion-fila--tenderos { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1.8fr) minmax(0, 1.1fr) minmax(0, 0.7fr); }
+  .gestion-fila--cabeza:hover { background: none; box-shadow: none; }
   .gestion-fila__editar { top: 50%; translate: 0 -50%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gestion-dialogo *,
-  .gestion-dialogo__fondo,
-  .gestion-dialogo__panel {
-    transition: none !important;
-  }
 }

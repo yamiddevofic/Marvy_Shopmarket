@@ -1,18 +1,24 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { Check, Trash2, X } from 'lucide-react'
+import { AlertCircle, Check, Trash2, X } from 'lucide-react'
 import { api } from '../../services/api'
 
 
 export default function Example({ open, id, setOpen, m, keyRow, item, onItemDeleted, onItemAdded, onItemUpdated}) {
     const [formData, setFormData] = useState({});
+    // Estado de la interfaz del diálogo (no cambia lo que se envía al backend)
+    const [confirmando, setConfirmando] = useState(false);
+    const [ocupado, setOcupado] = useState(null); // 'guardar' | 'borrar' | null
+    const [errorDialogo, setErrorDialogo] = useState('');
 
     useEffect(() => {
         if (item) {
             setFormData({...item});
         }
-    }, [item]);
+        setConfirmando(false);
+        setErrorDialogo('');
+    }, [item, open]);
 
     const campos = Object.keys(item || {})
 
@@ -60,6 +66,8 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
          id: item.id,
          ...formattedData
       }
+      setOcupado('guardar');
+      setErrorDialogo('');
       try {
         const endpoint = id === "new-product" ? `actualizar-producto/${item._id}` : `actualizar-tendero/${item.id}`;
         await api.patch(`/${endpoint}`, bodyHead);
@@ -71,6 +79,9 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
         setOpen(false);
       } catch (error) {
         console.error(`Error al actualizar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
+        setErrorDialogo(error.message || 'No se pudieron guardar los cambios.');
+      } finally {
+        setOcupado(null);
       }
     }
 
@@ -78,6 +89,8 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
 
     const handleDelete = async (itemId) => { // Cambiado 'id' a 'itemId' para mayor claridad
       console.log(`ID del ${id === "new-product" ? "producto" : "tendero"} a eliminar:`, itemId);
+      setOcupado('borrar');
+      setErrorDialogo('');
       try {
           const endpoint = id === "new-product" ? `eliminar-producto/${itemId}` : `eliminar-tendero/${itemId}`;
           await api.delete(`/${endpoint}`);
@@ -92,7 +105,10 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
           // setCurrentPage(1);
       } catch (error) {
           console.error(`Error al eliminar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
-          // Aquí podrías mostrar una notificación de error al usuario
+          setErrorDialogo(error.message || 'No se pudo borrar.');
+          setConfirmando(false);
+      } finally {
+          setOcupado(null);
       }
     };
 
@@ -158,8 +174,9 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
     })
 
   const esProducto = id === "new-product"
+  const cosa = esProducto ? 'producto' : 'tendero'
   return (
-    <Dialog open={open} onClose={setOpen} className="gestion-dialogo">
+    <Dialog open={open} onClose={() => !ocupado && setOpen(false)} className="gestion-dialogo">
       <DialogBackdrop transition className="gestion-dialogo__fondo" />
       <div className="gestion-dialogo__marco">
         <DialogPanel transition className="gestion-dialogo__panel">
@@ -168,32 +185,61 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
               <p className="gestion-dialogo__tipo">{esProducto ? 'Editar producto' : 'Editar tendero'}</p>
               <DialogTitle as="h2" className="gestion-dialogo__titulo">{item.nombre}</DialogTitle>
             </div>
-            <button type="button" onClick={() => setOpen(false)} className="gestion-dialogo__cerrar" aria-label="Cerrar">
+            <button type="button" onClick={() => setOpen(false)} className="gestion-dialogo__cerrar" aria-label="Cerrar" disabled={Boolean(ocupado)}>
               <X aria-hidden="true" />
             </button>
           </header>
 
+          {errorDialogo && (
+            <p className="aviso aviso--error" role="alert">
+              <AlertCircle aria-hidden="true" /> {errorDialogo}
+            </p>
+          )}
+
           <form onSubmit={handleSubmit} className="gestion-dialogo__form" id="edit-form">
-            {mapTypeInput}
+            <fieldset disabled={Boolean(ocupado) || confirmando} className="gestion-dialogo__campos">
+              {mapTypeInput}
+            </fieldset>
           </form>
 
-          <footer className="gestion-dialogo__pie">
-            <button
-              type="button"
-              onClick={() => handleDelete(item.id || item._id)}
-              className="gestion-boton gestion-boton--peligro"
-            >
-              <Trash2 aria-hidden="true" /> Borrar
-            </button>
-            <div className="gestion-dialogo__derecha">
-              <button type="button" onClick={() => setOpen(false)} className="gestion-boton">
-                Cancelar
+          {confirmando ? (
+            <footer className="gestion-dialogo__confirmar" role="alertdialog" aria-labelledby="confirmar-texto">
+              <p id="confirmar-texto">
+                <strong>¿Borrar {esProducto ? 'este producto' : 'a este tendero'}?</strong> Esta acción no se puede deshacer.
+              </p>
+              <div className="gestion-dialogo__derecha">
+                <button type="button" onClick={() => setConfirmando(false)} className="boton" disabled={ocupado === 'borrar'}>
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(item.id || item._id)}
+                  className="boton boton--peligro-lleno"
+                  aria-busy={ocupado === 'borrar'}
+                  disabled={ocupado === 'borrar'}
+                  data-autofocus
+                >
+                  {ocupado === 'borrar' ? <span className="boton__girando" aria-hidden="true" /> : <Trash2 aria-hidden="true" />}
+                  Sí, borrar {cosa}
+                </button>
+              </div>
+            </footer>
+          ) : (
+            <footer className="gestion-dialogo__pie">
+              <button type="button" onClick={() => setConfirmando(true)} className="boton boton--peligro" disabled={Boolean(ocupado)}>
+                <Trash2 aria-hidden="true" /> Borrar
               </button>
-              <button type="submit" form="edit-form" data-autofocus className="gestion-boton gestion-boton--primario">
-                <Check aria-hidden="true" /> Guardar cambios
-              </button>
-            </div>
-          </footer>
+              <div className="gestion-dialogo__derecha">
+                <button type="button" onClick={() => setOpen(false)} className="boton" disabled={Boolean(ocupado)}>
+                  Cancelar
+                </button>
+                <button type="submit" form="edit-form" className="boton boton--primario" aria-busy={ocupado === 'guardar'} disabled={Boolean(ocupado)}>
+                  {ocupado === 'guardar' ? <span className="boton__girando" aria-hidden="true" /> : <Check aria-hidden="true" />}
+                  {ocupado === 'guardar' ? 'Guardando…' : 'Guardar cambios'}
+                </button>
+              </div>
+            </footer>
+          )}
         </DialogPanel>
       </div>
     </Dialog>

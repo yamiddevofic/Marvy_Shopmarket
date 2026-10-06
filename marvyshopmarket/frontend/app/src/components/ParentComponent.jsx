@@ -1,27 +1,34 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ResultComponent from './ResultComponent'; // Ajusta la ruta si es necesario
-import { User } from 'lucide-react'; // Si User es un icono, importalo aquí
+import { pesos } from '../utils/negocio';
 
 const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, goToNextPage, goToPage, goToPrevPage, isLoading, itemsPerPage, totalPages: propTotalPages, currentItems: propCurrentItems, LoadingSkeleton, User, Box, error }) => { // typeId podría ser "new-product" o "register-shopkeeper"
     const [items, setItems] = useState(m || []); // El estado de TODOS los ítems (productos o tenderos), inicializado con m
 
-    const formatPrice = (price) => {
-        const priceFormatted = price.toLocaleString('es-CO', {
-          style: 'currency',
-          currency: 'COP',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        });
-        return priceFormatted;
-    };
+    // Búsqueda local sobre los ítems ya cargados (no llama al backend)
+    const [consulta, setConsulta] = useState('');
+
+    // Un producto puede no tener precio vigente: se muestra "—" en vez de fallar
+    const formatPrice = pesos;
 
     // Ordenar items alfabéticamente por nombre para tenderos y productos
     const sortedItems = (typeId === "register-shopkeeper" || typeId === "new-product") ? [...items].sort((a, b) => a.nombre.localeCompare(b.nombre)) : items;
 
-    // Calcular totalPages y currentItems desde sortedItems
-    const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
+    const normalizar = (texto) => String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const termino = normalizar(consulta.trim());
+    const visibles = termino
+        ? sortedItems.filter((item) => [item.nombre, item.categoria, item.correo, item.id, item._id].some((campo) => normalizar(campo).includes(termino)))
+        : sortedItems;
+
+    // Calcular totalPages y currentItems desde los ítems visibles
+    const totalPages = Math.ceil(visibles.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentItems = sortedItems.slice(startIndex, startIndex + itemsPerPage);
+    const currentItems = visibles.slice(startIndex, startIndex + itemsPerPage);
+
+    const buscar = (valor) => {
+        setConsulta(valor);
+        setCurrentPage(1);
+    };
 
     // Actualizar items cuando m cambia
     useEffect(() => {
@@ -66,7 +73,6 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
         );
     }, []);
 
-    console.log("Items:", items)
     return (
         <div className="w-full h-full">
             {/* Aquí podría ir tu formulario para agregar productos/tenderos */}
@@ -75,6 +81,10 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
             <ResultComponent
                 id={typeId}
                 m={sortedItems} // La lista completa ordenada de ítems
+                visibles={visibles} // Los que pasan la búsqueda
+                consulta={consulta}
+                onBuscar={buscar}
+                startIndex={startIndex}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 goToPage={goToPage}

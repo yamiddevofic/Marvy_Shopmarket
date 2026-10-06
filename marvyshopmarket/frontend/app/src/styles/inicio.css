@@ -1,0 +1,552 @@
+/*
+ * Inicio del panel (/home): saludo con el cielo del momento, indicadores con
+ * datos reales, módulos y el estado de la tienda (por reponer, ficha).
+ * Compone las piezas de panel.css (tarjeta, boton, chip, esqueleto).
+ * Mobile first; en desktop, módulos a la izquierda y estado a la derecha.
+ */
+
+.inicio {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+.inicio > * {
+  animation: panel-subir 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.inicio > :nth-child(2) { animation-delay: 0.06s; }
+.inicio > :nth-child(3) { animation-delay: 0.12s; }
+
+/* ── Saludo ──────────────────────────────────────────────────────── */
+.inicio-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 148px;
+  grid-template-areas:
+    'texto texto'
+    'acciones escena';
+  column-gap: 12px;
+  overflow: hidden;
+  padding: 20px 12px 0 20px;
+  background: linear-gradient(var(--cielo-1), var(--cielo-2));
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+.inicio-hero__texto {
+  grid-area: texto;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 72px; /* deja libre el sol o la luna */
+}
+
+.inicio-hero__fecha {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--tinta-700);
+}
+
+.inicio-hero__fecha::first-letter {
+  text-transform: uppercase;
+}
+
+.inicio-hero__titulo {
+  margin: 0;
+  font-size: var(--step-3);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.inicio-hero__remate {
+  margin: 0;
+  font-family: var(--fuente-remate);
+  font-size: var(--step-1);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--verde-800);
+}
+
+.inicio-hero__acciones {
+  grid-area: acciones;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 16px 0 20px;
+}
+
+.inicio-hero__acciones .boton {
+  padding: 0 14px;
+}
+
+.inicio-hero__escena {
+  grid-area: escena;
+  align-self: end;
+  width: 100%;
+}
+
+/* ── Indicadores ─────────────────────────────────────────────────── */
+.inicio-resumen {
+  padding: 0;
+  overflow: hidden;
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.indicador {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px;
+  border-color: var(--linea-100);
+  border-style: solid;
+  border-width: 0;
+}
+
+/* rejilla 2 × 2 con divisores internos */
+.indicador:nth-child(odd) { border-right-width: 1px; }
+.indicador:nth-child(-n + 2) { border-bottom-width: 1px; }
+
+.indicador__etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.indicador__icono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, var(--surface));
+  border-radius: 8px;
+}
+
+.indicador__icono svg {
+  width: 16px;
+  height: 16px;
+}
+
+.indicador__valor {
+  margin: 4px 0 0;
+  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.indicador__esqueleto {
+  display: inline-block;
+  width: 60%;
+  height: 1em;
+  vertical-align: middle;
+}
+
+.indicador__nota {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--texto-suave);
+}
+
+.indicador--alerta .indicador__valor { color: var(--alerta-600); }
+
+.indicador--alerta .indicador__icono {
+  color: var(--alerta-600);
+  background: var(--alerta-100);
+}
+
+/* ── Columnas ────────────────────────────────────────────────────── */
+.inicio__columnas {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.inicio__lateral {
+  display: grid;
+  gap: 16px;
+}
+
+/* ── Módulos ─────────────────────────────────────────────────────── */
+.modulos {
+  gap: 20px;
+}
+
+.modulos__grupo {
+  display: grid;
+  gap: 8px;
+}
+
+.modulos__titulo {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.modulos__lista {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--texto);
+  text-align: left;
+  background: var(--page-bg);
+  border: 1px solid var(--linea-100);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modulo:hover {
+  background: var(--surface);
+  border-color: var(--primario);
+  box-shadow: var(--sombra-sm);
+}
+
+.modulo__icono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, var(--surface));
+  border-radius: 12px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.modulo__icono svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modulo:hover .modulo__icono {
+  color: var(--sobre-primario);
+  background: var(--primario);
+}
+
+.modulo__texto {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.modulo__titulo {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.modulo__descripcion {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--texto-suave);
+}
+
+.modulo__flecha {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--tinta-300);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.modulo:hover .modulo__flecha {
+  color: var(--primario);
+  transform: translateX(2px);
+}
+
+/* ── Por reponer ─────────────────────────────────────────────────── */
+.reponer__lista {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reponer__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 0;
+}
+
+.reponer__fila + .reponer__fila {
+  border-top: 1px solid var(--linea-100);
+}
+
+.reponer__producto {
+  display: grid;
+  min-width: 0;
+}
+
+.reponer__nombre {
+  overflow: hidden;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reponer__categoria {
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+.reponer__cantidad {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.reponer__unidades {
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.reponer__esqueleto {
+  width: 100%;
+  height: 20px;
+}
+
+.reponer__estado {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.reponer__estado p {
+  margin: 0;
+}
+
+.reponer__estado--ok {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  line-height: 1.4;
+  color: var(--tinta-700);
+  background: var(--verde-50);
+  border-radius: var(--radius-md);
+}
+
+.reponer__estado--ok svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--verde-700);
+}
+
+.reponer__resto {
+  margin: -8px 0 0;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+/* ── Ficha de la tienda ──────────────────────────────────────────── */
+.ficha__identidad {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ficha__logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--sobre-primario);
+  background: var(--primario);
+  border-radius: 12px;
+}
+
+.ficha__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ficha__nombre {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ficha__datos {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.ficha__fila {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.ficha__fila dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-suave);
+}
+
+.ficha__fila dt svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.ficha__fila dd {
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.ficha__fila .ficha__vacio {
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+/* ── Carga inicial ───────────────────────────────────────────────── */
+.inicio-cargando {
+  height: 120px;
+  border-radius: var(--radius-lg);
+}
+
+.inicio-cargando--hero { height: 240px; }
+.inicio-cargando--alto { height: 360px; }
+
+/* ── Tablet (≥ 640 px) ───────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .inicio {
+    gap: 24px;
+    padding: 24px 24px 56px;
+  }
+
+  .inicio-hero {
+    grid-template-columns: minmax(0, 1fr) 230px;
+    grid-template-areas:
+      'texto escena'
+      'acciones escena';
+    padding: 28px 24px 0 32px;
+  }
+
+  .inicio-hero__texto {
+    align-self: end;
+    padding-right: 0;
+  }
+
+  .inicio-hero__acciones .boton {
+    padding: 0 18px;
+  }
+
+  .inicio-hero__acciones {
+    flex-direction: row;
+    align-items: center;
+    align-self: start;
+    padding: 20px 0 28px;
+  }
+
+  .inicio-hero__escena {
+    padding-top: 64px; /* bajo el sol */
+  }
+
+  .modulos__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inicio__lateral {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Indicadores en una fila (≥ 900 px) ──────────────────────────── */
+@media (min-width: 900px) {
+  .indicadores {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .indicador {
+    padding: 20px 24px;
+    border-width: 0;
+  }
+
+  .indicador:not(:last-child) {
+    border-right-width: 1px;
+  }
+}
+
+/* ── Desktop (≥ 1024 px) ─────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .inicio-hero {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    padding: 32px 40px 0 44px;
+  }
+
+  .inicio-hero__escena {
+    padding-top: 48px;
+  }
+
+  .inicio__columnas {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 24px;
+  }
+
+  .inicio__lateral {
+    grid-template-columns: none;
+    gap: 24px;
+  }
+}

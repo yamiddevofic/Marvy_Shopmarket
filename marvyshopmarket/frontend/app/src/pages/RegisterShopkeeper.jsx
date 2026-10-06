@@ -11,7 +11,7 @@ const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, 
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
     const [ adminInfo, setAdminInfo ] = useState(null);
-    const [ tenderos, setTenderos ] = useState([]);
+    const [ tenderos, setTenderos ] = useState(null);
     const { selectedOption, setSelectedOption } = useAppContext();
     const [error, setError] = useState(null);
 
@@ -84,15 +84,15 @@ const RegisterShopkeeper = ({ userName: propUserName, adminInfo: propAdminInfo, 
                 tienda_Id: "",
             }}
             fields={[
-                { name: "tendero_Id", label: "ID Tendero", placeholder: "Ingrese el ID", required: true },
-                { name: "tendero_Nombre", label: "Nombre Completo", placeholder: "Nombre completo", required: true },
-                { name: "tendero_Correo", label: "Correo Electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
-                { name: "tendero_Celular", label: "Celular", placeholder: "Número de celular", required: true },
+                { name: "tendero_Id", label: "Cédula", placeholder: "Ej. 1012345678", required: true },
+                { name: "tendero_Nombre", label: "Nombre completo", placeholder: "Ej. Laura Gómez", required: true },
+                { name: "tendero_Correo", label: "Correo electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
+                { name: "tendero_Celular", label: "Celular", placeholder: "Ej. 3001234567", required: true },
                 { name: "tendero_Password", label: "Contraseña", type: "password", placeholder: "••••••••", required: true },
-                { name: "tienda_Id", label: "ID Tienda", placeholder: "ID de la tienda asociada", required: true }
+                { name: "tienda_Id", label: "ID de la tienda", placeholder: "Ej. 1", required: true }
             ]}
             apiEndpoint="/registrar-tendero"
-            submitButtonText="Completar Registro"
+            submitButtonText="Registrar tendero"
             onSubmitSuccess={fetchShopkeepers} />
         </Layout>
     );

@@ -61,15 +61,15 @@ const RegisterSupplies = ({ userName: propUserName, adminInfo: propAdminInfo, st
                 suministroProveedor: "",
             }}
             fields={[
-                { name: "suministroId", label: "ID Suministro", placeholder: "Ingrese el ID", required: true },
-                { name: "suministroNombre", label: "Nombre del Suministro", placeholder: "Nombre del suministro", required: true },
-                { name: "suministroDescripcion", label: "Descripción", placeholder: "Descripción del suministro", required: false },
-                { name: "suministroCantidad", label: "Cantidad", type: "number", placeholder: "Cantidad disponible", required: true },
-                { name: "suministroPrecio", label: "Precio", type: "number", placeholder: "Precio del suministro", required: true },
-                { name: "suministroProveedor", label: "Proveedor", placeholder: "Nombre del proveedor", required: true }
+                { name: "suministroId", label: "ID del suministro", placeholder: "Ej. S-001", required: true },
+                { name: "suministroNombre", label: "Nombre del suministro", placeholder: "Ej. Bolsas de empaque", required: true },
+                { name: "suministroDescripcion", label: "Descripción (opcional)", placeholder: "Detalles del pedido", required: false },
+                { name: "suministroCantidad", label: "Cantidad", type: "number", placeholder: "Ej. 100", required: true },
+                { name: "suministroPrecio", label: "Precio", type: "number", placeholder: "Ej. 35000", required: true },
+                { name: "suministroProveedor", label: "Proveedor", placeholder: "Ej. Distribuidora El Llano", required: true }
             ]}
             apiEndpoint="/registrar-suministro"
-            submitButtonText="Completar Registro" />
+            submitButtonText="Registrar suministro" />
         </Layout>
     );
 };

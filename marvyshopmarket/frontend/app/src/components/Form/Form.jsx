@@ -6,7 +6,7 @@ import PlaceholderComponent from '../PlaceholderComponent';
 import { api } from '../../services/api';
 
 const LoadingSkeleton = () => (
-  <div className="gestion-esqueleto" aria-hidden="true" />
+  <span className="esqueleto gestion-lista__esqueleto" aria-hidden="true" />
 );
 
 const today = new Date().toLocaleDateString(); // Get today's date in YYYY-MM-DD format
@@ -139,16 +139,18 @@ const Form = ({
     }
   };
 
-  const DESCRIPCIONES = {
-    'new-product': 'Agrega productos al catálogo de tu tienda y revisa los que ya tienes.',
-    stock: 'Actualiza las existencias para que nunca se agote lo que más se vende.',
-    'register-sales': 'Anota cada venta del día con su monto y su estado.',
-    report: 'Elige el tipo de reporte y el rango de fechas que quieres revisar.',
-    'register-vendors': 'Guarda los datos de quienes te surten la mercancía.',
-    'register-supplies': 'Registra lo que llega: cantidades, precios y proveedor.',
-    'register-shopkeeper': 'Da de alta a quienes atienden la tienda contigo.',
-    configuration: 'Ajusta los datos de tu tienda.',
+  // Cada pantalla: su nombre (como en la navegación), la acción del formulario y para qué sirve.
+  const PANTALLAS = {
+    'new-product': { titulo: 'Productos', accion: 'Registrar producto', descripcion: 'Agrega productos al catálogo y revisa los que ya tienes.' },
+    stock: { titulo: 'Inventario', accion: 'Actualizar existencias', descripcion: 'Ajusta las unidades disponibles de cada producto.' },
+    'register-sales': { titulo: 'Ventas', accion: 'Registrar venta', descripcion: 'Anota cada venta del día con su monto y su estado.' },
+    report: { titulo: 'Reportes', accion: 'Generar reporte', descripcion: 'Elige el tipo de reporte y el rango de fechas que quieres revisar.' },
+    'register-vendors': { titulo: 'Proveedores', accion: 'Registrar proveedor', descripcion: 'Guarda los datos de quienes te surten la mercancía.' },
+    'register-supplies': { titulo: 'Suministros', accion: 'Registrar suministro', descripcion: 'Registra lo que llega: cantidades, precios y proveedor.' },
+    'register-shopkeeper': { titulo: 'Tenderos', accion: 'Registrar tendero', descripcion: 'Da de alta a quienes atienden la tienda contigo.' },
+    configuration: { titulo: 'Configuración', accion: 'Ajustes de la tienda', descripcion: 'Ajusta los datos de tu tienda.' },
   };
+  const pantalla = PANTALLAS[id] || { titulo: title, accion: title, descripcion: 'Completa la información requerida.' };
   const esLista = id === 'register-shopkeeper' || id === 'new-product';
 
   const renderField = (field) => {
@@ -226,18 +228,28 @@ const Form = ({
     );
   };
 
-  const lista = m && m.length > 0 ? (
-    <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
-  ) : (
-    <PlaceholderComponent id={id} Archive={Archive} />
-  );
+  let lista;
+  if (m === null || m === undefined) {
+    lista = (
+      <div className="gestion-lista" aria-busy="true" aria-label="Cargando registros">
+        <span className="esqueleto gestion-lista__esqueleto gestion-lista__esqueleto--titulo" />
+        {[0, 1, 2, 3].map((i) => <span key={i} className="esqueleto gestion-lista__esqueleto" />)}
+      </div>
+    );
+  } else if (m.length > 0) {
+    lista = (
+      <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+    );
+  } else {
+    lista = <PlaceholderComponent id={id} Archive={Archive} />;
+  }
 
   return (
-    <main className={`gestion${esLista ? ' gestion--lista' : ''}`}>
+    <main className={`gestion ${esLista ? 'gestion--lista' : 'gestion--simple'}`}>
       <section className="gestion-hero" aria-labelledby={`${id}-titulo`}>
         <div className="gestion-hero__texto">
-          <h1 id={`${id}-titulo`} className="gestion-hero__titulo">{title}</h1>
-          <p className="gestion-hero__bajada">{DESCRIPCIONES[id] || 'Complete la información requerida.'}</p>
+          <h1 id={`${id}-titulo`} className="gestion-hero__titulo">{pantalla.titulo}</h1>
+          <p className="gestion-hero__bajada">{pantalla.descripcion}</p>
         </div>
         <div className="gestion-hero__escena">
           <Ilustracion id={id} />
@@ -245,17 +257,22 @@ const Form = ({
       </section>
 
       <div className="gestion__cuerpo">
-        <section className="gestion-tarjeta" aria-label="Formulario">
-          <div role="alert">
+        <section className="tarjeta gestion-formulario" aria-labelledby={`${id}-accion`}>
+          <header className="tarjeta__titulos">
+            <h2 id={`${id}-accion`} className="tarjeta__titulo">{pantalla.accion}</h2>
+            <p className="tarjeta__ayuda">Los campos con <span className="gestion-form__requerido">*</span> son obligatorios.</p>
+          </header>
+
+          <div role="alert" className="gestion-formulario__avisos">
             {error && (
-              <p className="gestion-aviso gestion-aviso--error">
+              <p className="aviso aviso--error">
                 <AlertCircle aria-hidden="true" /> {error}
               </p>
             )}
           </div>
-          <div role="status">
+          <div role="status" className="gestion-formulario__avisos">
             {success && (
-              <p className="gestion-aviso gestion-aviso--ok">
+              <p className="aviso aviso--ok">
                 <CheckCircle2 aria-hidden="true" /> {success}
               </p>
             )}
@@ -266,21 +283,23 @@ const Form = ({
               {fields.map(renderField)}
             </div>
 
-            <button type="submit" disabled={isLoading} aria-busy={isLoading} className="gestion-boton gestion-boton--primario gestion-form__enviar">
-              {isLoading ? (
-                <>
-                  <span className="gestion-girando" aria-hidden="true" />
-                  Guardando…
-                </>
-              ) : (
-                submitButtonText
-              )}
-            </button>
+            <div className="gestion-form__pie">
+              <button type="submit" disabled={isLoading} aria-busy={isLoading} className="boton boton--primario gestion-form__enviar">
+                {isLoading ? (
+                  <>
+                    <span className="boton__girando" aria-hidden="true" />
+                    Guardando…
+                  </>
+                ) : (
+                  submitButtonText
+                )}
+              </button>
+            </div>
           </form>
         </section>
 
         {esLista && (
-          <section className="gestion-tarjeta gestion-tarjeta--lista" aria-label={id === 'new-product' ? 'Productos registrados' : 'Tenderos registrados'}>
+          <section className="tarjeta gestion-tarjeta--lista" aria-label={id === 'new-product' ? 'Productos registrados' : 'Tenderos registrados'}>
             {lista}
           </section>
         )}

@@ -60,15 +60,15 @@ const Stock = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: pr
                 tiendaId: "",
             }}
             fields={[
-                { name: "productoId", label: "ID Producto", placeholder: "Ingrese el ID", required: true },
-                { name: "productoNombre", label: "Nombre del Producto", placeholder: "Nombre del producto", required: true },
-                { name: "productoPrecio", label: "Precio", type: "number", placeholder: "Precio del producto", required: true },
-                { name: "productoStock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: true },
-                { name: "productoImagen", label: "Imagen", placeholder: "URL de la imagen", required: false },
-                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+                { name: "productoId", label: "ID del producto", placeholder: "Ej. P-001", required: true },
+                { name: "productoNombre", label: "Nombre del producto", placeholder: "Ej. Arroz Diana 1 kg", required: true },
+                { name: "productoPrecio", label: "Precio de venta", type: "number", placeholder: "Ej. 4800", required: true },
+                { name: "productoStock", label: "Unidades en stock", type: "number", placeholder: "Ej. 24", required: true },
+                { name: "productoImagen", label: "Imagen (opcional)", placeholder: "https://…", required: false },
+                { name: "tiendaId", label: "ID de la tienda", placeholder: "Ej. 1", required: true }
             ]}
             apiEndpoint="/actualizar-inventario"
-            submitButtonText="Actualizar Inventario" />
+            submitButtonText="Actualizar inventario" />
         </Layout>
     );
 };
