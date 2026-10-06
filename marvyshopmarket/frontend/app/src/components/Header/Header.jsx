@@ -1,34 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  Box, ChevronDown, House, LogOut, PackageSearch, Receipt, ScrollText,
+  Settings, Truck, User, UserPlus, Users,
+} from 'lucide-react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import ToggleTheme from '../Toggle/ToggleTheme';
 import EmblemaTienda from '../Login/EmblemaTienda';
 import { api } from '../../services/api';
 
-// Nombre de cada sección en la barra y en las migas de pan.
-const SECCIONES = {
-  home: 'Panel de administración',
-  ventas: 'Ventas',
-  inventario: 'Inventario',
-  productos: 'Productos',
-  suministros: 'Suministros',
-  proveedores: 'Proveedores',
-  tenderos: 'Tenderos',
-  reportes: 'Reportes',
-  configuracion: 'Configuración',
-  perfil: 'Perfil',
-};
+// Pestañas de la navegación principal, en el orden del día a día de la tienda.
+// Configuración y perfil viven en el menú de usuario.
+export const SECCIONES = [
+  { ruta: '/home', nombre: 'Inicio', Icono: House },
+  { ruta: '/ventas', nombre: 'Ventas', Icono: Receipt },
+  { ruta: '/inventario', nombre: 'Inventario', Icono: PackageSearch },
+  { ruta: '/productos', nombre: 'Productos', Icono: Box },
+  { ruta: '/reportes', nombre: 'Reportes', Icono: ScrollText },
+  { ruta: '/proveedores', nombre: 'Proveedores', Icono: Users },
+  { ruta: '/suministros', nombre: 'Suministros', Icono: Truck },
+  { ruta: '/tenderos', nombre: 'Tenderos', Icono: UserPlus },
+];
 
-const Header = ({ userName, storeInfo, selectedOption }) => {
+const Header = ({ userName, storeInfo }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const menuRef = useRef(null);
+  const navRef = useRef(null);
   const displayName = userName || 'Usuario';
   const initial = (displayName.charAt(0) || '?').toUpperCase();
-  const enInicio = !selectedOption || selectedOption === 'home';
   const nombreTienda = storeInfo?.nombre || 'Tu tienda';
-  const seccion = SECCIONES[selectedOption] || (enInicio ? SECCIONES.home : selectedOption);
 
   // El menú se cierra al pulsar fuera de él o con Escape.
   useEffect(() => {
@@ -46,6 +48,15 @@ const Header = ({ userName, storeInfo, selectedOption }) => {
       document.removeEventListener('keydown', alTeclear);
     };
   }, [menuAbierto]);
+
+  // En móvil la pestaña activa puede quedar fuera de vista: se centra al cambiar de ruta.
+  useEffect(() => {
+    const nav = navRef.current;
+    const activa = nav?.querySelector('[aria-current="page"]');
+    if (nav && activa && nav.scrollWidth > nav.clientWidth) {
+      nav.scrollLeft = activa.offsetLeft - (nav.clientWidth - activa.offsetWidth) / 2;
+    }
+  }, [pathname]);
 
   const ir = (ruta) => {
     setMenuAbierto(false);
@@ -71,11 +82,11 @@ const Header = ({ userName, storeInfo, selectedOption }) => {
   return (
     <header className="panel-cabecera">
       <div className="panel-cabecera__barra">
-        <NavLink to="/home" className="panel-cabecera__marca" aria-label="Ir al panel principal">
+        <NavLink to="/home" className="panel-cabecera__marca" aria-label={`${nombreTienda}, ir al inicio`}>
           <EmblemaTienda />
           <span className="panel-cabecera__titulos">
             <span className="panel-cabecera__tienda">{nombreTienda}</span>
-            <span className="panel-cabecera__seccion">{seccion}</span>
+            <span className="panel-cabecera__rol">Panel de administración</span>
           </span>
         </NavLink>
 
@@ -109,6 +120,7 @@ const Header = ({ userName, storeInfo, selectedOption }) => {
                 <button type="button" role="menuitem" className="panel-menu__opcion" onClick={() => ir('/configuracion')}>
                   <Settings aria-hidden="true" /> Configuración
                 </button>
+                <div className="panel-menu__separador" role="separator" />
                 <button type="button" role="menuitem" className="panel-menu__opcion panel-menu__opcion--salir" onClick={handleLogout}>
                   <LogOut aria-hidden="true" /> Cerrar sesión
                 </button>
@@ -118,15 +130,18 @@ const Header = ({ userName, storeInfo, selectedOption }) => {
         </div>
       </div>
 
-      {!enInicio && (
-        <nav className="panel-migas" aria-label="Ubicación">
-          <ol>
-            <li><NavLink to="/home">Panel</NavLink></li>
-            <li aria-hidden="true" className="panel-migas__sep">/</li>
-            <li aria-current="page">{seccion}</li>
-          </ol>
-        </nav>
-      )}
+      <nav className="panel-nav" aria-label="Secciones" ref={navRef}>
+        <ul>
+          {SECCIONES.map(({ ruta, nombre, Icono }) => (
+            <li key={ruta}>
+              <NavLink to={ruta} className="panel-nav__enlace">
+                <Icono aria-hidden="true" />
+                {nombre}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 };

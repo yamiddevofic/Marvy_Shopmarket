@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import StatsGrid from '../components/Stats/StatsGrid';
-import OptionsGrid from '../components/Options/OptionsGrid';
-import { MapPin, Box, Receipt } from 'lucide-react';
-import FachadaTienda from '../components/Panel/FachadaTienda';
+import { Box, Receipt } from 'lucide-react';
 import Cookies from 'js-cookie';
 import Layout from '../Layout/Layout';
+import FachadaTienda from '../components/Panel/FachadaTienda';
+import CieloAnimado from '../components/Panel/CieloAnimado';
+import Indicadores from '../components/Inicio/Indicadores';
+import PorReponer from '../components/Inicio/PorReponer';
+import DatosTienda from '../components/Inicio/DatosTienda';
+import Modulos from '../components/Inicio/Modulos';
 import { useAppContext } from '../context/AppContext';
 import { api } from '../services/api';
 
+const saludoSegunHora = (hora) => (hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches');
+
 const Home = () => {
   const navigate = useNavigate();
-  const { adminInfo, setAdminInfo, selectedOption, setSelectedOption, setStoreInfo, setUserName, storeInfo, userName, selectedIcon, setSelectedIcon } = useAppContext();
+  const { adminInfo, setAdminInfo, selectedOption, setSelectedOption, setStoreInfo, setUserName, storeInfo, userName, setSelectedIcon } = useAppContext();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Datos de los indicadores: undefined = cargando, false = falló, arreglo = listo
+  const [productos, setProductos] = useState(undefined);
+  const [tenderos, setTenderos] = useState(undefined);
   const isLoggedIn = Cookies.get('loggedIn');
 
   useEffect(() => {
     setSelectedOption('home');
-    
   }, []); // El array vacío asegura que solo se ejecute una vez al montar el componente
 
   const handleSelectOption = (option, iconName) => {
@@ -55,81 +61,76 @@ const Home = () => {
     };
     checkAuth();
   }, [navigate, isLoggedIn]);
-  
+
+  // Indicadores con datos reales: los mismos listados que usan Productos y Tenderos.
+  const cargarProductos = useCallback(() => {
+    setProductos(undefined);
+    api.get('/listar-productos')
+      .then((data) => setProductos(Array.isArray(data) ? data : []))
+      .catch(() => setProductos(false));
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    cargarProductos();
+    api.get('/consultar-tenderos')
+      .then((data) => setTenderos(Array.isArray(data?.tenderos) ? data.tenderos : []))
+      .catch(() => setTenderos(false));
+  }, [loading, cargarProductos]);
 
   if (loading) {
     return (
       <div className="panel">
-        <main className="panel-cargando" aria-busy="true" aria-label="Cargando el panel">
-          <div className="panel-cargando__bloque panel-cargando__bloque--hero" />
-          <div className="panel-cargando__fila">
-            <div className="panel-cargando__bloque" />
-            <div className="panel-cargando__bloque" />
-            <div className="panel-cargando__bloque" />
-          </div>
+        <main className="inicio" aria-busy="true" aria-label="Cargando el panel">
+          <div className="esqueleto inicio-cargando inicio-cargando--hero" />
+          <div className="esqueleto inicio-cargando" />
+          <div className="esqueleto inicio-cargando inicio-cargando--alto" />
         </main>
       </div>
     );
   }
 
   const primerNombre = (userName || '').trim().split(/\s+/)[0];
-  const hora = new Date().getHours();
-  const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
-  const fecha = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+  const ahora = new Date();
+  const fecha = ahora.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
     <Layout adminInfo={adminInfo} storeInfo={storeInfo} userName={userName} selectedOption={selectedOption}>
-      <main className="panel-principal">
-        <section className="panel-hero" aria-labelledby="panel-titulo">
-          <div className="panel-hero__astros" aria-hidden="true">
-            <span className="panel-hero__sol" />
-            <span className="panel-hero__luna" />
-          </div>
-          <div className="panel-hero__texto">
-            <p className="panel-hero__fecha">{fecha}</p>
-            <h1 id="panel-titulo" className="panel-hero__titulo">
-              <span className="panel-hero__linea">{saludo}{primerNombre ? `, ${primerNombre}` : ''}</span>
-              <em className="panel-hero__linea panel-hero__remate">tu tienda te espera</em>
+      <main className="inicio">
+        <section className="inicio-hero" aria-labelledby="inicio-titulo">
+          <CieloAnimado />
+          <div className="inicio-hero__texto">
+            <p className="inicio-hero__fecha">{fecha}</p>
+            <h1 id="inicio-titulo" className="inicio-hero__titulo">
+              {saludoSegunHora(ahora.getHours())}{primerNombre ? `, ${primerNombre}` : ''}
             </h1>
-            <div className="panel-hero__tienda">
-              <span className="panel-hero__logo">
-                {storeInfo?.imagen ? <img src={storeInfo.imagen} alt="" /> : (storeInfo?.nombre || 'T').charAt(0).toUpperCase()}
-              </span>
-              <span className="panel-hero__datos">
-                <span className="panel-hero__nombre">{storeInfo?.nombre || 'Tu tienda'}</span>
-                {storeInfo?.ubicacion && (
-                  <span className="panel-hero__lugar"><MapPin aria-hidden="true" />{storeInfo.ubicacion}</span>
-                )}
-              </span>
-            </div>
-            <div className="panel-hero__acciones">
-              <button type="button" className="panel-boton panel-boton--primario" onClick={() => handleSelectOption('ventas', 'Receipt')}>
-                <Receipt aria-hidden="true" /> Ver ventas
-              </button>
-              <button type="button" className="panel-boton" onClick={() => handleSelectOption('productos', 'Box')}>
-                <Box aria-hidden="true" /> Nuevo producto
-              </button>
-            </div>
+            <p className="inicio-hero__remate">así va tu tienda hoy</p>
           </div>
-          <div className="panel-hero__escena">
+          <div className="inicio-hero__acciones">
+            <button type="button" className="boton boton--primario" onClick={() => handleSelectOption('ventas', 'Receipt')}>
+              <Receipt aria-hidden="true" /> Registrar venta
+            </button>
+            <button type="button" className="boton" onClick={() => handleSelectOption('productos', 'Box')}>
+              <Box aria-hidden="true" /> Nuevo producto
+            </button>
+          </div>
+          <div className="inicio-hero__escena">
             <FachadaTienda />
           </div>
         </section>
 
-        <section className="panel-seccion" aria-labelledby="panel-resumen">
-          <header className="panel-seccion__cabeza">
-            <h2 id="panel-resumen" className="panel-seccion__titulo">Resumen del negocio</h2>
-            <span className="panel-seccion__etiqueta">Cifras de ejemplo</span>
-          </header>
-          <StatsGrid />
+        <section className="tarjeta inicio-resumen" aria-labelledby="resumen-titulo">
+          <h2 id="resumen-titulo" className="sr-only">Resumen de la tienda</h2>
+          <Indicadores productos={productos} tenderos={tenderos} />
         </section>
 
-        <section className="panel-seccion" aria-labelledby="panel-modulos">
-          <header className="panel-seccion__cabeza">
-            <h2 id="panel-modulos" className="panel-seccion__titulo">¿Qué quieres hacer hoy?</h2>
-          </header>
-          <OptionsGrid setSelectedOption={setSelectedOption} setSelectedIcon={setSelectedIcon} />
-        </section>
+        <div className="inicio__columnas">
+          <Modulos onSeleccionar={handleSelectOption} />
+          <aside className="inicio__lateral" aria-label="Estado de la tienda">
+            <PorReponer productos={productos} onReintentar={cargarProductos} />
+            <DatosTienda tienda={storeInfo && typeof storeInfo === 'object' ? storeInfo : null} />
+          </aside>
+        </div>
       </main>
     </Layout>
   );

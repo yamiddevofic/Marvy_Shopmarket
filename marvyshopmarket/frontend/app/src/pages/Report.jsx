@@ -59,14 +59,14 @@ const Report = ({ userName: propUserName, adminInfo: propAdminInfo, storeInfo: p
                 tiendaId: "",
             }}
             fields={[
-                { name: "reporteId", label: "ID Reporte", placeholder: "Ingrese el ID", required: true },
-                { name: "reporteTipo", label: "Tipo de Reporte", placeholder: "Tipo de reporte", required: true },
-                { name: "reporteFechaInicio", label: "Fecha de Inicio", type: "date", placeholder: "Fecha de inicio", required: true },
-                { name: "reporteFechaFin", label: "Fecha de Fin", type: "date", placeholder: "Fecha de fin", required: true },
-                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+                { name: "reporteId", label: "ID del reporte", placeholder: "Ej. R-001", required: true },
+                { name: "reporteTipo", label: "Tipo de reporte", placeholder: "Ej. Ventas", required: true },
+                { name: "reporteFechaInicio", label: "Desde", type: "date", placeholder: "Fecha de inicio", required: true },
+                { name: "reporteFechaFin", label: "Hasta", type: "date", placeholder: "Fecha de fin", required: true },
+                { name: "tiendaId", label: "ID de la tienda", placeholder: "Ej. 1", required: true }
             ]}
             apiEndpoint="/generar-reporte"
-            submitButtonText="Generar Reporte" />
+            submitButtonText="Generar reporte" />
         </Layout>
     );
 };

@@ -59,13 +59,13 @@ const RegisterSales = ({ userName: propUserName, adminInfo: propAdminInfo, store
                 tiendaId: "",
             }}
             fields={[
-                { name: "ventaFecha", label: "Fecha de Venta", type: "date", placeholder: "Ingrese la fecha de la venta", required: true },
-                { name: "ventaMonto", label: "Monto de Venta", type: "number", placeholder: "Ingrese el monto de la venta", required: true },
-                { name: "ventaEstado", label: "Estado de Venta", type: "text", placeholder: "Ingrese el estado de la venta", required: true },
-                { name: "tiendaId", label: "ID de la Tienda", type: "text", placeholder: "Ingrese el ID de la tienda", required: true },
+                { name: "ventaFecha", label: "Fecha de la venta", type: "date", placeholder: "Fecha de la venta", required: true },
+                { name: "ventaMonto", label: "Monto", type: "number", placeholder: "Ej. 25000", required: true },
+                { name: "ventaEstado", label: "Estado", type: "text", placeholder: "Ej. Pagada", required: true },
+                { name: "tiendaId", label: "ID de la tienda", type: "text", placeholder: "Ej. 1", required: true },
             ]}
             apiEndpoint={"/registrar-venta"}
-            submitButtonText="Registrar Venta"
+            submitButtonText="Registrar venta"
             formData={{
                 ventaId: "",
                 ventaFecha: "",

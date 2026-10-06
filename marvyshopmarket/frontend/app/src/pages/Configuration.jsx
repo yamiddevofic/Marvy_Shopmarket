@@ -60,15 +60,15 @@ const Configuration = ({ userName: propUserName, adminInfo: propAdminInfo, store
                 tiendaId: "",
             }}
             fields={[
-                { name: "reporteId", label: "ID Configuración", placeholder: "Ingrese el ID", required: true },
-                { name: "reporteNombre", label: "Nombre de Configuración", placeholder: "Nombre de la configuración", required: true },
-                { name: "reportePrecio", label: "Valor", type: "number", placeholder: "Valor de la configuración", required: true },
-                { name: "reporteStock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: false },
-                { name: "reporteImagen", label: "Imagen", placeholder: "URL de la imagen", required: false },
-                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+                { name: "reporteId", label: "ID del ajuste", placeholder: "Ej. C-001", required: true },
+                { name: "reporteNombre", label: "Nombre del ajuste", placeholder: "Ej. Horario", required: true },
+                { name: "reportePrecio", label: "Valor", type: "number", placeholder: "Ej. 1", required: true },
+                { name: "reporteStock", label: "Stock (opcional)", type: "number", placeholder: "Ej. 10", required: false },
+                { name: "reporteImagen", label: "Imagen (opcional)", placeholder: "https://…", required: false },
+                { name: "tiendaId", label: "ID de la tienda", placeholder: "Ej. 1", required: true }
             ]}
             apiEndpoint="/actualizar-configuracion"
-            submitButtonText="Guardar Configuración" />
+            submitButtonText="Guardar ajustes" />
         </Layout>
     );
 };

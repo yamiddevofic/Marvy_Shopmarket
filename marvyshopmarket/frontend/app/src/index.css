@@ -4,6 +4,8 @@
 @import './styles/login.css';
 @import './styles/registro.css';
 @import './styles/panel.css';
+@import './styles/inicio.css';
+@import './styles/gestion.css';
 
 @tailwind base;
 @tailwind components;

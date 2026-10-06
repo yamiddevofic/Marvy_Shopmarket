@@ -85,14 +85,14 @@ const NewProduct = ({ userName: propUserName, adminInfo: propAdminInfo, storeInf
                 tienda_Id: storeInfo?.id || ""
             }}
             fields={[
-                { name: "nombre", label: "Nombre del Producto", placeholder: "Nombre del producto", required: true },
-                { name: "categoria", label: "Categoria", placeholder: "Categoria del producto", required: true },
-                { name: "precio", label: "Precio", type: "number", placeholder: "Precio del producto", required: true },
-                { name: "stock", label: "Stock", type: "number", placeholder: "Cantidad en stock", required: true },
+                { name: "nombre", label: "Nombre del producto", placeholder: "Ej. Arroz Diana 1 kg", required: true },
+                { name: "categoria", label: "Categoría", placeholder: "Ej. Granos", required: true },
+                { name: "precio", label: "Precio de venta", type: "number", placeholder: "Ej. 4800", required: true },
+                { name: "stock", label: "Unidades en stock", type: "number", placeholder: "Ej. 24", required: true },
             ]}
             storeInfo={storeInfo}
             apiEndpoint="/registrar-producto"
-            submitButtonText="Completar Registro"
+            submitButtonText="Registrar producto"
             onSubmitSuccess={fetchProductos} />
         </Layout>
     );

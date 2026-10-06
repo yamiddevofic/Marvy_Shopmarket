@@ -59,14 +59,14 @@ const RegisterVendors = ({ userName: propUserName, adminInfo: propAdminInfo, sto
                 tiendaId: "",
             }}
             fields={[
-                { name: "proveedorId", label: "ID Proveedor", placeholder: "Ingrese el ID", required: true },
-                { name: "proveedorNombre", label: "Nombre del Proveedor", placeholder: "Nombre del proveedor", required: true },
-                { name: "proveedorTelefono", label: "Teléfono", placeholder: "Número de teléfono", required: true },
-                { name: "proveedorCorreo", label: "Correo Electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
-                { name: "tiendaId", label: "ID Tienda", placeholder: "ID de la tienda", required: true }
+                { name: "proveedorId", label: "NIT o cédula", placeholder: "Ej. 900123456", required: true },
+                { name: "proveedorNombre", label: "Nombre del proveedor", placeholder: "Ej. Distribuidora El Llano", required: true },
+                { name: "proveedorTelefono", label: "Teléfono", placeholder: "Ej. 3001234567", required: true },
+                { name: "proveedorCorreo", label: "Correo electrónico", type: "email", placeholder: "correo@ejemplo.com", required: true },
+                { name: "tiendaId", label: "ID de la tienda", placeholder: "Ej. 1", required: true }
             ]}
             apiEndpoint="/registrar-proveedor"
-            submitButtonText="Completar Registro" />
+            submitButtonText="Registrar proveedor" />
         </Layout>
     );
 };
