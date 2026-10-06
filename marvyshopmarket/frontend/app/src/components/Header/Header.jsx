@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import ToggleTheme from '../Toggle/ToggleTheme';
 import EmblemaTienda from '../Login/EmblemaTienda';
@@ -22,13 +22,16 @@ const SECCIONES = {
 
 const Header = ({ userName, storeInfo, selectedOption }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const menuRef = useRef(null);
   const displayName = userName || 'Usuario';
   const initial = (displayName.charAt(0) || '?').toUpperCase();
-  const enInicio = !selectedOption || selectedOption === 'home';
+  // La ruta manda: el contexto puede llegar vacío o desactualizado al recargar.
+  const ruta = pathname.replace(/^\/+|\/+$/g, '');
+  const enInicio = ruta === 'home' || (!SECCIONES[ruta] && (!selectedOption || selectedOption === 'home'));
   const nombreTienda = storeInfo?.nombre || 'Tu tienda';
-  const seccion = SECCIONES[selectedOption] || (enInicio ? SECCIONES.home : selectedOption);
+  const seccion = SECCIONES[ruta] || SECCIONES[selectedOption] || SECCIONES.home;
 
   // El menú se cierra al pulsar fuera de él o con Escape.
   useEffect(() => {

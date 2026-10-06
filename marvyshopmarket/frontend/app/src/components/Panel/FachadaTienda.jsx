@@ -1,5 +1,7 @@
 // Fachada de la tienda con su toldo a rayas y el letrero de «Abierto».
-// Es ilustración (aria-hidden); sus colores salen de los tokens de .panel-hero.
+// Pasto con flores a los lados. Es ilustración (aria-hidden); sus colores salen de los tokens de .panel-hero.
+import Pasto from './Pasto';
+
 const RAYAS = [0, 1, 2, 3, 4, 5];
 
 const FachadaTienda = () => (
@@ -30,6 +32,7 @@ const FachadaTienda = () => (
       <rect x="157" y="58" width="48" height="18" rx="4" />
       <text x="181" y="71" textAnchor="middle">ABIERTO</text>
     </g>
+    <Pasto matas={[4, 14, 24, 212, 222, 232]} flores={[[10, 12], [20, 8], [218, 11], [228, 14]]} />
     <path className="fachada-tienda__cuerda" d="M0 30 Q120 8 240 30" />
     {[24, 62, 100, 138, 176, 214].map((x, i) => (
       <path

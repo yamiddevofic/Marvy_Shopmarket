@@ -4,6 +4,7 @@ import StatsGrid from '../components/Stats/StatsGrid';
 import OptionsGrid from '../components/Options/OptionsGrid';
 import { MapPin, Box, Receipt } from 'lucide-react';
 import FachadaTienda from '../components/Panel/FachadaTienda';
+import CieloAnimado from '../components/Panel/CieloAnimado';
 import Cookies from 'js-cookie';
 import Layout from '../Layout/Layout';
 import { useAppContext } from '../context/AppContext';
@@ -81,10 +82,7 @@ const Home = () => {
     <Layout adminInfo={adminInfo} storeInfo={storeInfo} userName={userName} selectedOption={selectedOption}>
       <main className="panel-principal">
         <section className="panel-hero" aria-labelledby="panel-titulo">
-          <div className="panel-hero__astros" aria-hidden="true">
-            <span className="panel-hero__sol" />
-            <span className="panel-hero__luna" />
-          </div>
+          <CieloAnimado />
           <div className="panel-hero__texto">
             <p className="panel-hero__fecha">{fecha}</p>
             <h1 id="panel-titulo" className="panel-hero__titulo">

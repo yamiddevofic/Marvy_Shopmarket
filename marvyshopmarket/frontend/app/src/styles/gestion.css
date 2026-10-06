@@ -1,0 +1,869 @@
+/*
+ * Pantallas de gestión (productos, inventario, ventas, reportes, proveedores,
+ * suministros, tenderos): cabecera con cielo e ilustración, tarjeta de
+ * formulario y, donde aplica, la lista de registros.
+ * Mismo lenguaje que panel.css (va dentro de `.panel`, del Layout) y tokens
+ * globales; el tema oscuro solo redefine tokens. Mobile first.
+ */
+
+.gestion {
+  display: grid;
+  gap: 20px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+/* ── Cabecera con ilustración ────────────────────────────────────── */
+.gestion-hero {
+  /* paleta de las ilustraciones (día) */
+  --il-trazo: #5b3a1c;
+  --il-papel: #ffffff;
+  --il-tinta: #2c4038;
+  --il-suelo: #d3e3da;
+  --il-madera: #7c4a21;
+  --il-madera-c: #b07135;
+  --il-tabla: #8a5529;
+  --il-carton: #d9a568;
+  --il-carton-b: #c48a4f;
+  --il-cinta: #f3dfb6;
+  --il-verde: #34b884;
+  --il-verde-o: #0f8a5f;
+  --il-mostaza: #f2b84b;
+  --il-tomate: #e05a3f;
+  --il-vidrio: #cdeee0;
+  --il-metal: #9fb1a8;
+  --il-pantalla: #0f2a22;
+  --il-luz: #8ff0c6;
+  --il-piel: #e7b48a;
+  --il-pelo: #3b2a1e;
+  --il-llanta: #2b3a33;
+  --il-toldo-a: #10b981;
+  --il-toldo-b: #a7f3d0;
+  --il-baldosa: #b5cdbf;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 128px;
+  align-items: end;
+  gap: 12px;
+  overflow: hidden;
+  /* adentro de la tienda: pared clara con puntos, bajo un toldo a rayas */
+  padding: 34px 16px 0 20px;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--verde-700) 14%, transparent) 1.2px, transparent 1.6px) 0 0 / 18px 18px,
+    linear-gradient(var(--surface), var(--verde-50));
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+html.dark .gestion-hero {
+  /* noche: objetos más claros que el cielo y trazos claros para que se lean */
+  --il-trazo: #0b1611;
+  --il-papel: #e3efe8;
+  --il-tinta: #1d3a30;
+  --il-suelo: #13261f;
+  --il-madera: #a8743f;
+  --il-madera-c: #9a6634;
+  --il-tabla: #c08a52;
+  --il-carton: #c9955a;
+  --il-carton-b: #b07a42;
+  --il-cinta: #ead2a2;
+  --il-verde: #3fcf96;
+  --il-verde-o: #1fa877;
+  --il-mostaza: #f5c25c;
+  --il-tomate: #f0735a;
+  --il-vidrio: #a9dcc6;
+  --il-metal: #b9cbc2;
+  --il-pantalla: #06231a;
+  --il-luz: #8ff0c6;
+  --il-piel: #e0a97c;
+  --il-pelo: #20160f;
+  --il-llanta: #0b1611;
+  --il-toldo-a: #0f8a5f;
+  --il-toldo-b: #1d4a3c;
+  --il-baldosa: #24453a;
+}
+
+/* toldo: franjas verdes con borde ondulado */
+.gestion-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 18px;
+  background: repeating-linear-gradient(90deg, var(--il-toldo-a) 0 22px, var(--il-toldo-b) 22px 44px);
+  -webkit-mask: radial-gradient(circle at 11px 11px, #000 10.5px, transparent 11px) 0 7px / 22px 11px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 8px no-repeat;
+  mask: radial-gradient(circle at 11px 11px, #000 10.5px, transparent 11px) 0 7px / 22px 11px repeat-x, linear-gradient(#000 0 0) 0 0 / 100% 8px no-repeat;
+  animation: gestion-toldo 6s ease-in-out infinite;
+  transform-origin: top;
+}
+
+.gestion-hero__texto {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding-bottom: 20px;
+}
+
+.gestion-hero__titulo {
+  margin: 0;
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.gestion-hero__bajada {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--tinta-700);
+}
+
+.gestion-hero__escena {
+  align-self: end;
+  width: 100%;
+}
+
+/* ── Ilustraciones ───────────────────────────────────────────────── */
+.ilus {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ilus * { transition: fill 0.6s ease, stroke 0.6s ease; }
+
+.ilus-trazo { stroke: var(--il-trazo); stroke-width: 1.6; stroke-linejoin: round; }
+.ilus-suelo { fill: var(--il-suelo); }
+.ilus-baldosa { fill: none; stroke: var(--il-baldosa); stroke-width: 1; }
+.ilus-papel { fill: var(--il-papel); }
+.ilus-papel--atras { opacity: 0.7; }
+.ilus-tinta { fill: var(--il-tinta); }
+.ilus-tinta--suave { opacity: 0.45; }
+.ilus-madera { fill: var(--il-madera); }
+.ilus-madera-c { fill: var(--il-madera-c); }
+.ilus-tabla { fill: var(--il-tabla); }
+.ilus-carton { fill: var(--il-carton); }
+.ilus-carton-b { fill: var(--il-carton-b); }
+.ilus-verde { fill: var(--il-verde); }
+.ilus-verde-o { fill: var(--il-verde-o); }
+.ilus-mostaza { fill: var(--il-mostaza); }
+.ilus-tomate { fill: var(--il-tomate); }
+.ilus-vidrio { fill: var(--il-vidrio); }
+.ilus-metal { fill: var(--il-metal); }
+.ilus-pantalla { fill: var(--il-pantalla); }
+.ilus-gaveta { fill: var(--il-verde); }
+.ilus-pomo { fill: var(--il-mostaza); }
+.ilus-tapa { fill: var(--il-tomate); }
+.ilus-piel { fill: var(--il-piel); }
+.ilus-pelo { fill: var(--il-pelo); }
+.ilus-delantal { fill: var(--il-verde-o); }
+.ilus-llanta { fill: var(--il-llanta); }
+.ilus-llanta-c { fill: var(--il-metal); }
+.ilus-faro { fill: var(--il-mostaza); }
+.ilus-vacio { fill: none; }
+.ilus-barra { stroke: var(--il-trazo); stroke-width: 1.2; }
+.ilus-teclas circle { fill: var(--il-papel); stroke: var(--il-trazo); stroke-width: 1; }
+
+.ilus-linea,
+.ilus-cuerda,
+.ilus-eje,
+.ilus-sonrisa {
+  fill: none;
+  stroke: var(--il-trazo);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.ilus-cinta { fill: none; stroke: var(--il-cinta); stroke-width: 4; }
+.ilus-franja { fill: none; stroke: var(--il-papel); stroke-width: 6; opacity: 0.9; }
+.ilus-check { fill: none; stroke: var(--il-verde-o); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.ilus-luz { fill: none; stroke: var(--il-luz); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ilus-tendencia { fill: none; stroke: var(--il-tomate); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.ilus-punto { fill: var(--il-tomate); stroke: var(--il-papel); stroke-width: 1.5; }
+.ilus-rotulo { fill: var(--il-papel); font: 800 12px var(--fuente-ui); letter-spacing: 1.5px; }
+
+.ilus-etiqueta,
+.ilus-tiquete,
+.ilus-lapiz {
+  transform-box: fill-box;
+  animation: gestion-mecer 5s ease-in-out infinite;
+}
+
+.ilus-etiqueta { transform-origin: 50% 0; }
+.ilus-tiquete { transform-origin: 50% 100%; animation-name: gestion-asomar; }
+.ilus-lapiz { transform-origin: 0 100%; }
+
+/* ── Cuerpo: tarjetas ────────────────────────────────────────────── */
+.gestion__cuerpo {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+
+.gestion-tarjeta {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px 16px;
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+.gestion-tarjeta > [role='alert']:empty,
+.gestion-tarjeta > [role='status']:empty {
+  display: none;
+}
+
+.gestion-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+}
+
+.gestion-aviso svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.gestion-aviso--error {
+  color: var(--error-600);
+  background: var(--error-100);
+}
+
+.gestion-aviso--ok {
+  color: var(--verde-800);
+  background: var(--verde-100);
+}
+
+/* ── Formulario ──────────────────────────────────────────────────── */
+.gestion-form {
+  display: grid;
+  gap: 20px;
+}
+
+.gestion-form__campos {
+  display: grid;
+  gap: 14px;
+}
+
+.gestion-form__campo {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.gestion-form__etiqueta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tinta-700);
+}
+
+.gestion-form__requerido {
+  color: var(--error-600);
+}
+
+.gestion-form__input {
+  width: 100%;
+  min-height: calc(var(--hit) + 4px);
+  padding: 0 14px;
+  font: inherit;
+  font-size: 1rem; /* ≥ 16 px: iOS no hace zoom al enfocar */
+  color: var(--texto);
+  background: var(--page-bg);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gestion-form__input::placeholder {
+  color: var(--tinta-300);
+}
+
+.gestion-form__input:focus {
+  outline: none;
+  border-color: var(--primario);
+  box-shadow: var(--focus-ring);
+}
+
+.gestion-form__input:not([type='date']):not(:placeholder-shown):invalid {
+  border-color: var(--error-600);
+}
+
+/* el ícono del calendario del navegador sigue el tema */
+.gestion-form__input::-webkit-calendar-picker-indicator {
+  opacity: 0.7;
+}
+
+html.dark .gestion-form__input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.gestion-form__con-boton {
+  position: relative;
+}
+
+.gestion-form__con-boton .gestion-form__input {
+  padding-right: calc(var(--hit) + 8px);
+}
+
+.gestion-form__ojo {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  width: var(--hit);
+  height: var(--hit);
+  color: var(--texto-suave);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.gestion-form__ojo svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ── Botones ─────────────────────────────────────────────────────── */
+.gestion-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--hit);
+  padding: 0 18px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1.5px solid var(--linea-200);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gestion-boton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gestion-boton:hover {
+  background: var(--verde-50);
+}
+
+.gestion-boton--primario {
+  color: var(--sobre-primario);
+  background: var(--primario);
+  border-color: var(--primario);
+  box-shadow: var(--sombra-sm);
+}
+
+.gestion-boton--primario:hover {
+  background: var(--primario-hover);
+  border-color: var(--primario-hover);
+}
+
+.gestion-boton--primario:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.gestion-boton--peligro {
+  color: var(--error-600);
+  border-color: color-mix(in srgb, var(--error-600) 40%, transparent);
+}
+
+.gestion-boton--peligro:hover {
+  background: var(--error-100);
+}
+
+.gestion-form__enviar {
+  width: 100%;
+}
+
+.gestion-girando {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: gestion-girar 0.8s linear infinite;
+}
+
+/* ── Lista de registros ──────────────────────────────────────────── */
+.gestion-lista {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.gestion-lista__cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.gestion-lista__titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.gestion-lista__total {
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--verde-800);
+  background: var(--verde-100);
+  border-radius: var(--radius-pill);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestion-lista__ayuda {
+  margin: -4px 0 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.gestion-lista__filas {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gestion-paginas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gestion-paginas__texto {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.gestion-paginas__boton {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--primario);
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.gestion-paginas__boton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gestion-paginas__boton:hover:not(:disabled) {
+  background: var(--verde-50);
+}
+
+.gestion-paginas__boton:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Fila: tarjeta en móvil, fila de tabla en pantallas anchas */
+.gestion-fila {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  width: 100%;
+  padding: 14px 44px 14px 14px;
+  font: inherit;
+  color: var(--texto);
+  text-align: left;
+  background: var(--page-bg);
+  border: 1px solid var(--linea-100);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.gestion-fila:hover {
+  background: var(--surface);
+  border-color: var(--primario);
+  box-shadow: var(--sombra-sm);
+}
+
+.gestion-fila--cabeza {
+  display: none;
+}
+
+.gestion-fila--productos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gestion-fila__principal {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.gestion-fila__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  color: var(--sobre-primario);
+  background: var(--primario);
+  border-radius: 12px;
+}
+
+.gestion-fila__avatar--producto {
+  color: var(--madera-700);
+  background: color-mix(in srgb, var(--mostaza-400) 30%, var(--surface));
+}
+
+.gestion-fila__avatar svg {
+  width: 22px;
+  height: 22px;
+}
+
+.gestion-fila__textos {
+  display: grid;
+  min-width: 0;
+}
+
+.gestion-fila__nombre {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestion-fila__id {
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gestion-fila__dato {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.gestion-fila__dato::before {
+  content: attr(data-etiqueta);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.gestion-fila__dato--cifra {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.gestion-fila__dato--bajo {
+  color: var(--alerta-600);
+}
+
+.gestion-fila__editar {
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  width: 18px;
+  height: 18px;
+  color: var(--tinta-300);
+}
+
+.gestion-fila:hover .gestion-fila__editar {
+  color: var(--primario);
+}
+
+.gestion-esqueleto {
+  height: 240px;
+  background: linear-gradient(90deg, var(--linea-100), var(--linea-200), var(--linea-100));
+  background-size: 200% 100%;
+  border-radius: var(--radius-md);
+  animation: panel-brillo 1.4s ease-in-out infinite;
+}
+
+/* ── Estado vacío ────────────────────────────────────────────────── */
+.gestion-vacio {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  border: 2px dashed var(--linea-200);
+  border-radius: var(--radius-md);
+}
+
+.gestion-vacio__icono {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+  color: var(--primario);
+  background: var(--verde-100);
+  border-radius: 50%;
+}
+
+.gestion-vacio__icono svg {
+  width: 28px;
+  height: 28px;
+}
+
+.gestion-vacio__titulo {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.gestion-vacio__texto {
+  max-width: 26rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+/* ── Diálogo de edición ──────────────────────────────────────────── */
+.gestion-dialogo {
+  position: relative;
+  z-index: 50;
+  font-family: var(--fuente-ui);
+}
+
+.gestion-dialogo__fondo {
+  position: fixed;
+  inset: 0;
+  background: rgb(6 20 15 / 0.55);
+  backdrop-filter: blur(3px);
+  transition: opacity 0.2s ease;
+}
+
+.gestion-dialogo__fondo[data-closed] { opacity: 0; }
+
+.gestion-dialogo__marco {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.gestion-dialogo__panel {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 30rem;
+  padding: 20px;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sombra-lg);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.gestion-dialogo__panel[data-closed] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.gestion-dialogo__cabeza {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 3px dashed var(--linea-200);
+}
+
+.gestion-dialogo__tipo {
+  margin: 0 0 2px;
+  font-family: var(--fuente-remate);
+  font-style: italic;
+  color: var(--verde-800);
+}
+
+.gestion-dialogo__titulo {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.gestion-dialogo__cerrar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--texto-suave);
+  background: transparent;
+  border: 1px solid var(--linea-200);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.gestion-dialogo__cerrar svg { width: 18px; height: 18px; }
+
+.gestion-dialogo__form {
+  display: grid;
+  gap: 14px;
+}
+
+.gestion-dialogo__pie {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gestion-dialogo__derecha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Animaciones ─────────────────────────────────────────────────── */
+@keyframes gestion-toldo { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.08); } }
+
+@keyframes gestion-girar { to { transform: rotate(360deg); } }
+
+@keyframes gestion-mecer {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes gestion-asomar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.gestion-hero,
+.gestion-tarjeta {
+  animation: panel-subir 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.gestion-tarjeta:nth-child(2) { animation-delay: 0.12s; }
+
+/* ── Tablet (≥ 640 px) ───────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .gestion { padding: 24px 24px 56px; gap: 24px; }
+
+  .gestion-hero {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    padding: 28px 28px 0 32px;
+  }
+
+  .gestion-hero__texto { padding-bottom: 28px; }
+  .gestion-tarjeta { padding: 24px; }
+
+  .gestion:not(.gestion--lista) .gestion-form__campos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+  }
+
+  .gestion:not(.gestion--lista) .gestion__cuerpo {
+    max-width: 760px;
+  }
+
+  .gestion-dialogo__marco { align-items: center; }
+  .gestion-dialogo__panel { padding: 24px; }
+
+  .gestion-fila--productos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gestion-fila--tenderos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ── Desktop (≥ 1024 px) ─────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .gestion-hero {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    padding: 32px 40px 0 44px;
+  }
+
+  .gestion--lista .gestion__cuerpo {
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  }
+
+  .gestion--lista .gestion__cuerpo > .gestion-tarjeta:first-child {
+    position: sticky;
+    top: 88px;
+  }
+
+  /* la lista se vuelve tabla: cabecera visible y etiquetas por celda ocultas */
+  .gestion-fila {
+    align-items: center;
+    padding: 10px 44px 10px 12px;
+  }
+
+  .gestion-fila__principal { grid-column: auto; }
+  .gestion-fila__dato::before { content: none; }
+
+  .gestion-fila--cabeza {
+    display: grid;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    background: none;
+    border: 0;
+    cursor: default;
+  }
+
+  .gestion-fila--cabeza:hover { box-shadow: none; background: none; }
+
+  .gestion-fila--productos { grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.6fr); }
+  .gestion-fila--tenderos { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1.8fr) minmax(0, 1.1fr) minmax(0, 0.7fr); }
+  .gestion-fila__editar { top: 50%; translate: 0 -50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gestion-dialogo *,
+  .gestion-dialogo__fondo,
+  .gestion-dialogo__panel {
+    transition: none !important;
+  }
+}

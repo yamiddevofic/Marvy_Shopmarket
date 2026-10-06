@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import ToggleDark from '../Toggle/ToggleTheme';
-import { Receipt, Truck, PackageSearch, Users, User, UserPlus, Bolt, ScrollText, Box, Archive } from "lucide-react";
+import { Eye, EyeOff, User, Box, Archive, AlertCircle, CheckCircle2 } from 'lucide-react';
+import Ilustracion from "../Panel/Ilustraciones";
 import ParentComponent from '../ParentComponent';
 import PlaceholderComponent from '../PlaceholderComponent';
 import { api } from '../../services/api';
 
 const LoadingSkeleton = () => (
-  <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg h-full w-full"></div>
+  <div className="gestion-esqueleto" aria-hidden="true" />
 );
 
 const today = new Date().toLocaleDateString(); // Get today's date in YYYY-MM-DD format
 const formatDate = today.split('/').reverse().join('-');
-console.log('Today is: ', formatDate)
 
 const Form = ({
   id,
@@ -20,39 +18,22 @@ const Form = ({
   title,
   initialData = {},
   fields = [],
-  selectedIcon,
+  selectedIcon, // eslint-disable-line no-unused-vars -- la ilustración se elige por `id`
   apiEndpoint,
   submitButtonText = 'Completar Registro',
   onSubmitSuccess,
   onSubmitError,
   storeInfo
 }) => {
-  // Mapeo de iconos por nombre
-  const iconMap = {
-    Receipt: Receipt,
-    Truck: Truck,
-    PackageSearch: PackageSearch,
-    Users: Users,
-    UserPlus: UserPlus,
-    Bolt: Bolt,
-    ScrollText: ScrollText,
-    Box: Box,
-  };
-
   // obtener datos obtenidos del endpoint
   const m =  data;
-  console.log('m estado en Form: ', m)
 
-  console.log('storeInfo estado en Form: ', storeInfo)
   console.log('initialData estado en Form: ', initialData)
 
   const formDataInfo = initialData;
-  console.log('formDataInfo estado en Form: ', formDataInfo)
 
   
 
-  const IconComponent = selectedIcon && iconMap[selectedIcon];
-  
   const [formData, setFormData] = useState(initialData);
   const [showPasswordFields, setShowPasswordFields] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -158,6 +139,18 @@ const Form = ({
     }
   };
 
+  const DESCRIPCIONES = {
+    'new-product': 'Agrega productos al catálogo de tu tienda y revisa los que ya tienes.',
+    stock: 'Actualiza las existencias para que nunca se agote lo que más se vende.',
+    'register-sales': 'Anota cada venta del día con su monto y su estado.',
+    report: 'Elige el tipo de reporte y el rango de fechas que quieres revisar.',
+    'register-vendors': 'Guarda los datos de quienes te surten la mercancía.',
+    'register-supplies': 'Registra lo que llega: cantidades, precios y proveedor.',
+    'register-shopkeeper': 'Da de alta a quienes atienden la tienda contigo.',
+    configuration: 'Ajusta los datos de tu tienda.',
+  };
+  const esLista = id === 'register-shopkeeper' || id === 'new-product';
+
   const renderField = (field) => {
     const {
       name,
@@ -171,20 +164,26 @@ const Form = ({
     const value = formData[name] || '';
     const isPassword = type === 'password';
     const showPassword = showPasswordFields[name];
+    const campoId = `${id}-${name}`;
+
+    const etiqueta = (
+      <label htmlFor={campoId} className="gestion-form__etiqueta">
+        {label}
+        {required && <span className="gestion-form__requerido" aria-hidden="true"> *</span>}
+      </label>
+    );
 
     if (type === 'select') {
       return (
-        <div key={name}>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-            {label}
-            {required && <span className="text-red-500">*</span>}
-          </label>
+        <div key={name} className="gestion-form__campo">
+          {etiqueta}
           <select
+            id={campoId}
             name={name}
             value={value}
             onChange={handleChange}
             required={required}
-            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
+            className="gestion-form__input"
           >
             <option value="">Seleccionar...</option>
             {options.map(option => (
@@ -198,32 +197,28 @@ const Form = ({
     }
 
     return (
-      <div key={name}>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-          {label}
-          {required && <span className="text-red-500">*</span>}
-        </label>
-        <div className={isPassword ? 'relative' : ''}>
+      <div key={name} className="gestion-form__campo">
+        {etiqueta}
+        <div className={isPassword ? 'gestion-form__con-boton' : ''}>
           <input
+            id={campoId}
             type={isPassword ? (showPassword ? 'text' : 'password') : type}
             name={name}
             value={value}
             onChange={handleChange}
             required={required}
-            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white dark:placeholder-gray-400"
+            className="gestion-form__input"
             placeholder={placeholder}
           />
           {isPassword && (
             <button
               type="button"
               onClick={() => togglePasswordVisibility(name)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center"
+              className="gestion-form__ojo"
+              aria-label="Mostrar contraseña"
+              aria-pressed={Boolean(showPassword)}
             >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-              ) : (
-                <Eye className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-              )}
+              {showPassword ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
             </button>
           )}
         </div>
@@ -231,72 +226,66 @@ const Form = ({
     );
   };
 
+  const lista = m && m.length > 0 ? (
+    <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
+  ) : (
+    <PlaceholderComponent id={id} Archive={Archive} />
+  );
+
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-emerald-400 to-green-300 dark:from-gray-900 dark:to-gray-800 grid grid-cols-1 ${id==='register-shopkeeper' || id==='new-product' ? 'lg:grid-cols-[35%_65%]': 'place-items-center'} transition-colors duration-200 max-w-7xl mx-auto w-full py-8 px-3`}>
-      <div className={`relative ${id==='register-shopkeeper' || id==='new-product' ? 'w-full max-w-full' : 'w-[45%]'} bg-white dark:bg-gray-800 rounded-tl-2xl rounded-bl-2xl rounded-tr-0 rounded-br-0 shadow-r-xl p-8 transition-all duration-200`}>
-        <div className="text-center mb-8 perspective-1000">
-          <div className="w-16 h-16 bg-emerald-500 animate-girarmoneda dark:bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            {IconComponent ? <IconComponent className="h-8 w-8 text-white" /> : <PackageSearch className="h-8 w-8 text-white" />}
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">Complete la información requerida</p>
+    <main className={`gestion${esLista ? ' gestion--lista' : ''}`}>
+      <section className="gestion-hero" aria-labelledby={`${id}-titulo`}>
+        <div className="gestion-hero__texto">
+          <h1 id={`${id}-titulo`} className="gestion-hero__titulo">{title}</h1>
+          <p className="gestion-hero__bajada">{DESCRIPCIONES[id] || 'Complete la información requerida.'}</p>
         </div>
+        <div className="gestion-hero__escena">
+          <Ilustracion id={id} />
+        </div>
+      </section>
 
-        {error && (
-          <div className="mb-6 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-500/50 text-red-700 dark:text-red-300 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-6 p-3 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-500/50 text-green-700 dark:text-green-300 rounded-lg">
-            {success}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            <div className='flex justify-end mb-4'>
-              <ToggleDark />
-            </div>
-            {fields.map(renderField)}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-          >
-            {isLoading ? (
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              submitButtonText
+      <div className="gestion__cuerpo">
+        <section className="gestion-tarjeta" aria-label="Formulario">
+          <div role="alert">
+            {error && (
+              <p className="gestion-aviso gestion-aviso--error">
+                <AlertCircle aria-hidden="true" /> {error}
+              </p>
             )}
-          </button>
-        </form>
-        <div className="absolute top-4 right-4">
-          <ToggleDark />
-        </div>
-      </div>
-      {id==="register-shopkeeper" ? (
-        <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
-        {m && m.length > 0 ? (
-        <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
-        ) : (
-          <PlaceholderComponent id={id} Archive={Archive} />
+          </div>
+          <div role="status">
+            {success && (
+              <p className="gestion-aviso gestion-aviso--ok">
+                <CheckCircle2 aria-hidden="true" /> {success}
+              </p>
+            )}
+          </div>
+
+          <form onSubmit={handleSubmit} className="gestion-form">
+            <div className="gestion-form__campos">
+              {fields.map(renderField)}
+            </div>
+
+            <button type="submit" disabled={isLoading} aria-busy={isLoading} className="gestion-boton gestion-boton--primario gestion-form__enviar">
+              {isLoading ? (
+                <>
+                  <span className="gestion-girando" aria-hidden="true" />
+                  Guardando…
+                </>
+              ) : (
+                submitButtonText
+              )}
+            </button>
+          </form>
+        </section>
+
+        {esLista && (
+          <section className="gestion-tarjeta gestion-tarjeta--lista" aria-label={id === 'new-product' ? 'Productos registrados' : 'Tenderos registrados'}>
+            {lista}
+          </section>
         )}
       </div>
-      ) : null}
-      {id === 'new-product' ? (
-        <div className="w-full h-full bg-white dark:bg-gray-800 rounded-tl-0 rounded-tr-2xl rounded-bl-0 rounded-br-2xl shadow-xl transition-all duration-200 flex flex-col justify-start items-center pt-7 pr-5 border-l border-gray-300 dark:border-gray-600 pl-8">
-        {m && m.length > 0 ? (
-        <ParentComponent typeId={id} storeInfo={storeInfo} m={m} currentPage={currentPage} setCurrentPage={setCurrentPage} goToNextPage={goToNextPage} goToPage={goToPage} goToPrevPage={goToPrevPage} isLoading={isLoading} itemsPerPage={itemsPerPage} totalPages={totalPages} currentItems={currentItems} LoadingSkeleton={LoadingSkeleton} User={User} Box={Box} error={error} />
-        ) : (
-          <PlaceholderComponent id={id} Archive={Archive} />
-        )}
-      </div>
-      ) : null}
-    </div>
+    </main>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react'; // No necesitas useEffect aquí
-import { Wheat, User, Archive } from 'lucide-react';
+import { Wheat, Archive, ChevronLeft, ChevronRight, PencilLine } from 'lucide-react';
 import Example from './modal/Example';
 import { useState } from 'react'
 import PlaceholderComponent from './PlaceholderComponent';
@@ -34,138 +34,101 @@ const ResultComponent = ({
 
     // Los console.log están bien para depuración, pero no en producción.
 
-    return (
-        <div className='text-black w-full px-2 rounded-lg dark:text-white pb-10'>
-          <Example open={open} setOpen={setOpen} keyRow={keyRow} m={m} id={id} item={item} onItemDeleted={onItemDeleted} onItemAdded={onItemAdded} onItemUpdated={onItemUpdated}/>
-          <div className="flex items-center justify-between">
-            {/* Pagination Controls */}
+    const esTenderos = id === "register-shopkeeper";
+    const abrir = (registro, index) => {
+        setOpen(true);
+        setItem(registro);
+        setKeyRow(index);
+    };
 
-          </div>
+    const paginacion = m && m.length > itemsPerPage && (
+        <nav className="gestion-paginas" aria-label="Páginas">
+            <button type="button" onClick={goToPrevPage} disabled={currentPage === 1} className="gestion-paginas__boton" aria-label="Página anterior">
+                <ChevronLeft aria-hidden="true" />
+            </button>
+            <span className="gestion-paginas__texto">Página {currentPage} de {totalPages}</span>
+            <button type="button" onClick={goToNextPage} disabled={currentPage === totalPages} className="gestion-paginas__boton" aria-label="Página siguiente">
+                <ChevronRight aria-hidden="true" />
+            </button>
+        </nav>
+    );
+
+    const cabecera = (titulo) => (
+        <header className="gestion-lista__cabeza">
+            <h2 className="gestion-lista__titulo">
+                {titulo} <span className="gestion-lista__total">{m.length}</span>
+            </h2>
+            {paginacion}
+        </header>
+    );
+
+    return (
+        <div className="gestion-lista">
+          <Example open={open} setOpen={setOpen} keyRow={keyRow} m={m} id={id} item={item} onItemDeleted={onItemDeleted} onItemAdded={onItemAdded} onItemUpdated={onItemUpdated}/>
           {isLoading ? (
             <LoadingSkeleton />
           ) : m && m.length === 0 ? (
             <PlaceholderComponent Archive={Archive} id={id} />
-          ) : id === "register-shopkeeper" ? (
-                <div className="grid grid-cols-1 gap-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-bold">
-                            Total de tenderos: {m.length}
-                        </h3>
-                        {m && m.length > itemsPerPage && (
-                            <div className="flex justify-center items-center mb-2 space-x-2">
-                            <button
-                                onClick={goToPrevPage}
-                                disabled={currentPage === 1}
-                                className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Anterior
-                            </button>
-                            <span className="text-gray-700 dark:text-gray-300">
-                                Página {currentPage} de {totalPages}
-                            </span>
-                            <button
-                                onClick={goToNextPage}
-                                disabled={currentPage === totalPages}
-                                className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Siguiente
-                            </button>
-                        </div>
-                    )}
-                    </div>
-                    <div className='hidden lg:block'>
-                        <div className="grid grid-cols-[20%_18%_28%_18%_15%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow  place-items-center">
-                            <div className='flex gap-2 justify-center items-center w-full'>
-                            <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">Nombre</h4>
-                            </div>
-                            <p className="text-lg font-semibold text-gray-900 dark:text-white">ID</p>
-                            <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Correo</p>
-                            <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Celular</p>
-                            <p className="text-lg font-semibold text-gray-900 dark:text-white flex">ID Tienda</p>
-                        </div>
-                    </div>
-                  {currentItems.map((tendero, index) => (
-                    <div
-                      onClick={() => {
-                        setOpen(true);
-                        setItem(tendero)
-                        setKeyRow(index)
-                      }}
-                      key={tendero.id}
-                      className="cursor-pointer grid grid-cols-1 lg:grid-cols-[20%_18%_28%_18%_15%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
-                      <div className='flex gap-2 justify-left items-center w-full'>
-                        <div className="mb-4º flex items-center justify-center w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-full px-2">
-                          <User className="h-10 w-10 text-emerald-500 !text-white" />
-                        </div>
-                        <h4 className="rl-2 text-sm font-semibold text-gray-900 dark:text-white mb-2">{tendero.nombre}</h4>
-                      </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.id}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.correo}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.celular}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{tendero.tienda_Id}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : id === "new-product" ? (
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold">
-                        Total de productos: {m.length}
-                    </h3>
-                    {m && m.length > itemsPerPage && (
-                        <div className="flex justify-center items-center mb-2 space-x-2">
-                            <button
-                                onClick={goToPrevPage}
-                                disabled={currentPage === 1}
-                                className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Anterior
-                            </button>
-                            <span className="text-gray-700 dark:text-gray-300">
-                                Página {currentPage} de {totalPages}
-                            </span>
-                            <button
-                                onClick={goToNextPage}
-                                disabled={currentPage === totalPages}
-                                className="px-3 py-1 bg-emerald-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Siguiente
-                            </button>
-                        </div>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-[16%_36%_20%_20%_10%_8%] bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow place-items-center">
-                    <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">ID</h4>
-                    <div className='flex gap-2 justify-center items-center w-full'>
-                    <h4 className="rl-2 text-lg font-semibold text-gray-900 dark:text-white mb-2">Nombre</h4>
-                    </div>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Categoría</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Precio</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white flex">Stock</p>
-                </div>
-                  {currentItems.map((producto, index) => (
-                    <div onClick={() => {
-                      setOpen(true);
-                      setItem(producto)
-                      setKeyRow(index)}}
-                      key={producto._id} className="cursor-pointer grid grid-cols-1 lg:grid-cols-[16%_36%_20%_20%_10%_8%] bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-200 lg:place-items-center">
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{producto._id}</p>
-                      <div className='flex gap-2 justify-left items-center w-full'>
-                        <div className="mb-4º flex items-center justify-center w-12 h-12 bg-emerald-500 dark:bg-emerald-600 rounded-full px-2">
-                          <Wheat className="h-6 w-6 text-emerald-500 !text-white" />
-                        </div>
-                        <h4 className="rl-2 text-sm font-semibold text-gray-900 dark:text-white mb-2">{producto.nombre}</h4>
-                      </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{producto.categoria}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{formatPrice(producto.precio)}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 flex">{producto.stock}</p>
-                    </div>
-                  ))}
-                </div>
-            ) : (
-                <p className="text-gray-600 dark:text-gray-300">No hay {id === "register-shopkeeper" ? "tenderos" : "productos"} registrados.</p>
-            )}
-          </div>
+          ) : esTenderos ? (
+            <>
+              {cabecera('Tenderos')}
+              <p className="gestion-lista__ayuda">Toca un tendero para editar o borrar sus datos.</p>
+              <div className="gestion-fila gestion-fila--cabeza gestion-fila--tenderos" aria-hidden="true">
+                <span>Nombre</span><span>ID</span><span>Correo</span><span>Celular</span><span>Tienda</span>
+              </div>
+              <ul className="gestion-lista__filas">
+                {currentItems.map((tendero, index) => (
+                  <li key={tendero.id}>
+                    <button type="button" onClick={() => abrir(tendero, index)} className="gestion-fila gestion-fila--tenderos">
+                      <span className="gestion-fila__principal">
+                        <span className="gestion-fila__avatar" aria-hidden="true">
+                          {(tendero.nombre || '?').charAt(0).toUpperCase()}
+                        </span>
+                        <span className="gestion-fila__nombre">{tendero.nombre}</span>
+                      </span>
+                      <span className="gestion-fila__dato" data-etiqueta="ID">{tendero.id}</span>
+                      <span className="gestion-fila__dato" data-etiqueta="Correo">{tendero.correo}</span>
+                      <span className="gestion-fila__dato" data-etiqueta="Celular">{tendero.celular}</span>
+                      <span className="gestion-fila__dato" data-etiqueta="Tienda">{tendero.tienda_Id}</span>
+                      <PencilLine className="gestion-fila__editar" aria-hidden="true" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : id === "new-product" ? (
+            <>
+              {cabecera('Productos')}
+              <p className="gestion-lista__ayuda">Toca un producto para editar o borrar sus datos.</p>
+              <div className="gestion-fila gestion-fila--cabeza gestion-fila--productos" aria-hidden="true">
+                <span>Producto</span><span>Categoría</span><span>Precio</span><span>Stock</span>
+              </div>
+              <ul className="gestion-lista__filas">
+                {currentItems.map((producto, index) => (
+                  <li key={producto._id}>
+                    <button type="button" onClick={() => abrir(producto, index)} className="gestion-fila gestion-fila--productos">
+                      <span className="gestion-fila__principal">
+                        <span className="gestion-fila__avatar gestion-fila__avatar--producto" aria-hidden="true">
+                          <Wheat />
+                        </span>
+                        <span className="gestion-fila__textos">
+                          <span className="gestion-fila__nombre">{producto.nombre}</span>
+                          <span className="gestion-fila__id">ID {producto._id}</span>
+                        </span>
+                      </span>
+                      <span className="gestion-fila__dato" data-etiqueta="Categoría">{producto.categoria}</span>
+                      <span className="gestion-fila__dato gestion-fila__dato--cifra" data-etiqueta="Precio">{formatPrice(producto.precio)}</span>
+                      <span className={`gestion-fila__dato gestion-fila__dato--cifra${Number(producto.stock) <= 5 ? ' gestion-fila__dato--bajo' : ''}`} data-etiqueta="Stock">{producto.stock}</span>
+                      <PencilLine className="gestion-fila__editar" aria-hidden="true" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <PlaceholderComponent Archive={Archive} id={id} />
+          )}
+        </div>
     );
 };
 
