@@ -70,7 +70,7 @@ const App = () => {
   };
 
   return (
-    <Router>
+    <Router future={{ v7_relativeSplatPath: true }}>
       <ScrollToTop />
       <AppContext.Provider value={value}>
         <Routes>

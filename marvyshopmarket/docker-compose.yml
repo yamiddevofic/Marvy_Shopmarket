@@ -5,17 +5,43 @@
 # └─ docker-compose.yml
 
 services:
+  # ──────────────── MYSQL ────────────────
+  mysql:
+    image: mysql:8.4
+    container_name: marvyshop-mysql
+    environment:
+      MYSQL_DATABASE: marvyshopmarket
+      MYSQL_USER: marvy
+      MYSQL_PASSWORD: marvy_dev_password
+      MYSQL_ROOT_PASSWORD: marvy_root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmarvy_root_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
   # ──────────────── BACKEND ────────────────
   backend:
     build: ./backend
     container_name: marvyshop-backend
     env_file: ./backend/.env
+    environment:
+      SECRET_KEY: dev-secret-key-change-me
+      SQLALCHEMY_DATABASE_URI: mysql+mysqldb://marvy:marvy_dev_password@mysql:3306/marvyshopmarket?charset=utf8mb4
     command: gunicorn -w 4 -b 0.0.0.0:5000 "app:create_app()"
     volumes:
       - ./backend/app:/app/app
       - ./backend/uploads:/app/uploads
     ports:
       - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
     restart: on-failure
 
   # ──────────────── FRONTEND ───────────────
@@ -24,7 +50,7 @@ services:
     container_name: marvyshop-frontend
     command: npm run dev -- --host
     environment:
-      VITE_API_URL: http://localhost:5000/api   # 👈 mapping, no guiones
+      VITE_API_URL: /api
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "300"
     volumes:
@@ -34,3 +60,6 @@ services:
       - "5174:5174"
     depends_on:
       - backend
+
+volumes:
+  mysql_data:

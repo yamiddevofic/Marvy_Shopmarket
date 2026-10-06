@@ -9,7 +9,8 @@ export default defineConfig(({ mode }) => {
   /** Valor por defecto para cuando corras sin Docker Compose
    *  y tengas el backend en tu máquina local.
    */
-  const backend = env.VITE_API_URL || 'http://127.0.0.1:3333'
+  const configuredBackend = env.VITE_API_URL || 'http://127.0.0.1:3333'
+  const backend = configuredBackend.startsWith('/') ? 'http://backend:5000' : configuredBackend
 
   return {
     plugins: [react()],
