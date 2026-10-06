@@ -3,6 +3,7 @@
 @import './styles/boton-tema.css';
 @import './styles/login.css';
 @import './styles/registro.css';
+@import './styles/panel.css';
 
 @tailwind base;
 @tailwind components;
