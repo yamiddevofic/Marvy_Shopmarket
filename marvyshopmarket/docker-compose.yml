@@ -57,7 +57,7 @@ services:
       - ./frontend/app:/app
       - /app/node_modules         # volumen anónimo para conservar dependencias
     ports:
-      - "5174:5174"
+      - "5173:5173"
     depends_on:
       - backend
 

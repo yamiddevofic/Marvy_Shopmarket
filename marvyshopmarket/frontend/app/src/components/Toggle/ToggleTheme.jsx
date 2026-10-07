@@ -1,6 +1,6 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import PropTypes from 'prop-types';
-import { guardarTema, leerTema } from '../../tema';
+import { EVENTO_TEMA, guardarTema, leerTema } from '../../tema';
 
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -12,10 +12,16 @@ const ToggleTheme = ({ className, floating = true }) => {
   const mascara = `sombra-${useId().replace(/:/g, '')}`;
   const oscuro = tema === 'dark';
 
+  // El tema puede cambiar solo (amanecer/anochecer) o desde otro botón.
+  useEffect(() => {
+    const alCambiar = (e) => setTema(e.detail);
+    window.addEventListener(EVENTO_TEMA, alCambiar);
+    return () => window.removeEventListener(EVENTO_TEMA, alCambiar);
+  }, []);
+
   const alternar = () => {
     const siguiente = oscuro ? 'light' : 'dark';
     guardarTema(siguiente);
-    setTema(siguiente);
   };
 
   return (

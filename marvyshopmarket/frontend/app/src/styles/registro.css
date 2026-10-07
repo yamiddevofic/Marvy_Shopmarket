@@ -566,7 +566,7 @@ html.dark .registro-hero {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 12px;
+  padding-top: 8%;
 }
 
 /* barra de avance sobre cada paso */
@@ -752,6 +752,7 @@ html.dark .registro-hero {
   --color: var(--linea-200);
   display: grid;
   gap: 6px;
+  margin-top: 2%;
 }
 
 .registro-fuerza[data-nivel='1'] { --color: var(--error-600); }
