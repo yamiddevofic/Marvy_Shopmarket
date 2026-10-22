@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Bolt, Box, ChevronRight, PackageSearch, Receipt, ScrollText, Truck, UserPlus, Users } from 'lucide-react';
+import { Bolt, Box, ChevronRight, PackageSearch, Receipt, ScrollText, Truck, UserPlus, Users, Wallet } from 'lucide-react';
 
 // Accesos a cada módulo, agrupados por la tarea del tendero.
 // `icon` es el nombre que el resto de la app guarda en selectedIcon.
@@ -8,9 +8,10 @@ const GRUPOS = [
     id: 'operacion',
     titulo: 'Operación diaria',
     modulos: [
-      { option: 'ventas', icon: 'Receipt', Icono: Receipt, titulo: 'Ventas', descripcion: 'Registrar las ventas del día' },
-      { option: 'inventario', icon: 'PackageSearch', Icono: PackageSearch, titulo: 'Inventario', descripcion: 'Actualizar existencias' },
-      { option: 'productos', icon: 'Box', Icono: Box, titulo: 'Productos', descripcion: 'Catálogo, precios y stock' },
+      { option: 'ventas', icon: 'Receipt', Icono: Receipt, titulo: 'Ventas', descripcion: 'Vender y ver el historial' },
+      { option: 'gastos', icon: 'Wallet', Icono: Wallet, titulo: 'Gastos', descripcion: 'Lo que sale de la caja' },
+      { option: 'inventario', icon: 'PackageSearch', Icono: PackageSearch, titulo: 'Inventario', descripcion: 'Existencias y productos por agotarse' },
+      { option: 'productos', icon: 'Box', Icono: Box, titulo: 'Productos', descripcion: 'Agregar o actualizar productos' },
       { option: 'reportes', icon: 'ScrollText', Icono: ScrollText, titulo: 'Reportes', descripcion: 'Resultados por rango de fechas' },
     ],
   },

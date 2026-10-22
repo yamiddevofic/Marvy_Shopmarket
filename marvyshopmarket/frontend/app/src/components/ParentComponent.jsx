@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ResultComponent from './ResultComponent'; // Ajusta la ruta si es necesario
-import { pesos } from '../utils/negocio';
+import { STOCK_BAJO, pesos } from '../utils/negocio';
 
-const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, goToNextPage, goToPage, goToPrevPage, isLoading, itemsPerPage, totalPages: propTotalPages, currentItems: propCurrentItems, LoadingSkeleton, User, Box, error }) => { // typeId podría ser "new-product" o "register-shopkeeper"
+const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, goToNextPage, goToPage, goToPrevPage, isLoading, itemsPerPage, totalPages: propTotalPages, currentItems: propCurrentItems, LoadingSkeleton, User, Box, error, filtro = 'todos', onCambio }) => { // typeId podría ser "new-product" o "register-shopkeeper"
     const [items, setItems] = useState(m || []); // El estado de TODOS los ítems (productos o tenderos), inicializado con m
 
     // Búsqueda local sobre los ítems ya cargados (no llama al backend)
@@ -12,13 +12,20 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
     const formatPrice = pesos;
 
     // Ordenar items alfabéticamente por nombre para tenderos y productos
-    const sortedItems = (typeId === "register-shopkeeper" || typeId === "new-product") ? [...items].sort((a, b) => a.nombre.localeCompare(b.nombre)) : items;
+    const sortedItems = [...items].sort((a, b) => String(a.nombre).localeCompare(String(b.nombre)));
+
+    // Inventario: "por agotarse" incluye los agotados y va del más urgente al menos urgente
+    const filtrados = filtro === 'bajo'
+        ? sortedItems.filter((item) => Number(item.stock) <= STOCK_BAJO).sort((a, b) => Number(a.stock) - Number(b.stock))
+        : filtro === 'agotado'
+            ? sortedItems.filter((item) => Number(item.stock) <= 0)
+            : sortedItems;
 
     const normalizar = (texto) => String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const termino = normalizar(consulta.trim());
     const visibles = termino
-        ? sortedItems.filter((item) => [item.nombre, item.categoria, item.correo, item.id, item._id].some((campo) => normalizar(campo).includes(termino)))
-        : sortedItems;
+        ? filtrados.filter((item) => [item.nombre, item.categoria, item.correo, item.id, item._id].some((campo) => normalizar(campo).includes(termino)))
+        : filtrados;
 
     // Calcular totalPages y currentItems desde los ítems visibles
     const totalPages = Math.ceil(visibles.length / itemsPerPage);
@@ -51,8 +58,9 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
         // Filtra el ítem eliminado de la lista actual
         const updatedItems = items.filter(item => !(item._id === deletedItemId || item.id === deletedItemId));
         setItems(updatedItems); // Actualiza el estado
+        onCambio?.(updatedItems);
         // La paginación se ajusta automáticamente en el useEffect
-    }, [items]);
+    }, [items, onCambio]);
 
     // *** MANEJO DE ADICIÓN ***
     // Si tu componente padre también maneja el formulario para agregar un producto/tendero,
@@ -64,14 +72,14 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
 
     // *** MANEJO DE ACTUALIZACIÓN ***
     const handleItemUpdated = useCallback((updatedItemId, updatedData) => {
-        setItems(prevItems =>
-            prevItems.map(item =>
-                (item._id === updatedItemId || item.id === updatedItemId)
-                    ? { ...item, ...updatedData }
-                    : item
-            )
+        const updatedItems = items.map(item =>
+            (item._id === updatedItemId || item.id === updatedItemId)
+                ? { ...item, ...updatedData }
+                : item
         );
-    }, []);
+        setItems(updatedItems);
+        onCambio?.(updatedItems);
+    }, [items, onCambio]);
 
     return (
         <div className="w-full h-full">
@@ -81,6 +89,7 @@ const ParentComponent = ({ typeId, storeInfo, m, currentPage, setCurrentPage, go
             <ResultComponent
                 id={typeId}
                 m={sortedItems} // La lista completa ordenada de ítems
+                filtro={filtro}
                 visibles={visibles} // Los que pasan la búsqueda
                 consulta={consulta}
                 onBuscar={buscar}

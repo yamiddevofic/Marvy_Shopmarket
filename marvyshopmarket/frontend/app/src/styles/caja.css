@@ -1,0 +1,771 @@
+/*
+ * Ventas (venta nueva + historial), Gastos y el resumen de entradas y salidas
+ * del inicio. Compone las piezas de panel.css y gestion.css.
+ */
+
+/* ── Selector de periodo (Hoy · 7 días · Este mes) ───────────────── */
+.segmentos {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--linea-100);
+  border-radius: var(--radius-pill);
+  justify-self: start;
+}
+
+.segmentos__opcion {
+  min-height: 36px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.segmentos__opcion:hover { color: var(--texto); }
+.segmentos__opcion:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.segmentos__opcion[aria-pressed='true'] {
+  color: var(--texto);
+  background: var(--surface);
+  box-shadow: var(--sombra-sm);
+}
+
+.gestion-form__ayuda {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+/* ── Ventas ──────────────────────────────────────────────────────── */
+.ventas__cuerpo {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.venta-buscar {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.venta-buscar .gestion-buscar { width: 100%; }
+
+.venta-resultados {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--sombra-md);
+}
+
+.venta-resultados__vacio {
+  padding: 10px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.venta-resultado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 20px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--hit);
+  padding: 6px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--texto);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.venta-resultado:hover:not(:disabled) { background: var(--linea-100); }
+.venta-resultado:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.venta-resultado:disabled { cursor: not-allowed; opacity: 0.55; }
+
+.venta-resultado__textos,
+.venta-linea__textos,
+.gasto-fila__textos {
+  display: grid;
+  min-width: 0;
+}
+
+.venta-resultado__nombre,
+.venta-linea__nombre,
+.gasto-fila__descripcion {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.venta-resultado__dato,
+.venta-linea__dato,
+.gasto-fila__dato {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+.venta-resultado__precio,
+.venta-linea__subtotal,
+.gasto-fila__monto {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.venta-resultado__mas { width: 20px; height: 20px; color: var(--primario); }
+
+.venta-vacia {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--texto-suave);
+  border: 1.5px dashed var(--linea-200);
+  border-radius: var(--radius-md);
+}
+
+.venta-vacia svg { width: 28px; height: 28px; }
+.venta-vacia p { margin: 0; font-size: 0.9rem; }
+
+.venta-lineas {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.venta-linea {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 32px;
+  grid-template-areas:
+    'textos textos quitar'
+    'cantidad subtotal subtotal';
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--linea-100) 55%, var(--surface));
+  border-radius: var(--radius-md);
+}
+
+.venta-linea__textos { grid-area: textos; }
+.venta-linea__subtotal { grid-area: subtotal; justify-self: end; }
+.venta-cantidad { grid-area: cantidad; }
+.venta-linea__quitar { grid-area: quitar; }
+
+.venta-cantidad {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-pill);
+}
+
+.venta-cantidad button,
+.venta-linea__quitar,
+.gasto-fila__borrar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--texto-suave);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.venta-cantidad button:hover:not(:disabled),
+.venta-linea__quitar:hover,
+.gasto-fila__borrar:hover { color: var(--texto); background: var(--linea-100); }
+
+.venta-cantidad button:disabled { opacity: 0.35; cursor: default; }
+
+.venta-cantidad button:focus-visible,
+.venta-linea__quitar:focus-visible,
+.gasto-fila__borrar:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.venta-cantidad svg,
+.venta-linea__quitar svg,
+.gasto-fila__borrar svg { width: 16px; height: 16px; }
+
+.venta-cantidad input {
+  width: 3.2ch;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  color: var(--texto);
+  background: none;
+  border: 0;
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+
+.venta-cantidad input::-webkit-inner-spin-button,
+.venta-cantidad input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.venta-cantidad input:focus { outline: none; }
+
+.venta-metodo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.venta-metodo__opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.venta-metodo__opcion { position: relative; }
+
+.venta-metodo__opcion input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.venta-metodo__opcion span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1.5px solid var(--linea-200);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.venta-metodo__opcion input:checked + span {
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 10%, var(--surface));
+  border-color: var(--primario);
+}
+
+.venta-metodo__opcion input:focus-visible + span { box-shadow: var(--focus-ring); }
+
+/* efectivo: con cuánto paga y cuánto se devuelve */
+.venta-vueltos {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--linea-100) 55%, var(--surface));
+  border-radius: var(--radius-md);
+}
+
+.venta-vueltos__rapidos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.venta-vueltos__rapido {
+  min-height: 36px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1.5px solid var(--linea-200);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+
+.venta-vueltos__rapido:hover { border-color: var(--primario); }
+.venta-vueltos__rapido:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.venta-vueltos__rapido[aria-pressed='true'] {
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 10%, var(--surface));
+  border-color: var(--primario);
+}
+
+.venta-vueltos__resultado {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 2.2rem;
+  margin: 0;
+}
+
+.venta-vueltos__etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.venta-vueltos__etiqueta svg { width: 16px; height: 16px; }
+
+.venta-vueltos__resultado strong {
+  font-size: var(--step-2);
+  letter-spacing: -0.02em;
+  color: var(--primario);
+  font-variant-numeric: tabular-nums;
+}
+
+.venta-vueltos__resultado--falta .venta-vueltos__etiqueta,
+.venta-vueltos__resultado--falta strong { color: var(--error-600); }
+
+.venta-total {
+  display: grid;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--linea-200);
+}
+
+.venta-total__cifra {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}
+
+.venta-total__etiqueta { font-size: 0.9rem; color: var(--texto-suave); }
+
+.venta-total__cifra strong {
+  font-size: var(--step-2);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.venta-total__boton { width: 100%; }
+
+/* ── Historial (ventas y gastos) ─────────────────────────────────── */
+.historial__lista,
+.gastos__lista {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historial__vacio {
+  margin: 0;
+  padding: 20px 0;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.venta-historial {
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-md);
+}
+
+.venta-historial[open] { background: color-mix(in srgb, var(--linea-100) 40%, var(--surface)); }
+
+.venta-historial__resumen {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 20px;
+  grid-template-areas:
+    'cuando total flecha'
+    'items items items';
+  align-items: center;
+  gap: 4px 12px;
+  min-height: 56px;
+  padding: 10px 12px;
+  list-style: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+
+.venta-historial__resumen::-webkit-details-marker { display: none; }
+.venta-historial__resumen:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.venta-historial__cuando {
+  grid-area: cuando;
+  display: inline-flex;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.venta-historial__dia { color: var(--texto-suave); }
+
+.venta-historial__items {
+  grid-area: items;
+  overflow: hidden;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.venta-historial__total {
+  grid-area: total;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.venta-historial__cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.venta-historial__flecha {
+  grid-area: flecha;
+  width: 18px;
+  height: 18px;
+  color: var(--texto-suave);
+  transition: rotate 0.2s ease;
+}
+
+.venta-historial[open] .venta-historial__flecha { rotate: 180deg; }
+
+.venta-historial--anulada .venta-historial__cifra,
+.venta-historial--anulada .venta-historial__items { text-decoration: line-through; opacity: 0.7; }
+
+.venta-historial__detalle {
+  display: grid;
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+.venta-detalle {
+  width: 100%;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.venta-detalle th {
+  padding: 6px 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  border-bottom: 1px solid var(--linea-200);
+}
+
+.venta-detalle td {
+  padding: 6px 4px;
+  text-align: right;
+  border-bottom: 1px solid var(--linea-100);
+}
+
+.venta-detalle th:first-child,
+.venta-detalle td:first-child { text-align: left; }
+
+.venta-historial__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.venta-historial__pie p { margin: 0; font-size: 0.85rem; color: var(--texto-suave); }
+
+.venta-historial__confirmar,
+.gasto-fila__confirmar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+/* ── Gastos ──────────────────────────────────────────────────────── */
+.gasto-fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 4px 12px;
+  min-height: 56px;
+  padding: 8px 4px 8px 12px;
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-md);
+}
+
+.gasto-fila__error { grid-column: 1 / -1; }
+
+/* barras por categoría: un solo color (magnitud), valor siempre escrito */
+.categorias-gasto {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categorias-gasto__fila {
+  display: grid;
+  grid-template-columns: minmax(84px, 7.5rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.categorias-gasto__nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.categorias-gasto__pista {
+  height: 10px;
+  background: var(--linea-100);
+  border-radius: 0 4px 4px 0;
+}
+
+.categorias-gasto__barra {
+  display: block;
+  min-width: 2px;
+  height: 100%;
+  background: var(--serie-salidas);
+  border-radius: 0 4px 4px 0;
+}
+
+.categorias-gasto__valor {
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Inicio: entradas y salidas ──────────────────────────────────── */
+.caja__cabeza {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.caja__cifras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.caja__esqueleto { height: 88px; border-radius: var(--radius-md); }
+
+.caja-cifra {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--linea-100) 55%, var(--surface));
+  border-radius: var(--radius-md);
+}
+
+.caja-cifra:last-child { grid-column: 1 / -1; }
+
+.caja-cifra dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.caja-cifra dt svg { width: 16px; height: 16px; }
+.caja-cifra--entradas dt svg { color: var(--serie-entradas); }
+.caja-cifra--salidas dt svg { color: var(--serie-salidas); }
+
+.caja-cifra__valor {
+  margin: 2px 0 0;
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.caja-cifra__nota { margin: 0; font-size: 0.8rem; color: var(--texto-suave); }
+
+.caja__subtitulo {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.caja__nada { margin: 0; font-size: 0.85rem; color: var(--texto-suave); }
+
+.caja__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--linea-100);
+}
+
+/* gráfico de barras pareadas por día */
+.grafico-dias {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.grafico-dias__leyenda {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+.grafico-dias__clave {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.grafico-dias__clave::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--serie-entradas);
+}
+
+.grafico-dias__clave--salidas::before { background: var(--serie-salidas); }
+
+.grafico-dias__plano {
+  position: relative;
+  height: 160px;
+  margin: 8px 0 22px 48px;
+}
+
+.grafico-dias__guia {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed var(--linea-200);
+}
+
+.grafico-dias__guia--base { border-top-style: solid; border-color: var(--tinta-300); }
+
+.grafico-dias__guia span {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: -0.6em;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--texto-suave);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.grafico-dias__columnas {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.grafico-dias__col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.grafico-dias__col--activa { background: color-mix(in srgb, var(--linea-100) 70%, transparent); }
+
+.grafico-dias__barras {
+  position: absolute;
+  inset: 0 18% 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+}
+
+.grafico-dias__barra {
+  flex: 1;
+  max-width: 14px;
+  border-radius: 4px 4px 0 0;
+  background: var(--serie-entradas);
+}
+
+.grafico-dias__barra--salidas { background: var(--serie-salidas); }
+
+.grafico-dias__dia {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.grafico-dias__tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--sombra-md);
+  translate: -50% 0;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ── Tablet (≥ 640 px) ───────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .venta-linea {
+    grid-template-columns: minmax(0, 1fr) auto minmax(5.5rem, auto) 36px;
+    grid-template-areas: 'textos cantidad subtotal quitar';
+  }
+
+  .venta-total {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .venta-total__boton { width: auto; padding: 0 28px; }
+
+  .venta-historial__resumen {
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto 20px;
+    grid-template-areas: 'cuando items total flecha';
+  }
+
+  .caja__cifras { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .caja-cifra:last-child { grid-column: auto; }
+}
+
+/* ── Desktop (≥ 1100 px): venta e historial lado a lado ─────────── */
+@media (min-width: 1100px) {
+  .ventas__cuerpo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+}

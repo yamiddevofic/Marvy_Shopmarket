@@ -16,6 +16,14 @@ from .extensions import db
 log = logging.getLogger(__name__)
 
 
+# Textos en español para los errores HTTP genéricos (los de Werkzeug vienen en inglés)
+MENSAJES_HTTP = {
+    404: 'Esta función no existe en el servidor. Si se acaba de actualizar, reinicia el backend.',
+    405: 'Método no permitido para esta ruta',
+    413: 'El archivo es demasiado grande',
+}
+
+
 class APIError(Exception):
     def __init__(self, message, status=400, code=None):
         super().__init__(message)
@@ -45,7 +53,7 @@ def register_error_handlers(app):
 
     @app.errorhandler(HTTPException)
     def handle_http_exception(error):
-        return jsonify({'message': error.description}), error.code
+        return jsonify({'message': MENSAJES_HTTP.get(error.code, error.description)}), error.code
 
     @app.errorhandler(OperationalError)
     def handle_db_error(error):

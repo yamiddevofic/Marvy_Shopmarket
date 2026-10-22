@@ -5,6 +5,9 @@ import Example from './modal/Example';
 import { useState } from 'react'
 import PlaceholderComponent from './PlaceholderComponent';
 
+// Título de la lista de inventario según el filtro activo
+const TITULOS_FILTRO = { todos: 'Todos los productos', bajo: 'Por agotarse', agotado: 'Agotados' };
+
 const ResultComponent = ({
     id,
     m, // Lista total de ítems (productos/tenderos)
@@ -29,7 +32,8 @@ const ResultComponent = ({
     visibles = m,
     consulta = '',
     onBuscar,
-    startIndex = 0
+    startIndex = 0,
+    filtro = 'todos'
 }) => {
 
     const [open, setOpen] = useState(false)
@@ -54,8 +58,8 @@ const ResultComponent = ({
         <header className="gestion-lista__cabeza">
             <div className="tarjeta__titulos">
                 <h2 className="tarjeta__titulo">
-                    {esTenderos ? 'Tenderos registrados' : 'Productos registrados'}
-                    <span className="chip chip--neutro">{m.length}</span>
+                    {esTenderos ? 'Tenderos registrados' : TITULOS_FILTRO[filtro]}
+                    <span className="chip chip--neutro">{esTenderos ? m.length : visibles.length}</span>
                 </h2>
                 <p className="tarjeta__ayuda">Toca {esTenderos ? 'un tendero' : 'un producto'} para editarlo o borrarlo.</p>
             </div>
@@ -94,8 +98,14 @@ const ResultComponent = ({
 
     const sinResultados = (
         <div className="gestion-sin-resultados">
-            <p>Ningún {esTenderos ? 'tendero' : 'producto'} coincide con «{consulta}».</p>
-            <button type="button" className="tarjeta__enlace" onClick={() => onBuscar?.('')}>Limpiar búsqueda</button>
+            {consulta ? (
+                <>
+                    <p>Ningún {esTenderos ? 'tendero' : 'producto'} coincide con «{consulta}».</p>
+                    <button type="button" className="tarjeta__enlace" onClick={() => onBuscar?.('')}>Limpiar búsqueda</button>
+                </>
+            ) : (
+                <p>{filtro === 'agotado' ? 'Ningún producto está agotado.' : 'Ningún producto está por agotarse.'}</p>
+            )}
         </div>
     );
 

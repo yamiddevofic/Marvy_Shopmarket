@@ -9,6 +9,7 @@ import Indicadores from '../components/Inicio/Indicadores';
 import PorReponer from '../components/Inicio/PorReponer';
 import DatosTienda from '../components/Inicio/DatosTienda';
 import Modulos from '../components/Inicio/Modulos';
+import Caja from '../components/Inicio/Caja';
 import { useAppContext } from '../context/AppContext';
 import { api } from '../services/api';
 
@@ -123,6 +124,8 @@ const Home = () => {
           <h2 id="resumen-titulo" className="sr-only">Resumen de la tienda</h2>
           <Indicadores productos={productos} tenderos={tenderos} />
         </section>
+
+        <Caja />
 
         <div className="inicio__columnas">
           <Modulos onSeleccionar={handleSelectOption} />

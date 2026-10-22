@@ -6,6 +6,8 @@ import { api } from '../../services/api'
 
 
 export default function Example({ open, id, setOpen, m, keyRow, item, onItemDeleted, onItemAdded, onItemUpdated}) {
+    // Productos (desde Inventario) o tenderos
+    const esProducto = id !== "register-shopkeeper";
     const [formData, setFormData] = useState({});
     // Estado de la interfaz del diálogo (no cambia lo que se envía al backend)
     const [confirmando, setConfirmando] = useState(false);
@@ -50,7 +52,7 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
       // Para ambos productos y tenderos, enviar los datos del formulario
 
       //estructurar cuerpo json para productos
-      bodyHead = id === "new-product" ? {
+      bodyHead = esProducto ? {
          _id: item._id,
          nombre: formattedData.nombre,
          categoria: formattedData.categoria,
@@ -69,16 +71,16 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
       setOcupado('guardar');
       setErrorDialogo('');
       try {
-        const endpoint = id === "new-product" ? `actualizar-producto/${item._id}` : `actualizar-tendero/${item.id}`;
+        const endpoint = esProducto ? `actualizar-producto/${item._id}` : `actualizar-tendero/${item.id}`;
         await api.patch(`/${endpoint}`, bodyHead);
-        console.log(`${id === "new-product" ? "Producto" : "Tendero"} actualizado exitosamente`);
+        console.log(`${esProducto ? "Producto" : "Tendero"} actualizado exitosamente`);
         // Notificar al componente padre
         if (onItemUpdated) {
           onItemUpdated(item._id || item.id, formattedData);
         }
         setOpen(false);
       } catch (error) {
-        console.error(`Error al actualizar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
+        console.error(`Error al actualizar ${esProducto ? "producto" : "tendero"}:`, error.message);
         setErrorDialogo(error.message || 'No se pudieron guardar los cambios.');
       } finally {
         setOcupado(null);
@@ -88,13 +90,13 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
     
 
     const handleDelete = async (itemId) => { // Cambiado 'id' a 'itemId' para mayor claridad
-      console.log(`ID del ${id === "new-product" ? "producto" : "tendero"} a eliminar:`, itemId);
+      console.log(`ID del ${esProducto ? "producto" : "tendero"} a eliminar:`, itemId);
       setOcupado('borrar');
       setErrorDialogo('');
       try {
-          const endpoint = id === "new-product" ? `eliminar-producto/${itemId}` : `eliminar-tendero/${itemId}`;
+          const endpoint = esProducto ? `eliminar-producto/${itemId}` : `eliminar-tendero/${itemId}`;
           await api.delete(`/${endpoint}`);
-          console.log(`${id === "new-product" ? "Producto" : "Tendero"} eliminado exitosamente`);
+          console.log(`${esProducto ? "Producto" : "Tendero"} eliminado exitosamente`);
           // *** LLAMAR A onItemDeleted ***
           if (onItemDeleted) {
               onItemDeleted(itemId); // Notifica al componente padre
@@ -104,7 +106,7 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
           // pero si el padre actualiza 'm', la paginación se ajustará automáticamente.
           // setCurrentPage(1);
       } catch (error) {
-          console.error(`Error al eliminar ${id === "new-product" ? "producto" : "tendero"}:`, error.message);
+          console.error(`Error al eliminar ${esProducto ? "producto" : "tendero"}:`, error.message);
           setErrorDialogo(error.message || 'No se pudo borrar.');
           setConfirmando(false);
       } finally {
@@ -113,7 +115,7 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
     };
 
     const handleTypeInput = (campo) => {
-      if (id==="new-product"){
+      if (esProducto){
         if (campo === "precio") {
           return "number"
         } else if (campo === "stock") {
@@ -173,7 +175,6 @@ export default function Example({ open, id, setOpen, m, keyRow, item, onItemDele
       )
     })
 
-  const esProducto = id === "new-product"
   const cosa = esProducto ? 'producto' : 'tendero'
   return (
     <Dialog open={open} onClose={() => !ocupado && setOpen(false)} className="gestion-dialogo">

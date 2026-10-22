@@ -11,6 +11,7 @@ import Stock from "./pages/Stock";
 import RegisterSupplies from "./pages/RegisterSupplies";
 import RegisterVendors from "./pages/RegisterVendors";
 import RegisterSales from "./pages/RegisterSales";
+import Expenses from "./pages/Expenses";
 import Report from "./pages/Report";
 import Configurations from "./pages/Configuration";
 import ProtectedRoute from "./components/ProtectedRout";
@@ -87,6 +88,7 @@ const App = () => {
           <Route path="/suministros" element={<ProtectedPage Component={RegisterSupplies} />} />
           <Route path="/proveedores" element={<ProtectedPage Component={RegisterVendors} />} />
           <Route path="/ventas" element={<ProtectedPage Component={RegisterSales} />} />
+          <Route path="/gastos" element={<ProtectedPage Component={Expenses} />} />
           <Route path="/reportes" element={<ProtectedPage Component={Report} />} />
           <Route path="configuracion" element={<ProtectedPage Component={Configurations} />} />
           {/* Ruta por defecto para rutas no definidas */}

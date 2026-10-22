@@ -30,6 +30,10 @@ def current_role():
     return None
 
 
+def current_user_id():
+    return session.get('adm_Id') or session.get('tendero_Id')
+
+
 def current_tienda_id():
     return session.get('tienda_Id')
 

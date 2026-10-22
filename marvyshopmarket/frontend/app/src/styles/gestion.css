@@ -1,8 +1,9 @@
 /*
  * Pantallas de gestión (productos, inventario, ventas, reportes, proveedores,
- * suministros, tenderos y configuración), todas armadas por Form.jsx:
- *   cabecera compacta con la ilustración de la pantalla → tarjeta del formulario
- *   → (en productos y tenderos) la lista con búsqueda, paginación y edición.
+ * suministros, tenderos y configuración): cabecera compacta con la ilustración
+ * de la pantalla → tarjeta del formulario → (en tenderos) la lista con búsqueda,
+ * paginación y edición. Inventario es solo lista (con resumen y filtros) y
+ * Productos solo formulario (agrega o actualiza).
  * Compone las piezas de panel.css (tarjeta, boton, chip, aviso, esqueleto).
  * Las pantallas de solo formulario se centran en una columna de lectura.
  */
@@ -313,6 +314,146 @@ html.dark .gestion-hero {
 
 .gestion-form__pie {
   display: flex;
+  gap: 8px;
+}
+
+.gestion-form__campo--ancho {
+  grid-column: 1 / -1;
+}
+
+/* Productos: aviso de que el nombre coincide con uno existente */
+.producto-existente {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--texto);
+  background: color-mix(in srgb, var(--primario) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--primario) 30%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.producto-existente > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--primario);
+}
+
+.producto-existente p {
+  flex: 1 1 220px;
+  margin: 0;
+}
+
+.producto-existente__otro {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primario);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.producto-existente__otro svg { width: 16px; height: 16px; }
+.producto-existente__otro:hover { text-decoration: underline; text-underline-offset: 3px; }
+.producto-existente__otro:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* ── Inventario: resumen que también filtra la lista ─────────────── */
+.inventario-resumen {
+  display: grid;
+  gap: 12px;
+}
+
+.inventario-resumen__filtros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.inventario-filtro {
+  display: grid;
+  align-content: space-between; /* cifras alineadas aunque la etiqueta ocupe dos líneas */
+  gap: 2px;
+  min-width: 0;
+  padding: 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1px solid var(--linea-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.inventario-filtro:hover:not(:disabled) { border-color: var(--primario); }
+.inventario-filtro:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.inventario-filtro:disabled { cursor: default; }
+
+.inventario-filtro[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--primario) 10%, var(--surface));
+  border-color: var(--primario);
+  box-shadow: inset 0 0 0 1px var(--primario);
+}
+
+.inventario-filtro__etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.inventario-filtro__etiqueta svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--primario);
+}
+
+.inventario-filtro--alerta .inventario-filtro__etiqueta svg,
+.inventario-filtro--alerta .inventario-filtro__cifra { color: var(--alerta-600); }
+
+.inventario-filtro--error .inventario-filtro__etiqueta svg,
+.inventario-filtro--error .inventario-filtro__cifra { color: var(--error-600); }
+
+.inventario-filtro__cifra {
+  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.inventario-filtro__esqueleto {
+  display: inline-block;
+  width: 2.5ch;
+  height: 1em;
+  vertical-align: middle;
+}
+
+/* en teléfono la nota no cabe en tres columnas */
+.inventario-filtro__nota {
+  display: none;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--texto-suave);
+}
+
+.inventario-resumen__agregar {
+  justify-content: center;
 }
 
 .gestion-form__enviar {
@@ -814,6 +955,15 @@ html.dark .gestion-hero {
     flex: none;
     width: min(100%, 280px);
   }
+
+  .inventario-resumen {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .inventario-filtro { padding: 12px 14px; }
+  .inventario-filtro__nota { display: block; }
 
   .gestion-fila--tenderos {
     grid-template-columns: repeat(3, minmax(0, 1fr));

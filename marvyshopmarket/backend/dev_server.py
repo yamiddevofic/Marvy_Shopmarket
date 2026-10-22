@@ -1,7 +1,7 @@
 """Servidor de demostración local.
 
 Usa SQLite (backend/dev.db) y un MongoDB simulado en memoria, así que no
-necesita MySQL, MongoDB ni archivo .env. Los productos se reinician cada vez
+necesita MySQL, MongoDB ni archivo .env. Productos, ventas y gastos se reinician cada vez
 que arranca; el resto de datos persiste en dev.db.
 
     python dev_server.py            # http://127.0.0.1:3333
@@ -14,6 +14,7 @@ from app import create_app
 from app.config import DevelopmentConfig
 from app.extensions import db, mongo
 from app.models import Administrador, Tenderos, Tiendas
+from app.services import fechas
 from app.services.auth_service import hash_password
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,6 +64,42 @@ def seed_productos():
     ])
 
 
+def seed_movimientos():
+    """Ventas y gastos de los últimos días para que el inicio muestre un resumen."""
+    from datetime import timedelta
+    hoy = fechas.hoy()
+    ventas = [  # (días atrás, hora, [(producto, cantidad, precio)], método)
+        (6, '09:10', [('prd_demo1', 3, 4800)], 'efectivo'),
+        (5, '17:40', [('prd_demo2', 1, 14500), ('prd_demo3', 2, 4200)], 'transferencia'),
+        (3, '11:05', [('prd_demo6', 1, 18900)], 'efectivo'),
+        (2, '19:20', [('prd_demo4', 1, 21000), ('prd_demo5', 2, 3500)], 'tarjeta'),
+        (1, '08:30', [('prd_demo1', 2, 4800), ('prd_demo3', 1, 4200)], 'efectivo'),
+        (0, '10:15', [('prd_demo2', 1, 14500)], 'efectivo'),
+    ]
+    nombres = {p['_id']: p['nombre'] for p in mongo.db.productos.find()}
+    mongo.db.ventas.insert_many([
+        {'_id': f'vta_demo{i}', 'tienda_Id': 1,
+         'fecha': f"{(hoy - timedelta(days=atras)).isoformat()}T{hora}:00-05:00",
+         'dia': (hoy - timedelta(days=atras)).isoformat(),
+         'items': [{'producto_id': pid, 'nombre': nombres[pid], 'cantidad': c, 'precio_unitario': float(pr),
+                    'subtotal': float(pr * c)} for pid, c, pr in items],
+         'total': float(sum(pr * c for _, c, pr in items)), 'metodo': metodo,
+         'vendedor': {'rol': 'admin', 'id': DEMO_ID, 'nombre': 'Admin Demo'}, 'anulada': False}
+        for i, (atras, hora, items, metodo) in enumerate(ventas, start=1)
+    ])
+    gastos = [  # (días atrás, descripción, categoría, monto)
+        (6, 'Arriendo del local', 'Fijos', 45000),
+        (4, 'Reparación de la nevera', 'Mantenimiento', 18000),
+        (2, 'Recibo de la luz', 'Fijos', 12000),
+        (0, 'Bolsas y empaques', 'Otros', 6000),
+    ]
+    mongo.db.gastos.insert_many([
+        {'_id': f'gst_demo{i}', 'tienda_Id': 1, 'descripcion': d, 'categoria': c, 'monto': float(m),
+         'dia': (hoy - timedelta(days=atras)).isoformat(), 'creado': ''}
+        for i, (atras, d, c, m) in enumerate(gastos, start=1)
+    ])
+
+
 app = create_app(DemoConfig)
 mongo.db = mongomock.MongoClient().db
 
@@ -70,6 +107,7 @@ with app.app_context():
     db.create_all()
     seed_sql()
     seed_productos()
+    seed_movimientos()
 
 if __name__ == '__main__':
     print(f'\n  Usuario de demo: {DEMO_ID} / {DEMO_PASSWORD}\n')

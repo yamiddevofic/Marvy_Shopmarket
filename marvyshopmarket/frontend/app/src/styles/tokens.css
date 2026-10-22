@@ -39,6 +39,10 @@
   --error-600: #b42318;
   --error-100: #fde4e1;
 
+  /* series de gráficos: entradas y salidas (validadas para daltonismo sobre --papel) */
+  --serie-entradas: #047857;
+  --serie-salidas: #d9822b;
+
   /* ── Semánticos ─────────────────────────────────────────────── */
   --surface: var(--papel);
   --page-bg: var(--fondo);
@@ -107,6 +111,9 @@ html.dark {
   --alerta-100: #3a2d12;
   --error-600: #ff8a7d;
   --error-100: #3c1a17;
+
+  --serie-entradas: #239e74;
+  --serie-salidas: #d4782f;
 
   /* de noche el primario es claro: el texto encima va oscuro (contraste AA) */
   --sobre-primario: #06231a;

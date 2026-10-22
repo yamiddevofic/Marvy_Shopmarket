@@ -44,6 +44,10 @@ class Config:
 
     CORS_ORIGINS = _split_env_list(os.getenv('CORS_ORIGINS')) or DEFAULT_CORS_ORIGINS
 
+    # Zona horaria de la tienda para fechar ventas y armar los resúmenes del día.
+    # Colombia es UTC-5 todo el año (sin horario de verano).
+    TIENDA_UTC_OFFSET_HORAS = int(os.getenv('TIENDA_UTC_OFFSET_HORAS', '-5'))
+
     # En desarrollo el frontend (localhost:5173) y la API (localhost:5000) son
     # same-site, así que Lax sin Secure funciona sobre HTTP.
     SESSION_COOKIE_HTTPONLY = True

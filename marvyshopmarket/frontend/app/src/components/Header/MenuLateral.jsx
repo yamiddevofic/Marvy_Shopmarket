@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Box, House, LogOut, PackageSearch, PanelLeftClose, PanelLeftOpen, Receipt, ScrollText,
-  Settings, Truck, User, UserPlus, Users, X,
+  Settings, Truck, User, UserPlus, Users, Wallet, X,
 } from 'lucide-react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -13,6 +13,7 @@ import { api } from '../../services/api';
 export const SECCIONES = [
   { ruta: '/home', nombre: 'Inicio', Icono: House },
   { ruta: '/ventas', nombre: 'Ventas', Icono: Receipt },
+  { ruta: '/gastos', nombre: 'Gastos', Icono: Wallet },
   { ruta: '/inventario', nombre: 'Inventario', Icono: PackageSearch },
   { ruta: '/productos', nombre: 'Productos', Icono: Box },
   { ruta: '/reportes', nombre: 'Reportes', Icono: ScrollText },

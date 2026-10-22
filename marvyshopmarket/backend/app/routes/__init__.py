@@ -4,8 +4,9 @@ from .health_routes import health_bp
 from .product_routes import producto_bp
 from .tendero_routes import tendero_bp
 from .tienda_routes import tienda_bp
+from .venta_routes import venta_bp
 
 
 def register_blueprints(app):
-    for blueprint in (auth_bp, health_bp, tienda_bp, tendero_bp, producto_bp):
+    for blueprint in (auth_bp, health_bp, tienda_bp, tendero_bp, producto_bp, venta_bp):
         app.register_blueprint(blueprint)

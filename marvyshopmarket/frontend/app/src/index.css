@@ -6,6 +6,7 @@
 @import './styles/panel.css';
 @import './styles/inicio.css';
 @import './styles/gestion.css';
+@import './styles/caja.css';
 
 @tailwind base;
 @tailwind components;

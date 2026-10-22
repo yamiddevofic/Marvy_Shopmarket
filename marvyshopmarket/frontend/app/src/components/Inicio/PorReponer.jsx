@@ -74,8 +74,8 @@ const PorReponer = ({ productos, onReintentar }) => {
           </h2>
           <p className="tarjeta__ayuda">Productos con pocas unidades</p>
         </div>
-        <Link to="/productos" className="tarjeta__enlace">
-          Ver productos <ArrowRight aria-hidden="true" />
+        <Link to="/inventario" state={{ filtro: 'bajo' }} className="tarjeta__enlace">
+          Ver inventario <ArrowRight aria-hidden="true" />
         </Link>
       </header>
       {cuerpo}

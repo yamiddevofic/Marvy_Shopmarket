@@ -210,7 +210,37 @@ const Tenderos = () => (
   </>
 );
 
+const Gastos = () => (
+  <>
+    <Suelo />
+    {/* tablero de cuentas en la pared */}
+    <rect className="ilus-trazo ilus-madera" x="30" y="22" width="92" height="66" rx="4" />
+    <rect className="ilus-trazo ilus-papel" x="38" y="30" width="76" height="50" rx="2" />
+    <g className="ilus-etiqueta">
+      <rect className="ilus-trazo ilus-papel" x="44" y="36" width="30" height="20" rx="1" />
+      <rect className="ilus-tinta" x="48" y="41" width="18" height="3" rx="1.5" />
+      <rect className="ilus-tinta ilus-tinta--suave" x="48" y="48" width="12" height="3" rx="1.5" />
+    </g>
+    <rect className="ilus-trazo ilus-mostaza" x="80" y="38" width="28" height="18" rx="1" />
+    <rect className="ilus-trazo ilus-verde" x="50" y="60" width="26" height="15" rx="1" />
+    <rect className="ilus-trazo ilus-tomate" x="82" y="62" width="24" height="13" rx="1" />
+    {/* alcancía */}
+    <ellipse className="ilus-trazo ilus-tomate" cx="172" cy="104" rx="30" ry="22" />
+    <rect className="ilus-trazo ilus-tomate" x="152" y="120" width="8" height="10" rx="2" />
+    <rect className="ilus-trazo ilus-tomate" x="184" y="120" width="8" height="10" rx="2" />
+    <ellipse className="ilus-trazo ilus-tomate" cx="203" cy="102" rx="6" ry="7" />
+    <path className="ilus-barra" d="M164 84h16" />
+    <circle className="ilus-tinta" cx="190" cy="96" r="2" />
+    {/* moneda que sale */}
+    <g className="ilus-tiquete">
+      <ellipse className="ilus-trazo ilus-mostaza" cx="172" cy="66" rx="9" ry="9" />
+      <path className="ilus-barra" d="M172 61v10" />
+    </g>
+  </>
+);
+
 const ESCENAS = {
+  gastos: Gastos,
   'new-product': Productos,
   stock: Inventario,
   'register-sales': Ventas,

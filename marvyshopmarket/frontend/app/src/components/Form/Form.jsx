@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Box, Archive, AlertCircle, CheckCircle2 } from 'lucide-react';
-import Ilustracion from "../Panel/Ilustraciones";
+import GestionHero from "../Panel/GestionHero";
 import ParentComponent from '../ParentComponent';
 import PlaceholderComponent from '../PlaceholderComponent';
 import { api } from '../../services/api';
@@ -8,9 +8,6 @@ import { api } from '../../services/api';
 const LoadingSkeleton = () => (
   <span className="esqueleto gestion-lista__esqueleto" aria-hidden="true" />
 );
-
-const today = new Date().toLocaleDateString(); // Get today's date in YYYY-MM-DD format
-const formatDate = today.split('/').reverse().join('-');
 
 const Form = ({
   id,
@@ -40,7 +37,7 @@ const Form = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = id === 'register-shopkeeper' ? 7 : 5;
+  const itemsPerPage = 7;
 
   // Pagination calculations
   const totalPages = Math.ceil((m?.length || 0) / itemsPerPage);
@@ -101,24 +98,8 @@ const Form = ({
     setSuccess('');
     
     try {
-      let dataToSend = { ...formData };
-      
-      // Special handling for new product form
-      // (el backend genera el _id y toma la tienda de la sesión)
-      if (id === 'new-product') {
-        dataToSend = {
-          nombre: formData.nombre || '',
-          categoria: formData.categoria || '',
-          stock: parseInt(formData.stock) || 0,
-          precios: [
-            {
-              fecha: formatDate,
-              precio: parseFloat(formData.precio) || 0
-            }
-          ]
-        };
-      }
-      
+      const dataToSend = { ...formData };
+
       console.log('Datos a enviar:', dataToSend);
       
       const data = await api.post(apiEndpoint, dataToSend);
@@ -141,9 +122,6 @@ const Form = ({
 
   // Cada pantalla: su nombre (como en la navegación), la acción del formulario y para qué sirve.
   const PANTALLAS = {
-    'new-product': { titulo: 'Productos', accion: 'Registrar producto', descripcion: 'Agrega productos al catálogo y revisa los que ya tienes.' },
-    stock: { titulo: 'Inventario', accion: 'Actualizar existencias', descripcion: 'Ajusta las unidades disponibles de cada producto.' },
-    'register-sales': { titulo: 'Ventas', accion: 'Registrar venta', descripcion: 'Anota cada venta del día con su monto y su estado.' },
     report: { titulo: 'Reportes', accion: 'Generar reporte', descripcion: 'Elige el tipo de reporte y el rango de fechas que quieres revisar.' },
     'register-vendors': { titulo: 'Proveedores', accion: 'Registrar proveedor', descripcion: 'Guarda los datos de quienes te surten la mercancía.' },
     'register-supplies': { titulo: 'Suministros', accion: 'Registrar suministro', descripcion: 'Registra lo que llega: cantidades, precios y proveedor.' },
@@ -151,7 +129,7 @@ const Form = ({
     configuration: { titulo: 'Configuración', accion: 'Ajustes de la tienda', descripcion: 'Ajusta los datos de tu tienda.' },
   };
   const pantalla = PANTALLAS[id] || { titulo: title, accion: title, descripcion: 'Completa la información requerida.' };
-  const esLista = id === 'register-shopkeeper' || id === 'new-product';
+  const esLista = id === 'register-shopkeeper';
 
   const renderField = (field) => {
     const {
@@ -246,15 +224,7 @@ const Form = ({
 
   return (
     <main className={`gestion ${esLista ? 'gestion--lista' : 'gestion--simple'}`}>
-      <section className="gestion-hero" aria-labelledby={`${id}-titulo`}>
-        <div className="gestion-hero__texto">
-          <h1 id={`${id}-titulo`} className="gestion-hero__titulo">{pantalla.titulo}</h1>
-          <p className="gestion-hero__bajada">{pantalla.descripcion}</p>
-        </div>
-        <div className="gestion-hero__escena">
-          <Ilustracion id={id} />
-        </div>
-      </section>
+      <GestionHero id={id} titulo={pantalla.titulo} descripcion={pantalla.descripcion} />
 
       <div className="gestion__cuerpo">
         <section className="tarjeta gestion-formulario" aria-labelledby={`${id}-accion`}>
@@ -299,7 +269,7 @@ const Form = ({
         </section>
 
         {esLista && (
-          <section className="tarjeta gestion-tarjeta--lista" aria-label={id === 'new-product' ? 'Productos registrados' : 'Tenderos registrados'}>
+          <section className="tarjeta gestion-tarjeta--lista" aria-label="Tenderos registrados">
             {lista}
           </section>
         )}
