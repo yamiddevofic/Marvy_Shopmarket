@@ -1,5 +1,5 @@
 # ── Dev Stage ──────────────────────────────────────────────────────────
-FROM node:18-alpine
+FROM node:24-alpine
 
 # 1️⃣ Directorio de trabajo dentro del contenedor
 WORKDIR /app
